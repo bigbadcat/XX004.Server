@@ -2,7 +2,7 @@
 * Copyright (c) 2018-2028, By XuXiang all rights reserved.
 *
 * FileName: main.cpp
-* Summary: Êı¾İ·ş³ÌĞòÈë¿Ú¡£
+* Summary: æ•°æ®æœç¨‹åºå…¥å£ã€‚
 
 * Author: XuXiang
 * Date: 2018-07-29 09:49
