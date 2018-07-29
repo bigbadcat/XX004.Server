@@ -8,13 +8,16 @@
 * Date: 2018-07-29 09:49
 *******************************************************/
 
-#include<iostream>
+#include <iostream>
+#include "MySQLTest.h"
 using namespace std;
 
 
 int main(int argc, char *argv[])
 {
 	cout << "Hello SvrData!" << endl;
+	XX004::MySQLTest mysqltest;
+	mysqltest.DoTest();
 
 	system("pause");
 	return 0;
