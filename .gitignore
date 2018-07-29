@@ -1,0 +1,8 @@
+bin/*.ilk
+bin/*.pdb
+XX004/.vs/
+XX004/XX004.VC.*
+XX004/SvrData/x64/
+XX004/SvrData/SvrData.vcxproj.user
+XX004/SvrGate/x64/
+XX004/SvrGate/SvrGate.vcxproj.user
