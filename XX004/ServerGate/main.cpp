@@ -1,11 +1,11 @@
 /*******************************************************
-* Copyright (c) 2018-2028, By XuXiang all rights reserved.
+* Copyright (c) 2018-2088, By XuXiang all rights reserved.
 *
 * FileName: main.cpp
-* Summary: ç½‘å…³ç¨‹åºå…¥å£ã€‚
+* Summary: Íø¹Ø³ÌĞòÈë¿Ú¡£
 
 * Author: XuXiang
-* Date: 2018-07-29 10:30
+* Date: 2018-08-10 22:27
 *******************************************************/
 
 #include<iostream>
@@ -14,7 +14,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-	cout << "Hello SvrGate!" << endl;
+	cout << "Hello ServerGate!" << endl;
 
 	system("pause");
 	return 0;

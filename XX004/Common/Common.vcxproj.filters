@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Net">
+      <UniqueIdentifier>{5a45bd0d-13ab-42db-bc7d-50a2c11d614d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Net\NetServer.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="Net\NetListener.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="Net\NetConnection.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="Net\NetConnectionManager.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="Net\NetPackageHeader.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Net\NetServer.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="Net\NetListener.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="Net\NetConnection.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="Net\NetConnectionManager.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="Net\NetPackageHeader.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

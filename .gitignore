@@ -2,7 +2,11 @@ bin/*.ilk
 bin/*.pdb
 XX004/.vs/
 XX004/XX004.VC.*
-XX004/SvrData/x64/
-XX004/SvrData/SvrData.vcxproj.user
-XX004/SvrGate/x64/
-XX004/SvrGate/SvrGate.vcxproj.user
+XX004/x64/
+XX004/Common/x64/
+XX004/Common/SvrGate.vcxproj.user
+XX004/ServerGate/x64/
+XX004/ServerGate/SvrGate.vcxproj.user
+XX004/ServerData/x64/
+XX004/ServerData/SvrGate.vcxproj.user
+
