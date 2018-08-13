@@ -2,7 +2,7 @@
 * Copyright (c) 2018-2088, By XuXiang all rights reserved.
 *
 * FileName: main.cpp
-* Summary: Êı¾İ·ş³ÌĞòÈë¿Ú¡£
+* Summary: æ•°æ®æœç¨‹åºå…¥å£ã€‚
 
 * Author: XuXiang
 * Date: 2018-08-10 22:31
@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 	XX004::NetTest nettest;
 	nettest.Run();
 
-	//ÃüÁîÑ­»·
+	//å‘½ä»¤å¾ªç¯
 	cout << "Start command ..." << endl;
 	while (true)
 	{
