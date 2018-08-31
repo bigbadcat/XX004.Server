@@ -3,19 +3,42 @@
 *
 * FileName: main.cpp
 * Summary: 网关程序入口。
-
+*
 * Author: XuXiang
 * Date: 2018-08-10 22:27
 *******************************************************/
 
-#include<iostream>
+#include "Util/DataUtil.h"
+#include "ServerMain.h"
+#include <iostream>
 using namespace std;
 
+class ServerMainGate : public XX004::ServerMain
+{
+public:
+	ServerMainGate();
+	~ServerMainGate();
+
+private:
+
+};
+
+ServerMainGate::ServerMainGate()
+{
+}
+
+ServerMainGate::~ServerMainGate()
+{
+}
 
 int main(int argc, char *argv[])
 {
-	cout << "Hello ServerGate!" << endl;
+	int ret = 0;
+	{
+		ServerMainGate server;
+		ret = server.Run();
+	}
 
 	system("pause");
-	return 0;
+	return ret;
 }

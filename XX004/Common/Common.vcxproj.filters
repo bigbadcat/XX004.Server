@@ -4,6 +4,9 @@
     <Filter Include="Net">
       <UniqueIdentifier>{5a45bd0d-13ab-42db-bc7d-50a2c11d614d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{b27470c5-0aed-4cd6-85dc-237d78b8dea9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Net\NetServer.h">
@@ -21,6 +24,14 @@
     <ClInclude Include="Net\NetPackageHeader.h">
       <Filter>Net</Filter>
     </ClInclude>
+    <ClInclude Include="ServerMain.h" />
+    <ClInclude Include="Net\NetSocketThread.h">
+      <Filter>Net</Filter>
+    </ClInclude>
+    <ClInclude Include="Macro.h" />
+    <ClInclude Include="Util\DataUtil.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Net\NetServer.cpp">
@@ -37,6 +48,13 @@
     </ClCompile>
     <ClCompile Include="Net\NetPackageHeader.cpp">
       <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerMain.cpp" />
+    <ClCompile Include="Net\NetSocketThread.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\DataUtil.cpp">
+      <Filter>Util</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
