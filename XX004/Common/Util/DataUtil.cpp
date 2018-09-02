@@ -2,7 +2,7 @@
 * Copyright (c) 2018-2088, By XuXiang all rights reserved.
 *
 * FileName: DataUtil.cpp
-* Summary: ����ͨ�ò���������
+* Summary: 数据通用操作函数。
 *
 * Author: XuXiang
 * Date: 2018-08-26 22:26
@@ -115,7 +115,7 @@ namespace XX004
 		assert(n >= 0);
 		if (n == 0)
 		{
-			//д�볤�� ��д���Ӧ�ֽ�����			
+			//写入长度 再写入对应字节数组			
 			index = WriteInt32(src, index, (int)len);
 			::strcpy_s((char*)src + index, len, value.c_str());
 			index += (int)len;
@@ -127,7 +127,7 @@ namespace XX004
 			//::strcpy_s((char*)src + index, num, value.c_str());
 			if (num < n)
 			{
-				//����Ĳ�0
+				//后面的补0
 				::memset(src + index + num, 0, n - num);
 			}
 			index += n;
@@ -139,7 +139,8 @@ namespace XX004
 	{
 		assert(n >= 0);
 		int len = n == 0 ? ReadInt32(src, index, &index) : n;
-		string ret((char*)src + index, len);
+		int strlen = ::strnlen_s((char*)src + index, len);	//要读取真实的字符串长度，否则会有'\0'字符混入string对象中
+		string ret((char*)src + index, strlen);		//STL的string允许'\0'字符作为string对象元素
 		*next = index + len;
 		return ret;
 	}

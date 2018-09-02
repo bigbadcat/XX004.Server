@@ -2,8 +2,11 @@
 #include <iostream>
 #include <string>
 #include "Net/NetServer.h"
+#include "Net/NetPackageHeader.h"
+#include "Util/DataUtil.h"
 
 using namespace std;
+using namespace XX004::Net;
 
 namespace XX004
 {
@@ -245,8 +248,8 @@ namespace XX004
 		::setsockopt(s, SOL_SOCKET, SO_RCVBUF, (const char *)&recvbuffsize, sizeof(int));
 		::setsockopt(s, SOL_SOCKET, SO_SNDBUF, (const char *)&sendbuffsize, sizeof(int));
 
-		char recvbuff[buffsize];
-		char sendbuff[buffsize];
+		Byte recvbuff[buffsize];
+		Byte sendbuff[buffsize];
 		int recvsize = 0;
 		int sendsize = 0;
 		fd_set readfds;
@@ -280,68 +283,37 @@ namespace XX004
 				{
 					if (recvsize < buffsize)
 					{
-						int len = ::recv(s, recvbuff + recvsize, buffsize - recvsize, 0);
+						int len = ::recv(s, (char*)recvbuff + recvsize, buffsize - recvsize, 0);
 						if (len > 0)
 						{
 							recvsize += len;
 							cout << "recv data size:" << len << endl;
 							recvsize = 0;
 
-							//string text = UTF8_To_string(recvbuff + 18);
-							string text(recvbuff+18);
-							cout << "text:" << text << endl;
-							cout << "哈哈哈哈" << endl;
+							NetPackageHeader recvhead;
+							int i = 0;
+							recvhead.Unpack(recvbuff, i, &i);
+							string text = DataUtil::ReadString(recvbuff, i, &i);
+							cout << "text:" << UTF8_To_string(text) << endl;
 							needsleep = false;			//有数据接收就不休息了
 
-							//准备回复数据
-							char recvdata[1024];
+							//准备回复数据							
+							Byte recvdata[1024];
 							int index = 0;
 
 							int result = 4;
-							recvdata[index + 3] = (result >> 24) & 0xFF;
-							recvdata[index + 2] = (result >> 16) & 0xFF;
-							recvdata[index + 1] = (result >> 8) & 0xFF;
-							recvdata[index + 0] = result & 0xFF;
-							index += 4;
+							index = DataUtil::WriteInt32(recvdata, index, result);
+							string ret =  text + "吼吼吼吼";
+							index = DataUtil::WriteString(recvdata, index, ret);
+							Int64 freetime = 0;
+							index = DataUtil::WriteInt64(recvdata, index, freetime);
 
-							//string ret = string_To_UTF8(text + "(res)吼吼吼吼");
-							string ret = text + "吼吼吼吼";
-							size_t txtsize = ::strlen((char*)ret.c_str()) + 1;
-							recvdata[index + 1] = (txtsize >> 8) & 0xFF;
-							recvdata[index + 0] = txtsize & 0xFF;
-							index += 2;
-							::strcpy_s(recvdata + index, 1024 - index, (char*)ret.c_str());
-							index += txtsize;
+							//回复的数据头
+							NetPackageHeader sendhead(recvhead);
+							sendhead.Command = 1050;
+							sendhead.BodySize = index;
 
-							__int64 freetime = 0;
-							recvdata[index + 7] = (freetime >> 24) & 0xFF;
-							recvdata[index + 6] = (freetime >> 24) & 0xFF;
-							recvdata[index + 5] = (freetime >> 24) & 0xFF;
-							recvdata[index + 4] = (freetime >> 24) & 0xFF;
-							recvdata[index + 3] = (freetime >> 24) & 0xFF;
-							recvdata[index + 2] = (freetime >> 16) & 0xFF;
-							recvdata[index + 1] = (freetime >> 8) & 0xFF;
-							recvdata[index + 0] = freetime & 0xFF;
-							index += 8;
-
-							//复用数头内容
-							::memcpy_s(sendbuff, buffsize, recvbuff, 10);
-							sendsize = 10;
-
-							//写入协议号
-							unsigned short cmd = 1050;
-							sendbuff[sendsize + 1] = (cmd >> 8) & 0xFF;
-							sendbuff[sendsize + 0] = cmd & 0xFF;
-							sendsize += 2;
-
-							//写入数据长度
-							sendbuff[sendsize + 3] = (index >> 24) & 0xFF;
-							sendbuff[sendsize + 2] = (index >> 16) & 0xFF;
-							sendbuff[sendsize + 1] = (index >> 8) & 0xFF;
-							sendbuff[sendsize + 0] = index & 0xFF;
-							sendsize += 4;
-
-							//写入数据
+							sendsize = sendhead.Pack(sendbuff + sendsize, sendsize);
 							::memcpy_s(sendbuff + sendsize, buffsize - sendsize, recvdata, index);
 							sendsize += index;
 						}
@@ -367,7 +339,7 @@ namespace XX004
 					//看有数据是否需要发送
 					if (sendsize > 0)
 					{
-						int len = ::send(s, sendbuff, sendsize, 0);
+						int len = ::send(s, (char*)sendbuff, sendsize, 0);
 						if (len > 0)
 						{
 							sendsize -= len;

@@ -2,7 +2,7 @@
 * Copyright (c) 2018-2088, By XuXiang all rights reserved.
 *
 * FileName: NetPackageHeader.h
-* Summary: Êı¾İ°üÍ·¡£
+* Summary: æ•°æ®åŒ…å¤´ã€‚
 *
 * Author: XuXiang
 * Date: 2018-07-30 23:08
@@ -17,117 +17,65 @@ namespace XX004
 {
 	namespace Net
 	{
-		//Êı¾İ°üÍ·²¿¡£
-		class NetPackageHeader
+		//æ•°æ®åŒ…å¤´éƒ¨ã€‚
+		struct NetPackageHeader
 		{
-		public:
+			//æ•°æ®åŒ…å¤´ç­¾åå§‹ç»ˆä¸ºå›ºå®šå€¼0x58ã€‚(X)
+			static const Byte HEADER_SIGN = 0x58;
 
-			//Êı¾İ°üÍ·Ç©ÃûÊ¼ÖÕÎª¹Ì¶¨Öµ0x5858¡£(XX)
-			static const Int16 HEADER_SIGN = 0x5858;
-
-			//°üÍ·´óĞ¡¡£
-			static const int HEADER_SIZE = 2 + 1 + 1 + 4 + 2 + 2 + 4 + 1 + 8 + 4;
+			//åŒ…å¤´å¤§å°ã€‚
+			static const int HEADER_SIZE = 1 + 1 + 1 + 1 + 4 + 2 + 2 + 4 + 8 + 4;
 			
-			//°üÍ·Ç©Ãû¡£
-			Int16 Sign;
+			//åŒ…å¤´ç­¾åã€‚
+			Byte Sign;
 
-			//Ëæ»úÖÖ×Ó£¬ÓÃÀ´Éú³ÉCheckSum¡£
+			//éšæœºç§å­ï¼Œç”¨æ¥ç”ŸæˆCheckSumã€‚
 			Byte RandSeed;
 
-			//¼ìÑéºÍ, Éú³É¼ûºóÎÄº¯Êı¡£
+			//æ£€éªŒå’Œ, ç”Ÿæˆè§åæ–‡å‡½æ•°ã€‚
 			Byte CheckSum;
 
-			//Ñ¹Ëõ²ÎÊı£¬0±íÊ¾Î´Ñ¹Ëõ¡£
-			Int32 Compress;
-
-			//°üµÄĞòÁĞºÅ£¬´Ó0 ~9999 £¬±ØĞëÑ­»·µİÔö£¬ÓÃÓÚµ×²ã´¦Àí¶ÏÏßÖØÁ¬¡£
-			Int16 Index;
-
-			//½ÓÊÕµ½µÄ°üµÄĞòÁĞºÅ¡£
-			Int16 RecvIndex;
-
-			//Ğ­ÒéÏûÏ¢Âë¡£
-			Int32 Command;
-
-			//½Úµã
+			//èŠ‚ç‚¹
 			Byte Node;
 
-			//Íæ¼Ò½ÇÉ«
+			//å‹ç¼©å‚æ•°ï¼Œ0è¡¨ç¤ºæœªå‹ç¼©ã€‚
+			Int32 Compress;
+
+			//åŒ…çš„åºåˆ—å·ï¼Œä»0 ~9999 ï¼Œå¿…é¡»å¾ªç¯é€’å¢ï¼Œç”¨äºåº•å±‚å¤„ç†æ–­çº¿é‡è¿ã€‚
+			Int16 Index;
+
+			//æ¥æ”¶åˆ°çš„åŒ…çš„åºåˆ—å·ã€‚
+			Int16 RecvIndex;
+
+			//åè®®æ¶ˆæ¯ç ã€‚
+			Int32 Command;
+
+			//ç©å®¶è§’è‰²
 			Int64 GUID;
 
-			//°üÌå´óĞ¡£¨×Ö½ÚÊı£©¡£
+			//åŒ…ä½“å¤§å°ï¼ˆå­—èŠ‚æ•°ï¼‰ã€‚
 			Int32 BodySize;
+
+			//æ„é€ å‡½æ•°
+			NetPackageHeader();
+
+			//é‡ç½®æ•°æ®ã€‚
+			void Reset();
+
+			//è§£åŒ…å¤´éƒ¨ã€‚
+			//src:è¦è¯»å–çš„å­—èŠ‚æ•°ç»„ã€‚
+			//index:è¦è¯»å–çš„ä½ç½®ã€‚
+			//next:[out]ä¸‹ä¸€ä¸ªè¯»å–ä½ç½®ã€‚
+			//ret:ä¸‹ä¸€ä¸ªè¯»å–ä½ç½®ã€‚
+			void Unpack(Byte *src, int index, int *next);
+
+			//æ‰“åŒ…å¤´éƒ¨ã€‚
+			//src:è¦å†™å…¥çš„å­—èŠ‚æ•°ç»„ã€‚
+			//index:è¦å†™å…¥çš„ä½ç½®ã€‚
+			//ret:ä¸‹ä¸€ä¸ªå†™å…¥ä½ç½®ã€‚
+			int Pack(Byte *src, int index);
 		};
 	}
 }
 
 #endif	//__NetPackageHeader_h__
-
-
-/*
-
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace XuXiang.Net
-{
-/// <summary>
-/// Êı¾İ°üÍ·²¿¡£
-/// </summary>
-public struct NetPackageHeader
-{
-#region ¶ÔÍâ²Ù×÷----------------------------------------------------------------
-
-/// <summary>
-/// ÖØÖÃÊı¾İ¡£
-/// </summary>
-public void Reset()
-{
-Sign = 0;
-RandSeed = 0;
-CheckSum = 0;
-Compress = 0;
-Index = 0;
-Command = 0;
-BodySize = 0;
-}
-
-/// <summary>
-/// ½â°üÍ·²¿¡£
-/// </summary>
-/// <param name="buffer">Êı¾İ»º³åÇø¡£</param>
-/// <param name="index">Êı¾İÆğÊ¼Î»ÖÃ¡£</param>
-public void Unpack(byte[] buffer, int index)
-{
-int i = index;
-Sign = DataUtil.ReadInt16(buffer, i, ref i);
-RandSeed = buffer[i++];
-CheckSum = buffer[i++];
-Compress = DataUtil.ReadInt32(buffer, i, ref i);
-Index = DataUtil.ReadInt16(buffer, i, ref i);
-Command = DataUtil.ReadInt16(buffer, i, ref i);
-BodySize = DataUtil.ReadInt32(buffer, i, ref i);
-}
-
-/// <summary>
-/// ·â°üÍ·²¿¡£
-/// </summary>
-/// <param name="buffer">Êı¾İ»º³åÇø¡£</param>
-/// <param name="index">Êı¾İÆğÊ¼Î»ÖÃ¡£</param>
-public void Pack(byte[] buffer, int index)
-{
-int i = index;
-i = DataUtil.WriteUInt16(buffer, i, (UInt16)HeaderSign);
-buffer[i++] = RandSeed;
-buffer[i++] = CheckSum;
-i = DataUtil.WriteUInt32(buffer, i, (UInt32)Compress);
-i = DataUtil.WriteUInt16(buffer, i, (UInt16)Index);
-i = DataUtil.WriteUInt16(buffer, i, (UInt16)Command);
-i = DataUtil.WriteUInt32(buffer, i, (UInt32)BodySize);
-}
-
-#endregion
-
-*/
