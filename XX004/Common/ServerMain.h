@@ -1,8 +1,8 @@
-/*******************************************************
+ï»¿/*******************************************************
 * Copyright (c) 2018-2088, By XuXiang all rights reserved.
 *
 * FileName: ServerMain.h
-* Summary: ³ÌĞòÈë¿Ú¹ÜÀíµÄ»ùÀà¡£
+* Summary: ç¨‹åºå…¥å£ç®¡ç†çš„åŸºç±»ã€‚
 *
 * Author: XuXiang
 * Date: 2018-08-13 22:43
@@ -13,10 +13,10 @@
 
 namespace XX004
 {
-	//´´½¨ServerXXXºÍNetManagerXXXX
-	//´´½¨Ïß³Ì½¨Á¢ÓÎÏ·Ñ­»·
-	//Ìá¹©³ÌĞòÍ³Ò»Á÷³Ì Start Loop Stop 
-	//Î¬»¤ÍøÂçÏûÏ¢ºÍÃüÁîÏûÏ¢¶ÓÁĞ
+	//åˆ›å»ºServerXXXå’ŒNetManagerXXXX
+	//åˆ›å»ºçº¿ç¨‹å»ºç«‹æ¸¸æˆå¾ªç¯
+	//æä¾›ç¨‹åºç»Ÿä¸€æµç¨‹ Start Loop Stop 
+	//ç»´æŠ¤ç½‘ç»œæ¶ˆæ¯å’Œå‘½ä»¤æ¶ˆæ¯é˜Ÿåˆ—
 	class ServerMain
 	{
 	public:

@@ -1,8 +1,8 @@
-/*******************************************************
+ï»¿/*******************************************************
 * Copyright (c) 2018-2088, By XuXiang all rights reserved.
 *
 * FileName: NetSocketThread.cpp
-* Summary: ¹ÜÀíÒ»×éSocketµÄÏß³Ì¡£
+* Summary: ç®¡ç†ä¸€ç»„Socketçš„çº¿ç¨‹ã€‚
 *
 * Author: XuXiang
 * Date: 2018-08-13 22:48
@@ -11,6 +11,7 @@
 #include "NetSocketThread.h"
 #include <vector>
 #include <iostream>
+#include <assert.h>
 
 namespace XX004
 {
@@ -18,17 +19,27 @@ namespace XX004
 	{
 		NetSocketWrap::NetSocketWrap() : m_Socket(SOCKET_ERROR)
 		{
+		}
 
+		NetSocketWrap::NetSocketWrap(SOCKET s) : m_Socket(s)
+		{
 		}
 
 		NetSocketWrap::~NetSocketWrap()
 		{
+		}
 
+		NetSocketThread::SocketOperate::SocketOperate(NetSocketWrap *wrap) : OP(OP_ADD), Wrap(wrap), S(SOCKET_ERROR)
+		{
+
+		}
+
+		NetSocketThread::SocketOperate::SocketOperate(SOCKET s) : OP(OP_REMOVE), Wrap(NULL), S(s)
+		{
 		}
 
 		NetSocketThread::NetSocketThread() : m_Running(false), m_Stop(false)
 		{
-
 		}
 
 		NetSocketThread::~NetSocketThread()
@@ -41,6 +52,7 @@ namespace XX004
 
 		void NetSocketThread::ThreadProcess()
 		{
+			OnBegin();
 			fd_set readfds;
 			fd_set writefds;
 			fd_set exceptfds;
@@ -51,7 +63,8 @@ namespace XX004
 				FD_ZERO(&writefds);
 				FD_ZERO(&exceptfds);				
 				
-				//³õÊ¼»¯FD¼¯ºÏ
+				//åˆå§‹åŒ–FDé›†åˆ
+				HandleOperates();
 				for (SocketMap::iterator itr = m_Sockets.begin(); itr != m_Sockets.end(); ++itr)
 				{
 					SOCKET s = itr->second->GetSocket();
@@ -66,11 +79,11 @@ namespace XX004
 					FD_SET(s, &exceptfds);
 				}
 
-				//´¦Àí
+				//å¤„ç†
 				timeval timeout;
 				timeout.tv_sec = 0;
 				timeout.tv_usec = 0;
-				int ret = ::select(0, &readfds, &writefds, &exceptfds, &timeout);		//windowsÏÂnfds²ÎÊıÎŞÓÃ£¬¿É´«Èë0
+				int ret = ::select(0, &readfds, &writefds, &exceptfds, &timeout);		//windowsä¸‹nfdså‚æ•°æ— ç”¨ï¼Œå¯ä¼ å…¥0
 				if (ret > 0)
 				{
 					for (SocketMap::iterator itr = m_Sockets.begin(); itr != m_Sockets.end(); ++itr)
@@ -78,7 +91,7 @@ namespace XX004
 						SOCKET s = itr->second->GetSocket();
 						needremove.clear();
 
-						//ÏÈÅĞ¶ÏÊÇ·ñÓĞÒì³£
+						//å…ˆåˆ¤æ–­æ˜¯å¦æœ‰å¼‚å¸¸
 						if (FD_ISSET(s, &exceptfds) != 0)
 						{
 							needremove.push_back(s);
@@ -102,7 +115,7 @@ namespace XX004
 						}
 					}
 
-					//ÒÆ³ı´íÎóµÄSOKECT
+					//ç§»é™¤é”™è¯¯çš„SOKECT
 					for (vector<SOCKET>::iterator itr = needremove.begin(); itr != needremove.end(); ++itr)
 					{
 						NetSocketWrap *wrap = m_Sockets[*itr];
@@ -114,7 +127,7 @@ namespace XX004
 				}
 				else if (ret == 0)
 				{
-					//Ã»ÓĞÏûÏ¢ ÔÙµÈ100ºÁÃëºó¼ì²â
+					//æ²¡æœ‰æ¶ˆæ¯ å†ç­‰100æ¯«ç§’åæ£€æµ‹
 					::Sleep(100);
 				}
 				else if (ret == SOCKET_ERROR)
@@ -126,6 +139,44 @@ namespace XX004
 
 			m_Stop = false;
 			m_Running = false;
+			OnEnd();
+		}
+
+		void NetSocketThread::HandleOperates()
+		{
+			m_OPMutex.lock();
+			
+			while (m_Operates.size() > 0)
+			{
+				SocketOperate operate = m_Operates.front();
+				m_Operates.pop();
+				if (operate.OP == SocketOperate::OP_ADD)
+				{
+					assert(operate.Wrap != NULL);
+					SocketMap::iterator itr = m_Sockets.find(operate.Wrap->GetSocket());
+					assert(itr == m_Sockets.end());
+					m_Sockets.insert(SocketMap::value_type(operate.Wrap->GetSocket(), operate.Wrap));
+				}
+				else if (operate.OP == SocketOperate::OP_REMOVE)
+				{
+					assert(operate.S != SOCKET_ERROR);
+					SocketMap::iterator itr = m_Sockets.find(operate.S);
+					if (itr != m_Sockets.end())
+					{
+						NetSocketWrap *wrap = itr->second;
+						m_Sockets.erase(itr);
+						::closesocket(wrap->GetSocket());
+						wrap->SetSocket(SOCKET_ERROR);
+						OnSocketClose(wrap);
+					}
+				}
+				else
+				{
+					assert(false);
+				}
+			}
+
+			m_OPMutex.unlock();
 		}
 
 		void NetSocketThread::Start()
@@ -156,6 +207,20 @@ namespace XX004
 			{
 				m_Thread.join();
 			}
+		}
+
+		void NetSocketThread::AddSocket(NetSocketWrap *wrap)
+		{
+			m_OPMutex.lock();
+			m_Operates.push(SocketOperate(wrap));
+			m_OPMutex.unlock();
+		}
+
+		void NetSocketThread::RemoveSocket(SOCKET s)
+		{
+			m_OPMutex.lock();
+			m_Operates.push(SocketOperate(s));
+			m_OPMutex.unlock();
 		}
 	}
 }

@@ -1,4 +1,4 @@
-/*******************************************************
+﻿/*******************************************************
 * Copyright (c) 2018-2088, By XuXiang all rights reserved.
 *
 * FileName: DataUtil.cpp
@@ -139,7 +139,7 @@ namespace XX004
 	{
 		assert(n >= 0);
 		int len = n == 0 ? ReadInt32(src, index, &index) : n;
-		int strlen = ::strnlen_s((char*)src + index, len);	//要读取真实的字符串长度，否则会有'\0'字符混入string对象中
+		size_t strlen = ::strnlen_s((char*)src + index, len);	//要读取真实的字符串长度，否则会有'\0'字符混入string对象中
 		string ret((char*)src + index, strlen);		//STL的string允许'\0'字符作为string对象元素
 		*next = index + len;
 		return ret;

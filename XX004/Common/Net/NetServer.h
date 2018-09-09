@@ -1,8 +1,10 @@
-#ifndef __NetServer_h__
+ï»¿#ifndef __NetServer_h__
 #define __NetServer_h__
 
 #include <iostream>
 #include <string>
+#include "NetConnection.h"
+#include"../Macro.h"
 
 using namespace std;
 
@@ -10,19 +12,25 @@ namespace XX004
 {
 	namespace Net
 	{
-		//ÍøÂç´¦Àí½Ó¿Ú
+		//ç½‘ç»œå¤„ç†æ¥å£
 		class INetProcesser
 		{
 		public:
-
+			virtual void OnConnected(NetConnection *connection) = 0;
+			virtual void OnDisconnected(NetConnection *connection) = 0;
+			virtual void OnRecvData(NetConnection *connection, Int16 cmd, Byte *buffer, int len) = 0;
 		};
 
-		//·şÎñ¶ËÍøÂç¹ÜÀí¡£
+		//æœåŠ¡ç«¯ç½‘ç»œç®¡ç†ã€‚
 		class NetServer
 		{
 		public:
-			//Æô¶¯ÍøÂçÄ£¿é¡£ ipaddress:IPµØÖ·¡£ port:¶Ë¿ÚºÅ¡£
+			//å¯åŠ¨ç½‘ç»œæ¨¡å—ã€‚ ipaddress:IPåœ°å€ã€‚ port:ç«¯å£å·ã€‚
 			void Start(string ipaddress, int port);
+
+			//åœæ­¢æœåŠ¡
+			void Stop();
+			
 		};
 	}
 }

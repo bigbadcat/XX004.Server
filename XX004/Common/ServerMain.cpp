@@ -1,4 +1,4 @@
-/*******************************************************
+﻿/*******************************************************
 * Copyright (c) 2018-2088, By XuXiang all rights reserved.
 *
 * FileName: ServerMain.cpp
@@ -29,16 +29,16 @@ namespace XX004
 		//int rpos = 0;
 		//double r = DataUtil::ReadDouble(buff, rpos, &rpos);
 
-		std::string v = "sdf123换行e4";
-		//std::string v = "";
-		//std::string v = "123";
-		//std::string v = "换行";
-		Byte buff[64];
-		::memset(buff, 0xFF, sizeof(buff));
-		int wpos = 0;
-		wpos = DataUtil::WriteString(buff, 0, v, 8);
-		int rpos = 0;
-		std::string r = DataUtil::ReadString(buff, rpos, &rpos, 8);
+		//std::string v = "sdf123换行e4";
+		////std::string v = "";
+		////std::string v = "123";
+		////std::string v = "换行";
+		//Byte buff[64];
+		//::memset(buff, 0xFF, sizeof(buff));
+		//int wpos = 0;
+		//wpos = DataUtil::WriteString(buff, 0, v, 8);
+		//int rpos = 0;
+		//std::string r = DataUtil::ReadString(buff, rpos, &rpos, 8);
 
 		return 0;
 	}

@@ -1,4 +1,4 @@
-#include "NetServer.h"
+﻿#include "NetServer.h"
 
 
 namespace XX004
@@ -8,6 +8,11 @@ namespace XX004
 		void NetServer::Start(string ipaddress, int port)
 		{
 			cout << "NetServer::Start ipaddress:" << ipaddress << " port:" << port << endl;
+		}
+
+		void NetServer::Stop()
+		{
+
 		}
 	}
 }
