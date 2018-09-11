@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 	nettest.Run();
 
 	//命令循环
-	cout << "Start command ..." << endl;
+	//cout << "Start command ..." << endl;
 	while (true)
 	{
 		string cmd;

@@ -4,6 +4,7 @@
 #include <thread>
 #include <vector>
 #include <WinSock2.h>
+#include "Net/NetServer.h"
 
 namespace XX004
 {
@@ -17,11 +18,13 @@ namespace XX004
 
 	private:
 
-		static void ListenFun(NetTest *test);
+		//static void ListenFun(NetTest *test);
 		static void ClientFun(NetTest *test);
 
+		//Net::NetListener m_listerner;
+		Net::NetServer m_Server;
 		
-		std::thread m_listen_thread;
+		//std::thread m_listen_thread;
 		std::vector<std::thread> m_client_thread;
 		bool m_running;
 

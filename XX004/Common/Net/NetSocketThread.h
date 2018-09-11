@@ -40,11 +40,11 @@ namespace XX004
 			//获取Sokcet ret:Socket
 			inline SOCKET GetSocket()const { return m_Socket; }
 
-		private:
-
 			//设置Socket
 			inline void SetSocket(SOCKET s) { m_Socket = s; }
 
+		private:
+			
 			SOCKET m_Socket;
 		};
 

@@ -12,6 +12,7 @@
 #include <vector>
 #include <iostream>
 #include <assert.h>
+#include "../Macro.h"
 
 namespace XX004
 {
@@ -44,10 +45,12 @@ namespace XX004
 
 		NetSocketThread::~NetSocketThread()
 		{
-			if (m_Thread.joinable())
+			Join();
+			for (SocketMap::iterator itr = m_Sockets.begin(); itr != m_Sockets.end(); ++itr)
 			{
-				m_Thread.join();
+				::closesocket(itr->first);
 			}
+			m_Sockets.clear();
 		}
 
 		void NetSocketThread::ThreadProcess()
@@ -59,12 +62,18 @@ namespace XX004
 			vector<SOCKET> needremove;
 			while (!m_Stop)
 			{
+				//处理Socket操作
+				HandleOperates();
+				if (m_Sockets.size() <= 0)
+				{
+					::Sleep(100);
+					continue;
+				}
+
+				//初始化FD集合
 				FD_ZERO(&readfds);
 				FD_ZERO(&writefds);
-				FD_ZERO(&exceptfds);				
-				
-				//初始化FD集合
-				HandleOperates();
+				FD_ZERO(&exceptfds);
 				for (SocketMap::iterator itr = m_Sockets.begin(); itr != m_Sockets.end(); ++itr)
 				{
 					SOCKET s = itr->second->GetSocket();
@@ -188,7 +197,7 @@ namespace XX004
 
 			m_Running = true;
 			m_Stop = false;
-			m_Thread = thread([](NetSocketThread *t){t->~NetSocketThread(); }, this);
+			m_Thread = thread([](NetSocketThread *t){t->ThreadProcess(); }, this);
 		}
 
 		void NetSocketThread::Stop()
@@ -203,10 +212,7 @@ namespace XX004
 		void NetSocketThread::Join()
 		{
 			Stop();
-			if (m_Thread.joinable())
-			{
-				m_Thread.join();
-			}
+			JoinThread(m_Thread);
 		}
 
 		void NetSocketThread::AddSocket(NetSocketWrap *wrap)
