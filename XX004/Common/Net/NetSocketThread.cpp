@@ -51,6 +51,12 @@ namespace XX004
 				::closesocket(itr->first);
 			}
 			m_Sockets.clear();
+			while (m_Operates.size() > 0)
+			{
+				SocketOperate operate = m_Operates.front();
+				m_Operates.pop();
+				::closesocket(operate.Wrap->GetSocket());
+			}
 		}
 
 		void NetSocketThread::ThreadProcess()

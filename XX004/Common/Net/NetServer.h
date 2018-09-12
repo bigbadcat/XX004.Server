@@ -26,6 +26,7 @@ namespace XX004
 		class NetServer
 		{
 			friend class NetListener;
+			friend class NetConnectionManager;
 		public:
 			NetServer();
 			~NetServer();
@@ -42,10 +43,12 @@ namespace XX004
 
 			//有连接断开。
 			void OnDisconnect(SOCKET s);
-
-
+			
 			//监听者
 			NetListener *m_pListener;
+
+			//连接管理
+			NetConnectionManager *m_pConnectionManager;
 		};
 	}
 }

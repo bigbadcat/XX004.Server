@@ -1,4 +1,4 @@
-#ifndef __NetTest_h__
+﻿#ifndef __NetTest_h__
 #define __NetTest_h__
 
 #include <thread>
