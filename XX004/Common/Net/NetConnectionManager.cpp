@@ -75,6 +75,11 @@ namespace XX004
 			{
 				m_pServer->OnDisconnect(con);
 			}
+			ConnectionMap::iterator itr = m_RemoteToConnection.find(con->GetRemote());
+			if (itr != m_RemoteToConnection.end())
+			{
+				m_RemoteToConnection.erase(itr);
+			}
 		}
 
 		NetConnection* NetConnectionManager::GetConnection(SOCKET s)
@@ -88,9 +93,16 @@ namespace XX004
 			return ret;
 		}
 
+		void NetConnectionManager::SetRemote(NetConnection* con, const RemoteKey& key)
+		{
+			con->SetRemote(key);
+			m_RemoteToConnection[key] = con;
+		}
+
 		NetConnection* NetConnectionManager::GetConnection(const RemoteKey& key)
 		{
-			return NULL;
+			ConnectionMap::iterator itr = m_RemoteToConnection.find(key);
+			return itr == m_RemoteToConnection.end() ? NULL : itr->second;
 		}
 	}
 }

@@ -3,6 +3,7 @@
 
 #include <WinSock2.h>
 #include <vector>
+#include <map>
 #include "NetConnection.h"
 
 namespace XX004
@@ -10,13 +11,14 @@ namespace XX004
 	namespace Net
 	{
 		class NetServer;
-		class NetConnection;
 		class NetConnectionThread;
 
 		//网络连接管理		
 		class NetConnectionManager
 		{
 			typedef std::vector<NetConnectionThread*> ConnectionVector;
+			typedef std::map<RemoteKey, NetConnection*> ConnectionMap;
+
 		public:
 			//构造析构函数
 			NetConnectionManager();
@@ -46,6 +48,9 @@ namespace XX004
 			//获取连接
 			NetConnection* GetConnection(SOCKET s);
 
+			//设置远端标识
+			void SetRemote(NetConnection* con, const RemoteKey& key);
+
 			//获取连接
 			NetConnection* GetConnection(const RemoteKey& key);
 
@@ -55,6 +60,9 @@ namespace XX004
 
 			//连接线程
 			ConnectionVector m_ConnectionThreads;
+
+			//远端标识到连接映射
+			ConnectionMap m_RemoteToConnection;
 		};
 	}
 }

@@ -35,6 +35,25 @@ namespace XX004
 			m_pConnectionManager->Join();
 		}
 
+		void NetServer::SetRemote(NetConnection* con, const RemoteKey& key) 
+		{ 
+			m_pConnectionManager->SetRemote(con, key);
+		}
+
+		NetConnection* NetServer::GetConnection(const RemoteKey& key)
+		{ 
+			return m_pConnectionManager->GetConnection(key); 
+		}
+
+		void NetServer::CloseConnection(const RemoteKey& key)
+		{
+			NetConnection *con = m_pConnectionManager->GetConnection(key);
+			if (con != NULL)
+			{
+				m_pConnectionManager->RemoveConnection(con);
+			}			
+		}
+
 		void NetServer::OnConnect(SOCKET s)
 		{
 			//添加到连接管理器

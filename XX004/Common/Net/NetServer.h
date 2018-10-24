@@ -39,6 +39,15 @@ namespace XX004
 			//停止服务
 			void Stop();
 
+			//设置远端标识
+			void SetRemote(NetConnection* con, const RemoteKey& key);
+
+			//获取连接
+			NetConnection* GetConnection(const RemoteKey& key);
+
+			//关闭连接
+			void CloseConnection(const RemoteKey& key);
+
 		private:
 			//有新的连接。
 			void OnConnect(SOCKET s);
