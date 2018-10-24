@@ -41,7 +41,7 @@ namespace XX004
 			inline SOCKET GetSocket()const { return m_Socket; }
 
 			//设置Socket
-			inline void SetSocket(SOCKET s) { m_Socket = s; }
+			virtual void SetSocket(SOCKET s);
 
 		private:
 			

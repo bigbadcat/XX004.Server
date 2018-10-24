@@ -7,14 +7,15 @@ namespace XX004
 {
 	namespace Net
 	{
+		class NetServer;
+
 		class NetListenerSocketWrap : public NetSocketWrap
 		{
 			//判断是否需要写数据
 			virtual bool IsNeedWrite() { return false; }
 		};
 
-		//服务端的网络连接监听者。
-		class NetServer;
+		//服务端的网络连接监听者		
 		class NetListener : public NetSocketThread
 		{
 		public:

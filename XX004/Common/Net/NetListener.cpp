@@ -34,6 +34,18 @@ namespace XX004
 				cout << "accept socket err:" << WSAGetLastError() << endl;
 				return 1;
 			}
+
+			////非阻塞
+			//bool noblocking = true;
+			//u_long argp = noblocking ? 1 : 0;
+			//int ret = ::ioctlsocket(rs, FIONBIO, &argp);
+			//if (ret != 0)
+			//{
+			//	cout << "set socket noblocking err:" << WSAGetLastError() << endl;
+			//	::closesocket(rs);
+			//	return 2;
+			//}
+
 			if (m_pServer != NULL)
 			{
 				m_pServer->OnConnect(rs);

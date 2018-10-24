@@ -44,9 +44,9 @@ namespace XX004
 			}
 		}
 
-		void NetServer::OnDisconnect(SOCKET s)
+		void NetServer::OnDisconnect(NetConnection* con)
 		{
-			
+			cout << "Disconnect ip:" << con->GetIPAddress() << " port:" << con->GetPort() << endl;
 		}
 	}
 }

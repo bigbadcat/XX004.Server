@@ -30,6 +30,12 @@ namespace XX004
 		{
 		}
 
+		void NetSocketWrap::SetSocket(SOCKET s)
+		{
+			m_Socket = s;
+		}
+
+
 		NetSocketThread::SocketOperate::SocketOperate(NetSocketWrap *wrap) : OP(OP_ADD), Wrap(wrap), S(SOCKET_ERROR)
 		{
 

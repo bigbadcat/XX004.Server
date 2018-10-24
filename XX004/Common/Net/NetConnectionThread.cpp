@@ -1,13 +1,16 @@
 ﻿#include "NetConnectionThread.h"
 #include "NetConnection.h"
+#include "NetConnectionManager.h"
+#include "../Macro.h"
 #include <iostream>
+#include <assert.h>
 using namespace std;
 
 namespace XX004
 {
 	namespace Net
 	{
-		NetConnectionThread::NetConnectionThread()
+		NetConnectionThread::NetConnectionThread() : m_pManager(NULL)
 		{
 
 		}
@@ -17,37 +20,79 @@ namespace XX004
 
 		}
 
-		NetConnection* NetConnectionThread::AddConnection(SOCKET s)
+		int NetConnectionThread::OnSocketRead(NetSocketWrap *wrap)
 		{
-			SOCKADDR addr;
-			int addr_len = sizeof(addr);
-			ZeroMemory(&addr, addr_len);
-			int ret = getpeername(s, &addr, &addr_len);
-			if (ret == 0)
+			char buff[1024];
+			int len = ::recv(wrap->GetSocket(), buff, 1024, 0);
+			if (len > 0)
 			{
-				if (addr.sa_family == AF_INET)
-				{
-					SOCKADDR_IN *addr_v4 = (PSOCKADDR_IN)&addr;
-					char ip[32];
-					::sprintf_s(ip, "%d.%d.%d.%d", addr_v4->sin_addr.s_net, addr_v4->sin_addr.s_host, addr_v4->sin_addr.s_lh, addr_v4->sin_addr.s_impno);
-					cout << "accept connet ip:" << ip << " port:" << addr_v4->sin_port << endl;
-				}
-				else
-				{
-					cout << "socket addr.sa_family:" << addr.sa_family << endl;
-				}
+
+			}
+			else if (len == 0)
+			{
+				//客户端关闭了连接
+				return 1;
 			}
 			else
 			{
-				cout << "getpeername err:" << WSAGetLastError() << endl;
+				//cout << "recv socket err:" << WSAGetLastError() << endl;
+				return 2;
 			}
 
-			cout << "close connection in 5 second......" << endl;
-			::Sleep(5000);
-			cout << "close connection." << endl;
-			::closesocket(s);
+			return 0;
+		}
 
-			return NULL;
+		int NetConnectionThread::OnSocketWrite(NetSocketWrap *wrap)
+		{
+			return 0;
+		}
+
+		void NetConnectionThread::OnSocketClose(NetSocketWrap *wrap)
+		{
+			//连接断开
+			NetConnection *pcon = dynamic_cast<NetConnection*>(wrap);
+			assert(pcon != NULL);
+			if (m_pManager != NULL)
+			{
+				m_pManager->RemoveConnection(dynamic_cast<NetConnection*>(wrap));
+			}
+			m_Connections.erase(wrap->GetSocket());
+			SAFE_DELETE(wrap);
+		}
+
+		void NetConnectionThread::OnBegin()
+		{
+
+		}
+
+		void NetConnectionThread::OnEnd()
+		{
+
+		}
+
+		NetConnection* NetConnectionThread::AddConnection(SOCKET s)
+		{
+			if (m_Connections.size() >= MAX_CONNECTION_NUMBER)
+			{
+				return NULL;
+			}
+
+			NetConnection *pcon = new NetConnection();
+			pcon->SetSocket(s);
+			this->AddSocket(pcon);
+
+			//cout << "close connection in 5 second......" << endl;
+			//::Sleep(5000);
+			//cout << "close connection." << endl;
+			//::closesocket(s);
+
+			return pcon;
+		}
+
+		NetConnection* NetConnectionThread::GetConnection(SOCKET s)
+		{
+			ConnectionMap::iterator itr = m_Connections.find(s);
+			return itr == m_Connections.end() ? NULL : itr->second;
 		}
 	}
 }

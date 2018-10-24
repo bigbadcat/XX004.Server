@@ -1,4 +1,4 @@
-#include "NetConnectionManager.h"
+ï»¿#include "NetConnectionManager.h"
 #include "NetServer.h"
 #include "NetConnectionThread.h"
 #include <assert.h>
@@ -14,7 +14,13 @@ namespace XX004
 
 		NetConnectionManager::~NetConnectionManager()
 		{
-
+			Stop();
+			Join();
+			for (ConnectionVector::iterator itr = m_ConnectionThreads.begin(); itr != m_ConnectionThreads.end(); ++itr)
+			{
+				delete (*itr);
+			}
+			m_ConnectionThreads.clear();
 		}
 
 		void NetConnectionManager::Start()
@@ -43,20 +49,48 @@ namespace XX004
 
 		NetConnection* NetConnectionManager::AddConnection(SOCKET s)
 		{
-			//ÕÒÒ»¸öÏß³Ì¼ÓÈëÁ¬½Ó
+			//æ‰¾ä¸€ä¸ªçº¿ç¨‹åŠ å…¥è¿žæŽ¥
 			NetConnection *ret = NULL;
 			for (ConnectionVector::iterator itr = m_ConnectionThreads.begin(); ret == NULL && itr != m_ConnectionThreads.end(); ++itr)
 			{
 				ret = (*itr)->AddConnection(s);
 			}
 
-			//Ã»ÓÐÏß³Ì¿ÉÒÔ¼ÓÈëÁ¬½ÓÁË£¬´´½¨ÐÂµÄÏß³Ì
+			//æ²¡æœ‰çº¿ç¨‹å¯ä»¥åŠ å…¥è¿žæŽ¥äº†ï¼Œåˆ›å»ºæ–°çš„çº¿ç¨‹
 			if (ret == NULL)
 			{
-				//NetConnectionThread * connection_thread = new NetConnectionThread();
+				NetConnectionThread *connection_thread = new NetConnectionThread();
+				m_ConnectionThreads.push_back(connection_thread);
+				connection_thread->SetManager(this);
+				connection_thread->Start();
+				ret = connection_thread->AddConnection(s);
 			}
 
 			return ret;
+		}
+
+		void NetConnectionManager::RemoveConnection(NetConnection* con)
+		{
+			if (m_pServer != NULL)
+			{
+				m_pServer->OnDisconnect(con);
+			}
+		}
+
+		NetConnection* NetConnectionManager::GetConnection(SOCKET s)
+		{
+			//é€ä¸ªçº¿ç¨‹æŸ¥æ‰¾
+			NetConnection *ret = NULL;
+			for (ConnectionVector::iterator itr = m_ConnectionThreads.begin(); ret == NULL && itr != m_ConnectionThreads.end(); ++itr)
+			{
+				ret = (*itr)->GetConnection(s);
+			}
+			return ret;
+		}
+
+		NetConnection* NetConnectionManager::GetConnection(const RemoteKey& key)
+		{
+			return NULL;
 		}
 	}
 }

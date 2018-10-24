@@ -1,45 +1,59 @@
-#ifndef __NetConnectionManager_h__
+ï»¿#ifndef __NetConnectionManager_h__
 #define __NetConnectionManager_h__
 
 #include <WinSock2.h>
 #include <vector>
+#include "NetConnection.h"
 
 namespace XX004
 {
 	namespace Net
 	{
-		//ÍøÂçÁ¬½Ó¹ÜÀí¡£
 		class NetServer;
 		class NetConnection;
 		class NetConnectionThread;
+
+		//ç½‘ç»œè¿æ¥ç®¡ç†		
 		class NetConnectionManager
 		{
 			typedef std::vector<NetConnectionThread*> ConnectionVector;
 		public:
-			//¹¹ÔìÎö¹¹º¯Êı
+			//æ„é€ ææ„å‡½æ•°
 			NetConnectionManager();
 			virtual ~NetConnectionManager();
 
-			//Æô¶¯
+			//å¯åŠ¨
 			void Start();
 			
-			//Í£Ö¹
+			//åœæ­¢
 			void Stop();
 
-			//µÈ´ıÍêÈ«½áÊø
+			//ç­‰å¾…å®Œå…¨ç»“æŸ
 			void Join();
 
-			//ÉèÖÃ·şÎñ¶Ë
+			//è®¾ç½®æœåŠ¡ç«¯
 			inline void SetServer(NetServer *p) { m_pServer = p; }
 
-			//Ìí¼ÓÁ¬½Ó
+			//è·å–æœåŠ¡ç«¯
+			inline NetServer* GetServer()const { return m_pServer; }
+
+			//æ·»åŠ è¿æ¥
 			NetConnection* AddConnection(SOCKET s);
 
+			//ç§»é™¤è¿æ¥
+			void RemoveConnection(NetConnection* con);
+
+			//è·å–è¿æ¥
+			NetConnection* GetConnection(SOCKET s);
+
+			//è·å–è¿æ¥
+			NetConnection* GetConnection(const RemoteKey& key);
+
 		private:
-			//ÍøÂç·şÎñ¶Ë
+			//ç½‘ç»œæœåŠ¡ç«¯
 			NetServer *m_pServer;
 
-			//Á¬½ÓÏß³Ì
+			//è¿æ¥çº¿ç¨‹
 			ConnectionVector m_ConnectionThreads;
 		};
 	}

@@ -13,6 +13,8 @@ namespace XX004
 {
 	namespace Net
 	{
+		class NetConnection;
+
 		//网络处理接口
 		class INetProcesser
 		{
@@ -22,7 +24,7 @@ namespace XX004
 			virtual void OnRecvData(NetConnection *connection, Int16 cmd, Byte *buffer, int len) = 0;
 		};
 
-		//服务端网络管理。
+		//服务端网络管理。		
 		class NetServer
 		{
 			friend class NetListener;
@@ -42,7 +44,7 @@ namespace XX004
 			void OnConnect(SOCKET s);
 
 			//有连接断开。
-			void OnDisconnect(SOCKET s);
+			void OnDisconnect(NetConnection* con);
 			
 			//监听者
 			NetListener *m_pListener;
