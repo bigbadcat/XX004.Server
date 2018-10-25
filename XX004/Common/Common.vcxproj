@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Macro.h" />
+    <ClInclude Include="NetManager.h" />
     <ClInclude Include="Net\NetConnection.h" />
     <ClInclude Include="Net\NetConnectionManager.h" />
     <ClInclude Include="Net\NetConnectionThread.h" />
@@ -27,10 +28,12 @@
     <ClInclude Include="Net\NetPackageHeader.h" />
     <ClInclude Include="Net\NetServer.h" />
     <ClInclude Include="Net\NetSocketThread.h" />
+    <ClInclude Include="ServerBase.h" />
     <ClInclude Include="ServerMain.h" />
     <ClInclude Include="Util\DataUtil.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="NetManager.cpp" />
     <ClCompile Include="Net\NetConnection.cpp" />
     <ClCompile Include="Net\NetConnectionManager.cpp" />
     <ClCompile Include="Net\NetConnectionThread.cpp" />
@@ -38,6 +41,7 @@
     <ClCompile Include="Net\NetPackageHeader.cpp" />
     <ClCompile Include="Net\NetServer.cpp" />
     <ClCompile Include="Net\NetSocketThread.cpp" />
+    <ClCompile Include="ServerBase.cpp" />
     <ClCompile Include="ServerMain.cpp" />
     <ClCompile Include="Util\DataUtil.cpp" />
   </ItemGroup>

@@ -45,6 +45,11 @@ namespace XX004
 			return m_pConnectionManager->GetConnection(key); 
 		}
 
+		void NetServer::CloseConnection(NetConnection* con)
+		{
+			m_pConnectionManager->RemoveConnection(con);
+		}
+
 		void NetServer::CloseConnection(const RemoteKey& key)
 		{
 			NetConnection *con = m_pConnectionManager->GetConnection(key);

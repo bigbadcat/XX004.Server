@@ -21,7 +21,7 @@ namespace XX004
 		public:
 			virtual void OnConnected(NetConnection *connection) = 0;
 			virtual void OnDisconnected(NetConnection *connection) = 0;
-			virtual void OnRecvData(NetConnection *connection, Int16 cmd, Byte *buffer, int len) = 0;
+			virtual void OnRecvData(NetConnection *connection, Int32 cmd, Byte *buffer, int len) = 0;
 		};
 
 		//服务端网络管理。		
@@ -44,6 +44,9 @@ namespace XX004
 
 			//获取连接
 			NetConnection* GetConnection(const RemoteKey& key);
+
+			//关闭连接
+			void CloseConnection(NetConnection* con);
 
 			//关闭连接
 			void CloseConnection(const RemoteKey& key);

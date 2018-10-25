@@ -1,0 +1,37 @@
+﻿#ifndef __ServerData_h__
+#define __ServerData_h__
+
+#include "Macro.h"
+#include "ServerBase.h"
+
+namespace XX004
+{
+	class ServerData : public ServerBase
+	{
+	public:
+		ServerData();
+		virtual ~ServerData();
+
+	protected:
+		//注册网络消息
+		virtual void RegisterNetMessage(NetManager *pMgr);
+
+		//启动服务
+		virtual bool OnStart(int step, float &r);
+
+		//帧更新
+		virtual void OnUpdate();
+
+		//秒更新
+		virtual void OnUpdatePerSecond();
+
+		//停止服务
+		virtual bool OnStop(int step, float &r);
+
+	private:
+		void F1(Int32 cmd, Byte *buffer, int len);
+		void F2(Int32 cmd, Byte *buffer, int len);
+	};
+}
+
+#endif	//__ServerData_h__

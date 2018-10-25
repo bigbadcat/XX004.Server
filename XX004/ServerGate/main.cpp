@@ -11,6 +11,7 @@
 #include "Util/DataUtil.h"
 #include "ServerMain.h"
 #include <iostream>
+#include <vld.h>
 using namespace std;
 
 class ServerMainGate : public XX004::ServerMain

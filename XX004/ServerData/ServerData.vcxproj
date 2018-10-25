@@ -154,11 +154,17 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MySQLTest.cpp" />
+    <ClCompile Include="NetManagerData.cpp" />
     <ClCompile Include="NetTest.cpp" />
+    <ClCompile Include="ServerData.cpp" />
+    <ClCompile Include="ServerMainData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MySQLTest.h" />
+    <ClInclude Include="NetManagerData.h" />
     <ClInclude Include="NetTest.h" />
+    <ClInclude Include="ServerData.h" />
+    <ClInclude Include="ServerMainData.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

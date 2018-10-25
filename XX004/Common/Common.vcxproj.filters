@@ -35,6 +35,8 @@
     <ClInclude Include="Net\NetConnectionThread.h">
       <Filter>Net</Filter>
     </ClInclude>
+    <ClInclude Include="NetManager.h" />
+    <ClInclude Include="ServerBase.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Net\NetServer.cpp">
@@ -62,5 +64,7 @@
     <ClCompile Include="Net\NetConnectionThread.cpp">
       <Filter>Net</Filter>
     </ClCompile>
+    <ClCompile Include="NetManager.cpp" />
+    <ClCompile Include="ServerBase.cpp" />
   </ItemGroup>
 </Project>

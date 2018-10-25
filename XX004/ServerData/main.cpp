@@ -12,6 +12,8 @@
 #include <string>
 #include "MySQLTest.h"
 #include "NetTest.h"
+#include "ServerMainData.h"
+#include <vld.h>
 using namespace std;
 
 const char *COMMAND_QUIT = "quit";
@@ -22,23 +24,29 @@ int main(int argc, char *argv[])
 	//XX004::MySQLTest mysqltest;
 	//mysqltest.DoTest();
 
-	XX004::NetTest nettest;
-	nettest.Run();
+	//XX004::NetTest nettest;
+	//nettest.Run();
 
-	//命令循环
-	//cout << "Start command ..." << endl;
-	while (true)
+	////命令循环
+	////cout << "Start command ..." << endl;
+	//while (true)
+	//{
+	//	string cmd;
+	//	cin >> cmd;
+	//	if (cmd.compare(COMMAND_QUIT) == 0)
+	//	{
+	//		break;
+	//	}
+	//	cout << "Unknow command:" << cmd << endl;
+	//}
+	//nettest.Stop();
+
+	int ret = 0;
 	{
-		string cmd;
-		cin >> cmd;
-		if (cmd.compare(COMMAND_QUIT) == 0)
-		{
-			break;
-		}
-		cout << "Unknow command:" << cmd << endl;
+		XX004::ServerMainData server;
+		ret = server.Run();
 	}
-	nettest.Stop();
 
 	system("pause");
-	return 0;
+	return ret;
 }
