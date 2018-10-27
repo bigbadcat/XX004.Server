@@ -1,4 +1,14 @@
-﻿#include "NetConnectionThread.h"
+﻿/*******************************************************
+* Copyright (c) 2018-2088, By XuXiang all rights reserved.
+*
+* FileName: NetConnectionThread.cpp
+* Summary: 网络通信模块服务端连接线程。
+*
+* Author: XuXiang
+* Date: 2018-09-12 23:23
+*******************************************************/
+
+#include "NetConnectionThread.h"
 #include "NetConnection.h"
 #include "NetConnectionManager.h"
 #include "../Macro.h"

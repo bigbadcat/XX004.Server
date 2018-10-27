@@ -1,4 +1,14 @@
-﻿#include "NetConnection.h"
+﻿/*******************************************************
+* Copyright (c) 2018-2088, By XuXiang all rights reserved.
+*
+* FileName: NetConnection.cpp
+* Summary: 网络通信模块服务端连接。
+*
+* Author: XuXiang
+* Date: 2018-07-30 23:06
+*******************************************************/
+
+#include "NetConnection.h"
 #include <iostream>
 #include <string>
 using namespace std;

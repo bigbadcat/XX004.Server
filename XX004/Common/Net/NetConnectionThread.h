@@ -1,4 +1,14 @@
-﻿#ifndef __NetConnectionThread_h__
+﻿/*******************************************************
+* Copyright (c) 2018-2088, By XuXiang all rights reserved.
+*
+* FileName: NetConnectionThread.h
+* Summary: 网络通信模块服务端连接线程。
+*
+* Author: XuXiang
+* Date: 2018-09-12 23:23
+*******************************************************/
+
+#ifndef __NetConnectionThread_h__
 #define __NetConnectionThread_h__
 
 #include "NetConnection.h"

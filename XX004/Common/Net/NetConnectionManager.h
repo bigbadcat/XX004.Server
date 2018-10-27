@@ -1,4 +1,14 @@
-﻿#ifndef __NetConnectionManager_h__
+﻿/*******************************************************
+* Copyright (c) 2018-2088, By XuXiang all rights reserved.
+*
+* FileName: NetConnectionManager.h
+* Summary: 网络通信模块服务端连接管理器。
+*
+* Author: XuXiang
+* Date: 2018-07-30 23:07
+*******************************************************/
+
+#ifndef __NetConnectionManager_h__
 #define __NetConnectionManager_h__
 
 #include <WinSock2.h>
@@ -13,7 +23,7 @@ namespace XX004
 		class NetServer;
 		class NetConnectionThread;
 
-		//网络连接管理		
+		//网络连接管理，通过管理多个连接线程实现
 		class NetConnectionManager
 		{
 			typedef std::vector<NetConnectionThread*> ConnectionVector;

@@ -1,4 +1,14 @@
-﻿#ifndef __NetManager_h__
+﻿/*******************************************************
+* Copyright (c) 2018-2088, By XuXiang all rights reserved.
+*
+* FileName: NetManager.h
+* Summary: 网络管理的基类。
+*
+* Author: XuXiang
+* Date: 2018-10-24 20:52
+*******************************************************/
+
+#ifndef __NetManager_h__
 #define __NetManager_h__
 
 #include <map>
@@ -9,7 +19,6 @@ using namespace XX004::Net;
 namespace XX004
 {
 	//网络消息回调
-	//typedef void (*NetMessageCallBack)(Int32 cmd, Byte *buffer, int len);
 	typedef std::function<void(Int32, Byte*, int)> NetMessageCallBack;
 	typedef std::map<Int32, NetMessageCallBack> MessageCallBackMap;
 

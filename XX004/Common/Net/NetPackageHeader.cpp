@@ -1,7 +1,7 @@
 ﻿/*******************************************************
 * Copyright (c) 2018-2088, By XuXiang all rights reserved.
 *
-* FileName: NetPackageHeader.h
+* FileName: NetPackageHeader.cpp
 * Summary: 数据包头。
 *
 * Author: XuXiang

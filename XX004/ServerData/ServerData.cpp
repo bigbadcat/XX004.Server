@@ -1,4 +1,14 @@
-﻿#include "ServerData.h"
+﻿/*******************************************************
+* Copyright (c) 2018-2088, By XuXiang all rights reserved.
+*
+* FileName: ServerData.cpp
+* Summary: 数据服务模块。
+*
+* Author: XuXiang
+* Date: 2018-10-25 19:41
+*******************************************************/
+
+#include "ServerData.h"
 #include "NetManagerData.h"
 #include "ServerMain.h"
 

@@ -1,4 +1,14 @@
-﻿#include "NetManager.h"
+﻿/*******************************************************
+* Copyright (c) 2018-2088, By XuXiang all rights reserved.
+*
+* FileName: NetManager.cpp
+* Summary: 网络管理的基类。
+*
+* Author: XuXiang
+* Date: 2018-10-24 20:52
+*******************************************************/
+
+#include "NetManager.h"
 #include <iostream>
 #include <string>
 using namespace std;

@@ -1,4 +1,14 @@
-﻿#ifndef __NetListener_h__
+﻿/*******************************************************
+* Copyright (c) 2018-2088, By XuXiang all rights reserved.
+*
+* FileName: NetListener.h
+* Summary: 网络通信模块服务端连接监听线程。
+*
+* Author: XuXiang
+* Date: 2018-07-30 22:58
+*******************************************************/
+
+#ifndef __NetListener_h__
 #define __NetListener_h__
 
 #include "NetSocketThread.h"

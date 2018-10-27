@@ -1,4 +1,14 @@
-﻿#include "NetConnectionManager.h"
+﻿/*******************************************************
+* Copyright (c) 2018-2088, By XuXiang all rights reserved.
+*
+* FileName: NetConnectionManager.cpp
+* Summary: 网络通信模块服务端连接管理器。
+*
+* Author: XuXiang
+* Date: 2018-07-30 23:07
+*******************************************************/
+
+#include "NetConnectionManager.h"
 #include "NetServer.h"
 #include "NetConnectionThread.h"
 #include <assert.h>

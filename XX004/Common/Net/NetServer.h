@@ -1,4 +1,14 @@
-﻿#ifndef __NetServer_h__
+﻿/*******************************************************
+* Copyright (c) 2018-2088, By XuXiang all rights reserved.
+*
+* FileName: NetServer.h
+* Summary: 网络通信模块服务端。
+*
+* Author: XuXiang
+* Date: 2018-07-30 22:49
+*******************************************************/
+
+#ifndef __NetServer_h__
 #define __NetServer_h__
 
 #include <iostream>
@@ -19,8 +29,13 @@ namespace XX004
 		class INetProcesser
 		{
 		public:
+			//有连接建立
 			virtual void OnConnected(NetConnection *connection) = 0;
+
+			//有链接断开
 			virtual void OnDisconnected(NetConnection *connection) = 0;
+
+			//有数据接收
 			virtual void OnRecvData(NetConnection *connection, Int32 cmd, Byte *buffer, int len) = 0;
 		};
 
@@ -29,7 +44,9 @@ namespace XX004
 		{
 			friend class NetListener;
 			friend class NetConnectionManager;
+
 		public:
+			//构造析构函数
 			NetServer();
 			~NetServer();
 
@@ -51,6 +68,12 @@ namespace XX004
 			//关闭连接
 			void CloseConnection(const RemoteKey& key);
 
+			//设置网络处理者，处理者生命周期不由NetServer管理
+			inline void SetProcesser(INetProcesser *p) { m_pProcesser = p; }
+
+			//获取网络处理者
+			inline INetProcesser* GetProcesser()const { return m_pProcesser; }
+
 		private:
 			//有新的连接。
 			void OnConnect(SOCKET s);
@@ -63,6 +86,9 @@ namespace XX004
 
 			//连接管理
 			NetConnectionManager *m_pConnectionManager;
+
+			//网络处理
+			INetProcesser* m_pProcesser;
 		};
 	}
 }

@@ -1,4 +1,14 @@
-﻿#ifndef __ServerData_h__
+﻿/*******************************************************
+* Copyright (c) 2018-2088, By XuXiang all rights reserved.
+*
+* FileName: ServerData.h
+* Summary: 数据服务模块。
+*
+* Author: XuXiang
+* Date: 2018-10-25 19:41
+*******************************************************/
+
+#ifndef __ServerData_h__
 #define __ServerData_h__
 
 #include "Macro.h"

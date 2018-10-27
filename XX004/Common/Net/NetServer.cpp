@@ -1,4 +1,14 @@
-﻿#include "NetServer.h"
+﻿/*******************************************************
+* Copyright (c) 2018-2088, By XuXiang all rights reserved.
+*
+* FileName: NetServer.cpp
+* Summary: 网络通信模块服务端。
+*
+* Author: XuXiang
+* Date: 2018-07-30 22:56
+*******************************************************/
+
+#include "NetServer.h"
 #include "NetListener.h"
 #include "NetConnectionManager.h"
 #include "../Macro.h"
@@ -7,7 +17,7 @@ namespace XX004
 {
 	namespace Net
 	{
-		NetServer::NetServer() : m_pListener(NULL), m_pConnectionManager(NULL)
+		NetServer::NetServer() : m_pListener(NULL), m_pConnectionManager(NULL), m_pProcesser(NULL)
 		{
 			m_pListener = new NetListener();
 			m_pListener->SetServer(this);
@@ -29,6 +39,7 @@ namespace XX004
 
 		void NetServer::Stop()
 		{
+			//先通知停掉，再等待结束
 			m_pListener->Stop();
 			m_pConnectionManager->Stop();
 			m_pListener->Join();
@@ -64,13 +75,21 @@ namespace XX004
 			//添加到连接管理器
 			if (m_pConnectionManager != NULL)
 			{
-				m_pConnectionManager->AddConnection(s);
+				NetConnection* con = m_pConnectionManager->AddConnection(s);
+				if (m_pProcesser != NULL)
+				{
+					m_pProcesser->OnConnected(con);
+				}
 			}
 		}
 
 		void NetServer::OnDisconnect(NetConnection* con)
 		{
 			cout << "Disconnect ip:" << con->GetIPAddress() << " port:" << con->GetPort() << endl;
+			if (m_pProcesser != NULL)
+			{
+				m_pProcesser->OnDisconnected(con);
+			}
 		}
 	}
 }

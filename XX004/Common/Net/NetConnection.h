@@ -1,4 +1,14 @@
-﻿#ifndef __NetConnection_h__
+﻿/*******************************************************
+* Copyright (c) 2018-2088, By XuXiang all rights reserved.
+*
+* FileName: NetConnection.h
+* Summary: 网络通信模块服务端连接。
+*
+* Author: XuXiang
+* Date: 2018-07-30 23:06
+*******************************************************/
+
+#ifndef __NetConnection_h__
 #define __NetConnection_h__
 
 #include <map>

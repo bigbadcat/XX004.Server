@@ -1,4 +1,14 @@
-﻿#include "NetListener.h"
+﻿/*******************************************************
+* Copyright (c) 2018-2088, By XuXiang all rights reserved.
+*
+* FileName: NetListener.cpp
+* Summary: 网络通信模块服务端连接监听线程。
+*
+* Author: XuXiang
+* Date: 2018-07-30 22:58
+*******************************************************/
+
+#include "NetListener.h"
 #include "NetServer.h"
 #include <assert.h>
 #include <iostream>
@@ -35,30 +45,11 @@ namespace XX004
 				return 1;
 			}
 
-			////非阻塞
-			//bool noblocking = true;
-			//u_long argp = noblocking ? 1 : 0;
-			//int ret = ::ioctlsocket(rs, FIONBIO, &argp);
-			//if (ret != 0)
-			//{
-			//	cout << "set socket noblocking err:" << WSAGetLastError() << endl;
-			//	::closesocket(rs);
-			//	return 2;
-			//}
-
 			if (m_pServer != NULL)
 			{
 				m_pServer->OnConnect(rs);
 			}
 
-			//char ip[32];
-			//::sprintf_s(ip, "%d.%d.%d.%d", r_addr.sin_addr.s_net, r_addr.sin_addr.s_host, r_addr.sin_addr.s_lh, r_addr.sin_addr.s_impno);
-			//cout << "accept connet ip:" << ip << " port:" << r_addr.sin_port << endl;
-
-			//cout << "close connection in 5 second......" << endl;
-			//::Sleep(5000);
-			//cout << "close connection." << endl;
-			//::closesocket(rs);
 			return 0;
 		}
 
