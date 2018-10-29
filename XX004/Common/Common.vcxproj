@@ -32,6 +32,7 @@
     <ClInclude Include="ServerBase.h" />
     <ClInclude Include="ServerMain.h" />
     <ClInclude Include="Util\DataUtil.h" />
+    <ClInclude Include="Util\TimeUtil.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\semaphore.cpp" />
@@ -46,6 +47,7 @@
     <ClCompile Include="ServerBase.cpp" />
     <ClCompile Include="ServerMain.cpp" />
     <ClCompile Include="Util\DataUtil.cpp" />
+    <ClCompile Include="Util\TimeUtil.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{359A49BF-CA6D-448D-8FB9-7D55CC72C0AC}</ProjectGuid>
