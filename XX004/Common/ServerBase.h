@@ -32,7 +32,7 @@ namespace XX004
 		virtual bool OnStart(int step, float &r) = 0;
 
 		//帧更新
-		virtual void OnUpdate() = 0;;
+		virtual void OnUpdate() = 0;
 		
 		//秒更新
 		virtual void OnUpdatePerSecond() = 0;

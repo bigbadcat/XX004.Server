@@ -12,6 +12,8 @@
 #define __Macro_h__
 
 #include <thread>
+#include <string>
+#include <iostream>
 
 namespace XX004
 {
@@ -33,6 +35,15 @@ namespace XX004
 		if (t.joinable())
 		{
 			t.join();
+		}
+	}
+
+	//将光标往回移动
+	inline void MoveCursorBack(int n)
+	{
+		while (n-- > 0)
+		{
+			printf("\b");
 		}
 	}
 }

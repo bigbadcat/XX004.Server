@@ -12,6 +12,10 @@
 #define __ServerMain_h__
 
 #include "Macro.h"
+#include <thread>
+#include <string>
+#include "Core\semaphore.h"
+using namespace std;
 
 namespace XX004
 {
@@ -47,14 +51,32 @@ namespace XX004
 		virtual ServerBase* OnCreateServer() = 0;
 
 	private:
+		//线程过程
+		void ThreadProcess();
+
 		//当前Main对象
 		static ServerMain* pCurMain;
+
+		//每一帧的间隔毫秒
+		static const Int64 FRAME_GAP;
+
+		//退出命令
+		static const string COMMAND_QUIT;
 
 		//网络管理
 		NetManager* m_pNetManager;
 
 		//服务对象
 		ServerBase* m_pServer;
+
+		//逻辑处理线程
+		thread m_Thread;
+
+		//是否运行中
+		bool m_IsRunning;
+
+		//启动信号
+		xxstd::semaphore m_StartSemaphore;
 	};
 }
 

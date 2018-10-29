@@ -16,7 +16,7 @@
 #include <vld.h>
 using namespace std;
 
-const char *COMMAND_QUIT = "quit";
+
 
 int main(int argc, char *argv[])
 {
@@ -27,18 +27,6 @@ int main(int argc, char *argv[])
 	//XX004::NetTest nettest;
 	//nettest.Run();
 
-	////命令循环
-	////cout << "Start command ..." << endl;
-	//while (true)
-	//{
-	//	string cmd;
-	//	cin >> cmd;
-	//	if (cmd.compare(COMMAND_QUIT) == 0)
-	//	{
-	//		break;
-	//	}
-	//	cout << "Unknow command:" << cmd << endl;
-	//}
 	//nettest.Stop();
 
 	int ret = 0;

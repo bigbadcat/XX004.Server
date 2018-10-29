@@ -42,6 +42,9 @@ namespace XX004
 		//注销所有网络消息处理函数
 		void UnregisterAllCallBack();
 
+		//帧更新
+		virtual void OnUpdate();
+
 		void Test(Int32 cmd);
 
 	private:

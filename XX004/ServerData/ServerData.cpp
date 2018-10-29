@@ -11,6 +11,7 @@
 #include "ServerData.h"
 #include "NetManagerData.h"
 #include "ServerMain.h"
+#include "Util/TimeUtil.h"
 
 namespace XX004
 {
@@ -30,23 +31,28 @@ namespace XX004
 
 	bool ServerData::OnStart(int step, float &r)
 	{
-		ServerMain::GetCurMain()->GetNetManager()->Test(2);
+		//ServerMain::GetCurMain()->GetNetManager()->Test(2);
+		//r = step / 80.0f;
+		//return step >= 80;
 		r = 1;
 		return true;
 	}
 
 	void ServerData::OnUpdate()
 	{
-
+		//cout << "ServerData::OnUpdate() " << TimeUtil::GetCurrentMillisecond() << endl;
 	}
 
 	void ServerData::OnUpdatePerSecond()
 	{
-
+		//cout << "ServerData::OnUpdatePerSecond()" << TimeUtil::GetCurrentMillisecond() << endl;
 	}
 
 	bool ServerData::OnStop(int step, float &r)
 	{
+		//r = step / 50.0f;
+		//return step >= 50;
+
 		r = 1;
 		return true;
 	}

@@ -35,7 +35,7 @@ namespace XX004
 
 	void NetManager::OnRecvData(NetConnection *connection, Int32 cmd, Byte *buffer, int len)
 	{
-
+		//解析网络消息并添加到队列中
 	}
 
 	void NetManager::RegisterMessageCallBack(Int32 cmd, NetMessageCallBack call)
@@ -51,6 +51,11 @@ namespace XX004
 	void NetManager::UnregisterAllCallBack()
 	{
 		m_CallBack.clear();
+	}
+
+	void NetManager::OnUpdate()
+	{
+		//分发消息队列
 	}
 
 	void NetManager::Test(Int32 cmd)
