@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Core\semaphore.h" />
     <ClInclude Include="Macro.h" />
     <ClInclude Include="NetManager.h" />
     <ClInclude Include="Net\NetConnection.h" />
@@ -33,6 +34,7 @@
     <ClInclude Include="Util\DataUtil.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Core\semaphore.cpp" />
     <ClCompile Include="NetManager.cpp" />
     <ClCompile Include="Net\NetConnection.cpp" />
     <ClCompile Include="Net\NetConnectionManager.cpp" />

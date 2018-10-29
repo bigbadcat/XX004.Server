@@ -7,6 +7,9 @@
     <Filter Include="Util">
       <UniqueIdentifier>{b27470c5-0aed-4cd6-85dc-237d78b8dea9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{96b401c8-3914-41c8-b30e-626c2eeaa3ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Net\NetServer.h">
@@ -37,6 +40,9 @@
     </ClInclude>
     <ClInclude Include="NetManager.h" />
     <ClInclude Include="ServerBase.h" />
+    <ClInclude Include="Core\semaphore.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Net\NetServer.cpp">
@@ -66,5 +72,8 @@
     </ClCompile>
     <ClCompile Include="NetManager.cpp" />
     <ClCompile Include="ServerBase.cpp" />
+    <ClCompile Include="Core\semaphore.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
