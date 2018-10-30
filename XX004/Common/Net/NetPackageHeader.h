@@ -67,7 +67,7 @@ namespace XX004
 			//index:要读取的位置。
 			//next:[out]下一个读取位置。
 			//ret:下一个读取位置。
-			void Unpack(Byte *src, int index, int *next);
+			int Unpack(Byte *src, int index);
 
 			//打包头部。
 			//src:要写入的字节数组。

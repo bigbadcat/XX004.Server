@@ -35,7 +35,7 @@ namespace XX004
 			BodySize = 0;
 		}
 
-		void NetPackageHeader::Unpack(Byte *src, int index, int *next)
+		int NetPackageHeader::Unpack(Byte *src, int index)
 		{
 			int i = index;
 			Sign = src[i++];
@@ -48,7 +48,7 @@ namespace XX004
 			Command = DataUtil::ReadInt32(src, i, &i);
 			GUID = DataUtil::ReadInt64(src, i, &i);
 			BodySize = DataUtil::ReadInt32(src, i, &i);
-			*next = i;
+			return i;
 		}
 
 		int NetPackageHeader::Pack(Byte *src, int index)

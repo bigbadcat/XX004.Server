@@ -26,6 +26,7 @@
     <ClInclude Include="Net\NetConnectionManager.h" />
     <ClInclude Include="Net\NetConnectionThread.h" />
     <ClInclude Include="Net\NetListener.h" />
+    <ClInclude Include="Net\NetMessage.h" />
     <ClInclude Include="Net\NetPackageHeader.h" />
     <ClInclude Include="Net\NetServer.h" />
     <ClInclude Include="Net\NetSocketThread.h" />
@@ -41,6 +42,7 @@
     <ClCompile Include="Net\NetConnectionManager.cpp" />
     <ClCompile Include="Net\NetConnectionThread.cpp" />
     <ClCompile Include="Net\NetListener.cpp" />
+    <ClCompile Include="Net\NetMessage.cpp" />
     <ClCompile Include="Net\NetPackageHeader.cpp" />
     <ClCompile Include="Net\NetServer.cpp" />
     <ClCompile Include="Net\NetSocketThread.cpp" />

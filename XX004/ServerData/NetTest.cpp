@@ -296,7 +296,7 @@ namespace XX004
 
 							NetPackageHeader recvhead;
 							int i = 0;
-							recvhead.Unpack(recvbuff, i, &i);
+							i= recvhead.Unpack(recvbuff, i);
 							string text = DataUtil::ReadString(recvbuff, i, &i);
 							cout << "text:" << UTF8_To_string(text) << endl;
 							needsleep = false;			//有数据接收就不休息了

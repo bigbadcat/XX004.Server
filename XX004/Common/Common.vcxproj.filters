@@ -46,6 +46,9 @@
     <ClInclude Include="Util\TimeUtil.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="Net\NetMessage.h">
+      <Filter>Net</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Net\NetServer.cpp">
@@ -80,6 +83,9 @@
     </ClCompile>
     <ClCompile Include="Util\TimeUtil.cpp">
       <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Net\NetMessage.cpp">
+      <Filter>Net</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
