@@ -54,6 +54,18 @@ namespace XX004
 		//线程过程
 		void ThreadProcess();
 
+		//服务器循环
+		void SeverLoop();
+
+		//启动分步
+		bool StarStep(int step);
+
+		//更新分步
+		bool UpdateStep(UInt64 &sectick);
+
+		//停止分步
+		bool StopStep(int step);
+
 		//当前Main对象
 		static ServerMain* pCurMain;
 
