@@ -14,6 +14,7 @@
 #include "ServerBase.h"
 #include <iostream>
 #include <assert.h>
+#include <chrono>
 
 namespace XX004
 {
@@ -140,7 +141,8 @@ namespace XX004
 			if (t_loopend > t_loopstart)
 			{
 				UInt64 t_needsleep = FRAME_GAP - (t_loopend - t_loopstart);
-				::Sleep(t_needsleep > 0 ? t_needsleep : 1);
+				std::chrono::milliseconds dura(t_needsleep > 0 ? t_needsleep : 1);
+				std::this_thread::sleep_for(dura);
 				//cout << "t_needsleep:" << t_needsleep << endl;
 			}
 		}

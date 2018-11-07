@@ -11,10 +11,10 @@
 #ifndef __ServerBase_h__
 #define __ServerBase_h__
 
+#include "NetManager.h"
+
 namespace XX004
 {
-	class NetManager;
-
 	//服务模块的基类
 	class ServerBase
 	{

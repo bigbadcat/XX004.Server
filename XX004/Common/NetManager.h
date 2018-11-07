@@ -13,15 +13,39 @@
 
 #include <map>
 #include <functional>
+#include <queue>
 #include "Net/NetServer.h"
+#include "Net/NetMessage.h"
 using namespace XX004::Net;
 
 namespace XX004
 {
-	//网络消息回调
-	typedef std::function<void(Int32, Byte*, int)> NetMessageCallBack;
-	typedef std::map<Int32, NetMessageCallBack> MessageCallBackMap;
+	//网络数据项
+	struct NetDataItem
+	{
+		//连接标识
+		SOCKET s;
 
+		//远端标识
+		RemoteKey key;
+
+		//协议号
+		Int32 cmd;
+
+		//消息数据内容
+		Byte data[NET_PACKAGE_MAX_SIZE];
+
+		//消息数据长度
+		int len;
+
+		void Reset();
+	};
+	
+	//网络消息回调
+	typedef std::function<void(NetDataItem*)> NetMessageCallBack;
+	typedef std::map<Int32, NetMessageCallBack> MessageCallBackMap;
+	typedef std::queue<NetDataItem*> NetDataItemQueue;
+		
 	//网络连接对象
 	class NetManager : public INetProcesser
 	{
@@ -51,14 +75,30 @@ namespace XX004
 		//帧更新
 		virtual void OnUpdate();
 
-		void Test(Int32 cmd);
+		//void Test(Int32 cmd);
 
 	private:
+
+		//创建一个数据项
+		NetDataItem* CreateNetDataItem();
+
 		//消息集合
 		MessageCallBackMap m_CallBack;
 
 		//网络服务端模块
 		NetServer m_Server;
+
+		//要发送的数据队列
+		NetDataItemQueue m_SendQueue;
+
+		//接收到的数据队列
+		NetDataItemQueue m_RecvQueue;
+
+		//发送锁
+		std::mutex m_RecvMutex;
+
+		//缓存队列
+		NetDataItemQueue m_CacheQueue;
 	};
 }
 

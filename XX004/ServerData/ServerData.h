@@ -39,8 +39,7 @@ namespace XX004
 		virtual bool OnStop(int step, float &r);
 
 	private:
-		void F1(Int32 cmd, Byte *buffer, int len);
-		void F2(Int32 cmd, Byte *buffer, int len);
+		void F1(NetDataItem *item);
 	};
 }
 

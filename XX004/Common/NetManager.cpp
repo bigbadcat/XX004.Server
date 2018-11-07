@@ -16,12 +16,38 @@ using namespace std;
 
 namespace XX004
 {
+	void NetDataItem::Reset()
+	{
+		s = SOCKET_ERROR;
+		key = RemoteKey(RemoteType::RT_UNKNOW, 0);
+		cmd = 0;
+		len = 0;
+	}
+
 	NetManager::NetManager()
 	{
 	}
 
 	NetManager::~NetManager()
 	{
+		while (m_CacheQueue.size() > 0)
+		{
+			NetDataItem *item = m_CacheQueue.front();
+			m_CacheQueue.pop();
+			SAFE_DELETE(item);
+		}
+		while (m_SendQueue.size() > 0)
+		{
+			NetDataItem *item = m_SendQueue.front();
+			m_SendQueue.pop();
+			SAFE_DELETE(item);
+		}
+		while (m_RecvQueue.size() > 0)
+		{
+			NetDataItem *item = m_RecvQueue.front();
+			m_RecvQueue.pop();
+			SAFE_DELETE(item);
+		}
 	}
 
 	void NetManager::Start(const string &ipaddress, int port)
@@ -48,42 +74,29 @@ namespace XX004
 	void NetManager::OnRecvData(NetConnection *connection, const NetPackageHeader& header, Byte *buffer)
 	{
 		//解析网络消息并添加到队列中
-		cout << "NetManager::OnRecvData ip:" << connection->GetIPAddress() << " port:" << connection->GetPort() << endl;
+		cout << "NetManager::OnRecvData ip:" << connection->GetIPAddress() << " port:" << connection->GetPort();
 		cout << " cmd:" << header.Command << " len:" << header.BodySize << endl;
-		int i = 0;
-		string text = DataUtil::ReadString(buffer, i, &i);
-		cout << " text:" << text << endl;
 
-		//NetPackageHeader recvhead;
-		//int i = 0;
-		//i = recvhead.Unpack(m_RecvBuffer, i);
-		//string text = DataUtil::ReadString(m_RecvBuffer, i, &i);
-		//cout << "text:" << text << endl;
+		//包头相关处理
 
-		//准备回复数据							
-		Byte recvdata[1024];
-		int index = 0;
+		//加入消息队列
+		NetDataItem *item = CreateNetDataItem();
+		item->s = connection->GetSocket();
+		item->key = connection->GetRemote();
+		item->cmd = header.Command;
+		item->len = header.BodySize;
+		::memcpy_s(item->data, NET_PACKAGE_MAX_SIZE, buffer, item->len);
+		{
+			std::unique_lock<std::mutex> lock(m_RecvMutex);
+			m_RecvQueue.push(item);
+		}
 
-		int result = 4;
-		index = DataUtil::WriteInt32(recvdata, index, result);
-		string ret = text + "hhhhh";
-		index = DataUtil::WriteString(recvdata, index, ret);
-		Int64 freetime = 0;
-		index = DataUtil::WriteInt64(recvdata, index, freetime);
-
-		//回复的数据头
-		NetPackageHeader sendhead;
-		sendhead.SetSign();
-		sendhead.Command = 1050;
-		sendhead.BodySize = index;
-
-		Byte sendbuff[1024];
-		int sendsize = 0;
-		sendsize = sendhead.Pack(sendbuff + sendsize, sendsize);
-		::memcpy_s(sendbuff + sendsize, 1024 - sendsize, recvdata, index);
-		sendsize += index;
-
-		connection->AddSendData(sendbuff, sendsize);
+		////分发消息
+		//MessageCallBackMap::iterator itr = m_CallBack.find(header.Command);
+		//if (itr != m_CallBack.end())
+		//{
+		//	(itr->second)(connection, header.Command, buffer);
+		//}
 	}
 
 	void NetManager::RegisterMessageCallBack(Int32 cmd, NetMessageCallBack call)
@@ -104,16 +117,49 @@ namespace XX004
 	void NetManager::OnUpdate()
 	{
 		//分发接收消息队列
+		if (m_RecvQueue.size() > 0)
+		{
+			std::unique_lock<std::mutex> lock(m_RecvMutex);
+			if (m_RecvQueue.size() > 0)
+			{
+				NetDataItem *item = m_RecvQueue.front();
+				m_RecvQueue.pop();
+
+				MessageCallBackMap::iterator itr = m_CallBack.find(item->cmd);
+				if (itr != m_CallBack.end())
+				{
+					(itr->second)(item);
+				}
+				m_CacheQueue.push(item);
+			}
+			
+		}
 
 		//写入发送消息队列
 	}
 
-	void NetManager::Test(Int32 cmd)
+	NetDataItem* NetManager::CreateNetDataItem()
 	{
-		MessageCallBackMap::iterator itr = m_CallBack.find(cmd);
-		if (itr != m_CallBack.end())
+		NetDataItem *item = NULL;
+		if (m_CacheQueue.size() > 0)
 		{
-			(itr->second)(cmd, NULL, 0);
+			item = m_CacheQueue.front();			
+			m_CacheQueue.pop();
 		}
+		else
+		{
+			item = new NetDataItem();
+		}
+		item->Reset();
+		return item;
 	}
+
+	//void NetManager::Test(Int32 cmd)
+	//{
+	//	MessageCallBackMap::iterator itr = m_CallBack.find(cmd);
+	//	if (itr != m_CallBack.end())
+	//	{
+	//		(itr->second)(cmd, NULL);
+	//	}
+	//}
 }

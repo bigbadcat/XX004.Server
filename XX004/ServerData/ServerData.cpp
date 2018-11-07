@@ -12,6 +12,8 @@
 #include "NetManagerData.h"
 #include "ServerMain.h"
 #include "Util/TimeUtil.h"
+#include "Net/NetMessage.h"
+using namespace XX004::Net;
 
 namespace XX004
 {
@@ -25,8 +27,7 @@ namespace XX004
 
 	void ServerData::RegisterNetMessage(NetManager *pMgr)
 	{
-		pMgr->RegisterMessageCallBack(1, [this](Int32 cmd, Byte *buffer, int len){this->F1(cmd, buffer, len); });
-		pMgr->RegisterMessageCallBack(2, [this](Int32 cmd, Byte *buffer, int len){this->F2(cmd, buffer, len); });
+		pMgr->RegisterMessageCallBack(1000, [this](NetDataItem *item){this->F1(item); });
 	}
 
 	bool ServerData::OnStart(int step, float &r)
@@ -57,13 +58,33 @@ namespace XX004
 		return true;
 	}
 
-	void ServerData::F1(Int32 cmd, Byte *buffer, int len)
+	void ServerData::F1(NetDataItem *item)
 	{
-		cout << "F1" << endl;
-	}
+		NetMessageString nms;
+		nms.Unpack(item->data, 0);
+		cout << "text:" << nms.Value << endl;
 
-	void ServerData::F2(Int32 cmd, Byte *buffer, int len)
-	{
-		cout << "F2" << endl;
+		////准备回复数据		
+		//NetMessageIntString res;
+		//res.Value1 = 0;
+		//res.Value2 = nms.Value + "hhhhh";
+
+		//Byte recvdata[1024];
+		//int index = 0;
+		//index = res.Pack(recvdata, index);
+
+		////回复的数据头
+		//NetPackageHeader sendhead;
+		//sendhead.SetSign();
+		//sendhead.Command = 1050;
+		//sendhead.BodySize = index;
+
+		//Byte sendbuff[1024];
+		//int sendsize = 0;
+		//sendsize = sendhead.Pack(sendbuff + sendsize, sendsize);
+		//::memcpy_s(sendbuff + sendsize, 1024 - sendsize, recvdata, index);
+		//sendsize += index;
+
+		//con->AddSendData(sendbuff, sendsize);
 	}
 }
