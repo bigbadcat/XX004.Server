@@ -15,7 +15,7 @@ namespace XX004
 {
 	namespace Net
 	{
-		NetPackageHeader::NetPackageHeader() : Sign(HEADER_SIGN), RandSeed(0), CheckSum(0), Node(0), Compress(0), Index(0), RecvIndex(0),
+		NetPackageHeader::NetPackageHeader() : Sign(0), RandSeed(0), CheckSum(0), Node(0), Compress(0), Index(0), RecvIndex(0),
 			Command(0), GUID(0), BodySize(0)
 		{
 
@@ -23,7 +23,7 @@ namespace XX004
 
 		void NetPackageHeader::Reset()
 		{
-			Sign = HEADER_SIGN;
+			Sign = 0;
 			RandSeed = 0;
 			CheckSum = 0;
 			Compress = 0;
@@ -33,6 +33,11 @@ namespace XX004
 			Node = 0;
 			GUID = 0;
 			BodySize = 0;
+		}
+
+		void NetPackageHeader::SetSign()
+		{
+			Sign = HEADER_SIGN;
 		}
 
 		int NetPackageHeader::Unpack(Byte *src, int index)

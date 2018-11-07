@@ -116,6 +116,17 @@ namespace XX004
 				return SOCKET_ERROR;
 			}
 
+			struct linger so_linger;
+			so_linger.l_onoff = 1;
+			so_linger.l_linger = 5;
+			ret = ::setsockopt(s, SOL_SOCKET, SO_LINGER, (char*)&so_linger, sizeof so_linger);
+			if (ret != 0)
+			{
+				cout << "setsockopt err:" << WSAGetLastError() << endl;
+				::closesocket(s);
+				return SOCKET_ERROR;
+			}
+
 			//非阻塞
 			bool noblocking = true;
 			u_long argp = noblocking ? 1 : 0;

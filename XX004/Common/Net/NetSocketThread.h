@@ -87,7 +87,7 @@ namespace XX004
 			//Socket可以写入数据了
 			virtual int OnSocketWrite(NetSocketWrap *wrap) = 0;
 
-			//Socket关闭了，此时wrap的Socket成员已经被重置成SOCKET_ERROR
+			//Socket关闭了 此时线程不再引用wrap对象
 			virtual void OnSocketClose(NetSocketWrap *wrap) = 0;
 
 			//开始线程
@@ -99,7 +99,7 @@ namespace XX004
 			//等待线程结束
 			void Join();
 
-			//添加Socket
+			//添加Socket wrap的生命周期由调用者管理
 			void AddSocket(NetSocketWrap *wrap);
 
 			//移除Socket，调用此函数后并不会立即移除SOCKET，由SocketThread自身循环移除，通过OnSocketClose通知

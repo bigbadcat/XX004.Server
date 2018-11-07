@@ -12,6 +12,7 @@
 #include "NetListener.h"
 #include "NetConnectionManager.h"
 #include "../Macro.h"
+#include <assert.h>
 
 namespace XX004
 {
@@ -89,6 +90,18 @@ namespace XX004
 			if (m_pProcesser != NULL)
 			{
 				m_pProcesser->OnDisconnected(con);
+			}
+		}
+
+		void NetServer::OnRecvData(NetConnection* con)
+		{
+			static Byte buffer[NET_PACKAGE_MAX_SIZE];
+			static NetPackageHeader header;
+			assert(con != NULL);
+			con->TakeRecvPackage(header, buffer, NET_PACKAGE_MAX_SIZE);
+			if (m_pProcesser != NULL)
+			{
+				m_pProcesser->OnRecvData(con, header, buffer);
 			}
 		}
 	}

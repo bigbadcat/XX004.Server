@@ -27,16 +27,43 @@ namespace XX004
 
 		NetConnectionThread::~NetConnectionThread()
 		{
-
+			for (ConnectionMap::iterator itr = m_Connections.begin(); itr != m_Connections.end(); ++itr)
+			{
+				delete itr->second;
+			}
+			m_Connections.clear();
 		}
 
 		int NetConnectionThread::OnSocketRead(NetSocketWrap *wrap)
 		{
-			char buff[1024];
-			int len = ::recv(wrap->GetSocket(), buff, 1024, 0);
+			Byte buff[1024];
+			int len = ::recv(wrap->GetSocket(), (char*)buff, 1024, 0);
 			if (len > 0)
 			{
+				NetConnection *con = dynamic_cast<NetConnection*>(wrap);
+				assert(con != NULL);
+				if (!con->AddRecvData(buff, len))
+				{
+					return 3;
+				}
 
+				do
+				{
+					int ret = con->CheckRecvPackage();
+					if (ret == 0)
+					{
+						break;
+					}
+					else if (ret == 1)
+					{
+						assert(m_pManager != NULL);
+						m_pManager->OnRecvPackage(con);
+					}
+					else
+					{
+						return 4;
+					}
+				} while (true);
 			}
 			else if (len == 0)
 			{
@@ -45,7 +72,7 @@ namespace XX004
 			}
 			else
 			{
-				//cout << "recv socket err:" << WSAGetLastError() << endl;
+				cout << "recv socket err:" << WSAGetLastError() << endl;
 				return 2;
 			}
 
@@ -86,15 +113,12 @@ namespace XX004
 			{
 				return NULL;
 			}
+			assert(m_Connections.find(s) == m_Connections.end());
 
 			NetConnection *pcon = new NetConnection();
 			pcon->SetSocket(s);
+			m_Connections.insert(ConnectionMap::value_type(s, pcon));
 			this->AddSocket(pcon);
-
-			//cout << "close connection in 5 second......" << endl;
-			//::Sleep(5000);
-			//cout << "close connection." << endl;
-			//::closesocket(s);
 
 			return pcon;
 		}

@@ -9,6 +9,7 @@
 *******************************************************/
 
 #include "NetConnection.h"
+#include "../Util/DataUtil.h"
 #include <iostream>
 #include <string>
 using namespace std;
@@ -17,7 +18,7 @@ namespace XX004
 {
 	namespace Net
 	{
-		NetConnection::NetConnection() : m_Port(0)
+		NetConnection::NetConnection() : m_Port(0), m_SendLen(0), m_RecvLen(0)
 		{
 		}
 		
@@ -57,6 +58,56 @@ namespace XX004
 			{
 				cout << "getpeername err:" << WSAGetLastError() << endl;
 			}
+		}
+
+		bool NetConnection::AddSendData(Byte *buffer, int len)
+		{
+			return true;
+		}
+
+		bool NetConnection::AddRecvData(Byte *buffer, int len)
+		{
+			//数据超过缓冲区大小了，不能写入
+			if (m_RecvLen + len > NET_BUFFER_SIZE)
+			{
+				return false;
+			}
+
+			::memcpy_s(m_RecvBuffer + m_RecvLen, NET_BUFFER_SIZE - m_RecvLen, buffer, len);
+			m_RecvLen += len;
+
+			return true;
+		}
+
+		int NetConnection::CheckRecvPackage()
+		{
+			if (m_RecvHeader.Sign == 0)
+			{
+				if (m_RecvLen >= NetPackageHeader::HEADER_SIZE)
+				{
+					m_RecvHeader.Unpack(m_RecvBuffer, 0);
+					if (m_RecvHeader.Sign != NetPackageHeader::HEADER_SIGN || m_RecvHeader.BodySize > NET_PACKAGE_MAX_SIZE)
+					{
+						return -1;
+					}
+				}
+			}
+
+			bool have = m_RecvHeader.Sign != 0 && m_RecvLen >= (m_RecvHeader.BodySize + NetPackageHeader::HEADER_SIZE);
+			return have ? 1 : 0;
+		}
+
+		void NetConnection::TakeRecvPackage(NetPackageHeader& header, Byte *buffer, int size)
+		{
+			//获取数据包
+			int datasize = m_RecvHeader.BodySize + NetPackageHeader::HEADER_SIZE;
+			header = m_RecvHeader;
+			::memcpy_s(buffer, NET_PACKAGE_MAX_SIZE, m_RecvBuffer + NetPackageHeader::HEADER_SIZE, m_RecvHeader.BodySize);
+
+			//清除数据包
+			m_RecvLen -= datasize;
+			::memcpy_s(m_RecvBuffer, NET_BUFFER_SIZE, m_RecvBuffer + datasize, m_RecvLen);		//数据回移
+			m_RecvHeader.Reset();
 		}
 	}
 }

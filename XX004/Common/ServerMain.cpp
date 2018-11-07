@@ -40,6 +40,18 @@ namespace XX004
 
 	int ServerMain::Run()
 	{
+		//初始化网络
+		WORD wVersionRequested;
+		WSADATA wsaData;
+		int32_t err;
+		wVersionRequested = MAKEWORD(2, 2);
+		err = ::WSAStartup(wVersionRequested, &wsaData);
+		if (err != 0)
+		{
+			cout << "WSAStartup err:" << err << endl;
+			return 1;
+		}
+
 		//启动服务循环
 		m_Thread = thread([](ServerMain *t){t->ThreadProcess(); }, this);
 
@@ -60,12 +72,15 @@ namespace XX004
 
 		cout << "Waitting server end ..." << endl;
 		JoinThread(m_Thread);
+		::WSACleanup();
 
 		return 0;
 	}
 
 	void ServerMain::ThreadProcess()
 	{
+		
+
 		//模块创建		
 		m_IsRunning = true;
 		m_pNetManager = OnCreateNetManager();
@@ -73,11 +88,15 @@ namespace XX004
 		m_pServer = OnCreateServer();
 		assert(m_pServer != NULL);
 		m_pServer->RegisterNetMessage(m_pNetManager);
+		m_pNetManager->Start("127.0.0.1", 9000);
 
 		//服务器中
 		SeverLoop();
 
 		//停止并销毁
+		m_pNetManager->Stop();
+		SAFE_DELETE(m_pNetManager);
+		SAFE_DELETE(m_pServer);		
 	}
 
 	void ServerMain::SeverLoop()

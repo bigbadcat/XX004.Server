@@ -9,6 +9,7 @@
 *******************************************************/
 
 #include "NetManager.h"
+#include "Util/DataUtil.h"
 #include <iostream>
 #include <string>
 using namespace std;
@@ -23,19 +24,61 @@ namespace XX004
 	{
 	}
 
+	void NetManager::Start(const string &ipaddress, int port)
+	{
+		m_Server.SetProcesser(this);
+		m_Server.Start(ipaddress, port);
+	}
+
+	void NetManager::Stop()
+	{
+		m_Server.Stop();
+	}
+
 	void NetManager::OnConnected(NetConnection *connection)
 	{
-
+		cout << "NetManager::OnConnected ip:" << connection->GetIPAddress() << " port:" << connection->GetPort() << endl;
 	}
 
 	void NetManager::OnDisconnected(NetConnection *connection)
 	{
-
+		cout << "NetManager::OnDisconnected ip:" << connection->GetIPAddress() << " port:" << connection->GetPort() << endl;
 	}
 
-	void NetManager::OnRecvData(NetConnection *connection, Int32 cmd, Byte *buffer, int len)
+	void NetManager::OnRecvData(NetConnection *connection, const NetPackageHeader& header, Byte *buffer)
 	{
 		//解析网络消息并添加到队列中
+		cout << "NetManager::OnRecvData ip:" << connection->GetIPAddress() << " port:" << connection->GetPort() << endl;
+		cout << " cmd:" << header.Command << " len:" << header.BodySize << endl;
+		int i = 0;
+		string text = DataUtil::ReadString(buffer, i, &i);
+		cout << " text:" << text << endl;
+
+		//NetPackageHeader recvhead;
+		//int i = 0;
+		//i = recvhead.Unpack(m_RecvBuffer, i);
+		//string text = DataUtil::ReadString(m_RecvBuffer, i, &i);
+		//cout << "text:" << text << endl;
+
+		//准备回复数据							
+		//Byte recvdata[1024];
+		//int index = 0;
+
+		//int result = 4;
+		//index = DataUtil::WriteInt32(recvdata, index, result);
+		//string ret = text + "吼吼吼吼";
+		//index = DataUtil::WriteString(recvdata, index, ret);
+		//Int64 freetime = 0;
+		//index = DataUtil::WriteInt64(recvdata, index, freetime);
+
+		////回复的数据头
+		//NetPackageHeader sendhead(recvhead);
+		//sendhead.Command = 1050;
+		//sendhead.BodySize = index;
+
+		//sendsize = sendhead.Pack(sendbuff + sendsize, sendsize);
+		//::memcpy_s(sendbuff + sendsize, buffsize - sendsize, recvdata, index);
+		//sendsize += index;
 	}
 
 	void NetManager::RegisterMessageCallBack(Int32 cmd, NetMessageCallBack call)
@@ -55,7 +98,9 @@ namespace XX004
 
 	void NetManager::OnUpdate()
 	{
-		//分发消息队列
+		//分发接收消息队列
+
+		//写入发送消息队列
 	}
 
 	void NetManager::Test(Int32 cmd)

@@ -141,8 +141,7 @@ namespace XX004
 					{
 						NetSocketWrap *wrap = m_Sockets[*itr];
 						m_Sockets.erase(wrap->GetSocket());
-						::closesocket(wrap->GetSocket());
-						wrap->SetSocket(SOCKET_ERROR);
+						::closesocket(wrap->GetSocket());						
 						OnSocketClose(wrap);
 					}
 				}
@@ -187,8 +186,7 @@ namespace XX004
 						NetSocketWrap *wrap = itr->second;
 						m_Sockets.erase(itr);
 						::closesocket(wrap->GetSocket());
-						wrap->SetSocket(SOCKET_ERROR);
-						OnSocketClose(wrap);
+						OnSocketClose(wrap);				
 					}
 				}
 				else

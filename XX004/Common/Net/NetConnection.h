@@ -13,6 +13,8 @@
 
 #include <map>
 #include "../Macro.h"
+#include "NetDefine.h"
+#include "NetPackageHeader.h"
 #include "NetSocketThread.h"
 
 namespace XX004
@@ -54,6 +56,12 @@ namespace XX004
 			NetConnection();
 			virtual ~NetConnection();
 
+			//判断是否需要读数据
+			virtual bool IsNeedRead() { return NET_BUFFER_SIZE - m_RecvLen >= NET_PACKAGE_MAX_SIZE; }
+
+			//判断是否需要写数据
+			virtual bool IsNeedWrite() { return m_SendLen > 0; }
+
 			//设置Socket
 			virtual void SetSocket(SOCKET s);
 
@@ -69,6 +77,19 @@ namespace XX004
 			//获取端口号
 			inline const int GetPort()const { return m_Port; }
 
+			//添加发送的数据
+			bool AddSendData(Byte *buffer, int len);
+
+			//添加接收的数据
+			bool AddRecvData(Byte *buffer, int len);
+
+			//检测是否接受到了完整数据包
+			//ret:0 没有完整数据包 1:有完整数据包 -1:数据错误
+			int CheckRecvPackage();
+
+			//拿去接收到的数据包
+			void TakeRecvPackage(NetPackageHeader& header, Byte *buffer, int size);
+
 		private:
 			//远端标识
 			RemoteKey m_Remote;
@@ -78,6 +99,21 @@ namespace XX004
 
 			//端口号。
 			int m_Port;
+
+			//收发缓冲区
+			Byte m_SendBuffer[NET_BUFFER_SIZE];
+
+			//发送长度
+			int m_SendLen;
+
+			//接收缓冲区
+			Byte m_RecvBuffer[NET_BUFFER_SIZE];
+
+			//接收长度
+			int m_RecvLen;
+
+			//接收的数据头
+			NetPackageHeader m_RecvHeader;
 		};
 	}
 }

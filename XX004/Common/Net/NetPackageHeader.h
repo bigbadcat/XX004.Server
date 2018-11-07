@@ -62,6 +62,9 @@ namespace XX004
 			//重置数据。
 			void Reset();
 
+			//设置签名
+			void SetSign();
+
 			//解包头部。
 			//src:要读取的字节数组。
 			//index:要读取的位置。

@@ -36,7 +36,7 @@ namespace XX004
 			virtual void OnDisconnected(NetConnection *connection) = 0;
 
 			//有数据接收
-			virtual void OnRecvData(NetConnection *connection, Int32 cmd, Byte *buffer, int len) = 0;
+			virtual void OnRecvData(NetConnection *connection, const NetPackageHeader& header, Byte *buffer) = 0;
 		};
 
 		//服务端网络管理。		
@@ -80,6 +80,9 @@ namespace XX004
 
 			//有连接断开。
 			void OnDisconnect(NetConnection* con);
+
+			//有连接接收到数据包
+			void OnRecvData(NetConnection* con);
 			
 			//监听者
 			NetListener *m_pListener;

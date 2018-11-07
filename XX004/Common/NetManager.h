@@ -29,9 +29,15 @@ namespace XX004
 		NetManager();
 		virtual ~NetManager();
 
+		//启动网络 ipaddress:IP地址。 port:端口号。
+		void Start(const string &ipaddress, int port);
+
+		//停止网络
+		void Stop();
+
 		virtual void OnConnected(NetConnection *connection);
 		virtual void OnDisconnected(NetConnection *connection);
-		virtual void OnRecvData(NetConnection *connection, Int32 cmd, Byte *buffer, int len);
+		virtual void OnRecvData(NetConnection *connection, const NetPackageHeader& header, Byte *buffer);
 
 		//注册网络消息处理函数
 		void RegisterMessageCallBack(Int32 cmd, NetMessageCallBack call);
@@ -50,6 +56,9 @@ namespace XX004
 	private:
 		//消息集合
 		MessageCallBackMap m_CallBack;
+
+		//网络服务端模块
+		NetServer m_Server;
 	};
 }
 

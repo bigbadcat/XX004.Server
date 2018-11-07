@@ -64,6 +64,9 @@ namespace XX004
 			//获取连接
 			NetConnection* GetConnection(const RemoteKey& key);
 
+			//有连接接收到数据包了
+			void OnRecvPackage(NetConnection *con);
+
 		private:
 			//网络服务端
 			NetServer *m_pServer;

@@ -114,5 +114,11 @@ namespace XX004
 			ConnectionMap::iterator itr = m_RemoteToConnection.find(key);
 			return itr == m_RemoteToConnection.end() ? NULL : itr->second;
 		}
+
+		void NetConnectionManager::OnRecvPackage(NetConnection *con)
+		{
+			assert(con != NULL && m_pServer != NULL);
+			m_pServer->OnRecvData(con);
+		}
 	}
 }
