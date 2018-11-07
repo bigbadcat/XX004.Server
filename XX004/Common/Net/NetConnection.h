@@ -12,6 +12,7 @@
 #define __NetConnection_h__
 
 #include <map>
+#include <mutex>
 #include "../Macro.h"
 #include "NetDefine.h"
 #include "NetPackageHeader.h"
@@ -60,7 +61,7 @@ namespace XX004
 			virtual bool IsNeedRead() { return NET_BUFFER_SIZE - m_RecvLen >= NET_PACKAGE_MAX_SIZE; }
 
 			//判断是否需要写数据
-			virtual bool IsNeedWrite() { return m_SendLen > 0; }
+			virtual bool IsNeedWrite();
 
 			//设置Socket
 			virtual void SetSocket(SOCKET s);
@@ -90,6 +91,9 @@ namespace XX004
 			//拿去接收到的数据包
 			void TakeRecvPackage(NetPackageHeader& header, Byte *buffer, int size);
 
+			//进行发送操作
+			int DoSend();
+
 		private:
 			//远端标识
 			RemoteKey m_Remote;
@@ -105,6 +109,9 @@ namespace XX004
 
 			//发送长度
 			int m_SendLen;
+
+			//发送锁
+			std::mutex m_SendMutex;
 
 			//接收缓冲区
 			Byte m_RecvBuffer[NET_BUFFER_SIZE];

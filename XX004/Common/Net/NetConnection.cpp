@@ -26,6 +26,12 @@ namespace XX004
 		{
 		}
 
+		bool NetConnection::IsNeedWrite()
+		{
+			std::unique_lock<std::mutex> lock(m_SendMutex);
+			return m_SendLen > 0;
+		}
+
 		void NetConnection::SetSocket(SOCKET s)
 		{
 			NetSocketWrap::SetSocket(s);
@@ -47,7 +53,7 @@ namespace XX004
 					::sprintf_s(ip, "%d.%d.%d.%d", addr_v4->sin_addr.s_net, addr_v4->sin_addr.s_host, addr_v4->sin_addr.s_lh, addr_v4->sin_addr.s_impno);
 					m_IPAddress = ip;
 					m_Port = addr_v4->sin_port;
-					cout << "accept connet ip:" << m_IPAddress << " port:" << m_Port << endl;
+					//cout << "accept connet ip:" << m_IPAddress << " port:" << m_Port << endl;
 				}
 				else
 				{
@@ -62,6 +68,15 @@ namespace XX004
 
 		bool NetConnection::AddSendData(Byte *buffer, int len)
 		{
+			//数据超过缓冲区大小了，不能添加
+			std::unique_lock<std::mutex> lock(m_SendMutex);
+			if (m_SendLen + len > NET_BUFFER_SIZE)
+			{
+				return false;
+			}
+
+			::memcpy_s(m_SendBuffer + m_SendLen, NET_BUFFER_SIZE - m_SendLen, buffer, len);
+			m_SendLen += len;
 			return true;
 		}
 
@@ -108,6 +123,30 @@ namespace XX004
 			m_RecvLen -= datasize;
 			::memcpy_s(m_RecvBuffer, NET_BUFFER_SIZE, m_RecvBuffer + datasize, m_RecvLen);		//数据回移
 			m_RecvHeader.Reset();
+		}
+
+		int NetConnection::DoSend()
+		{
+			std::unique_lock<std::mutex> lock(m_SendMutex);
+			if (m_SendLen > 0)
+			{
+				int ret = ::send(GetSocket(), (char*)m_SendBuffer, m_SendLen, 0);
+				if (ret > 0)
+				{
+					m_SendLen -= ret;
+					if (m_SendLen > 0)
+					{
+						::memcpy_s(m_SendBuffer, NET_BUFFER_SIZE, m_SendBuffer + ret, m_SendLen);	//数据回移
+					}					
+				}
+				else if (ret == SOCKET_ERROR)
+				{
+					cout << "send socket err:" << WSAGetLastError() << endl;
+					return 1;
+				}
+			}
+			
+			return 0;
 		}
 	}
 }

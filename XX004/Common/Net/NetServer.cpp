@@ -77,6 +77,7 @@ namespace XX004
 			if (m_pConnectionManager != NULL)
 			{
 				NetConnection* con = m_pConnectionManager->AddConnection(s);
+				cout << "OnConnect ip:" << con->GetIPAddress() << " port:" << con->GetPort() << endl;
 				if (m_pProcesser != NULL)
 				{
 					m_pProcesser->OnConnected(con);
@@ -86,7 +87,7 @@ namespace XX004
 
 		void NetServer::OnDisconnect(NetConnection* con)
 		{
-			cout << "Disconnect ip:" << con->GetIPAddress() << " port:" << con->GetPort() << endl;
+			cout << "OnDisconnect ip:" << con->GetIPAddress() << " port:" << con->GetPort() << endl;
 			if (m_pProcesser != NULL)
 			{
 				m_pProcesser->OnDisconnected(con);

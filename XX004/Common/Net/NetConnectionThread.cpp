@@ -81,7 +81,9 @@ namespace XX004
 
 		int NetConnectionThread::OnSocketWrite(NetSocketWrap *wrap)
 		{
-			return 0;
+			NetConnection *con = dynamic_cast<NetConnection*>(wrap);
+			assert(con != NULL);
+			return con->DoSend();
 		}
 
 		void NetConnectionThread::OnSocketClose(NetSocketWrap *wrap)

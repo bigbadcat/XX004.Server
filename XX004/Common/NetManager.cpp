@@ -37,12 +37,12 @@ namespace XX004
 
 	void NetManager::OnConnected(NetConnection *connection)
 	{
-		cout << "NetManager::OnConnected ip:" << connection->GetIPAddress() << " port:" << connection->GetPort() << endl;
+		//cout << "NetManager::OnConnected ip:" << connection->GetIPAddress() << " port:" << connection->GetPort() << endl;
 	}
 
 	void NetManager::OnDisconnected(NetConnection *connection)
 	{
-		cout << "NetManager::OnDisconnected ip:" << connection->GetIPAddress() << " port:" << connection->GetPort() << endl;
+		//cout << "NetManager::OnDisconnected ip:" << connection->GetIPAddress() << " port:" << connection->GetPort() << endl;
 	}
 
 	void NetManager::OnRecvData(NetConnection *connection, const NetPackageHeader& header, Byte *buffer)
@@ -61,24 +61,29 @@ namespace XX004
 		//cout << "text:" << text << endl;
 
 		//准备回复数据							
-		//Byte recvdata[1024];
-		//int index = 0;
+		Byte recvdata[1024];
+		int index = 0;
 
-		//int result = 4;
-		//index = DataUtil::WriteInt32(recvdata, index, result);
-		//string ret = text + "吼吼吼吼";
-		//index = DataUtil::WriteString(recvdata, index, ret);
-		//Int64 freetime = 0;
-		//index = DataUtil::WriteInt64(recvdata, index, freetime);
+		int result = 4;
+		index = DataUtil::WriteInt32(recvdata, index, result);
+		string ret = text + "hhhhh";
+		index = DataUtil::WriteString(recvdata, index, ret);
+		Int64 freetime = 0;
+		index = DataUtil::WriteInt64(recvdata, index, freetime);
 
-		////回复的数据头
-		//NetPackageHeader sendhead(recvhead);
-		//sendhead.Command = 1050;
-		//sendhead.BodySize = index;
+		//回复的数据头
+		NetPackageHeader sendhead;
+		sendhead.SetSign();
+		sendhead.Command = 1050;
+		sendhead.BodySize = index;
 
-		//sendsize = sendhead.Pack(sendbuff + sendsize, sendsize);
-		//::memcpy_s(sendbuff + sendsize, buffsize - sendsize, recvdata, index);
-		//sendsize += index;
+		Byte sendbuff[1024];
+		int sendsize = 0;
+		sendsize = sendhead.Pack(sendbuff + sendsize, sendsize);
+		::memcpy_s(sendbuff + sendsize, 1024 - sendsize, recvdata, index);
+		sendsize += index;
+
+		connection->AddSendData(sendbuff, sendsize);
 	}
 
 	void NetManager::RegisterMessageCallBack(Int32 cmd, NetMessageCallBack call)
