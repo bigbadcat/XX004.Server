@@ -23,9 +23,6 @@ namespace XX004
 	class ServerBase;
 
 	//创建ServerXXX和NetManagerXXXX
-	//创建线程建立游戏循环
-	//提供程序统一流程 Start Loop Stop 
-	//维护网络消息和命令消息队列
 	class MainBase
 	{
 	public:
@@ -65,6 +62,13 @@ namespace XX004
 
 		//停止分步
 		bool StopStep(int step);
+
+
+
+		//命令循环
+		void CommandLoop();
+
+
 
 		//当前Main对象
 		static MainBase* pCurMain;

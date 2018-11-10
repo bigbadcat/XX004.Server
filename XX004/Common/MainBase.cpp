@@ -53,26 +53,43 @@ namespace XX004
 			return 1;
 		}
 
-		//启动服务循环
-		m_Thread = thread([](MainBase *t){t->ThreadProcess(); }, this);
+		////启动服务循环
+		//m_Thread = thread([](MainBase *t){t->ThreadProcess(); }, this);
 
-		//等待初始化完毕的信号后开始命令循环
-		m_StartSemaphore.wait();
-		cout << "Start command ..." << endl;
-		while (true)
-		{
-			string cmd;
-			cin >> cmd;
-			if (cmd.compare(COMMAND_QUIT) == 0)
-			{
-				m_IsRunning = false;
-				break;
-			}
-			cout << "Unknow command:" << cmd << endl;
-		}
+		////等待初始化完毕的信号后开始命令循环
+		//m_StartSemaphore.wait();
+		//cout << "Start command ..." << endl;
+		//while (true)
+		//{
+		//	string cmd;
+		//	cin >> cmd;
+		//	if (cmd.compare(COMMAND_QUIT) == 0)
+		//	{
+		//		m_IsRunning = false;
+		//		break;
+		//	}
+		//	cout << "Unknow command:" << cmd << endl;
+		//}
 
+		//cout << "Waitting server end ..." << endl;
+		//JoinThread(m_Thread);
+
+		//模块创建		
+		m_pNetManager = OnCreateNetManager();
+		assert(m_pNetManager != NULL);
+		m_pServer = OnCreateServer();
+		assert(m_pServer != NULL);
+		m_pServer->RegisterNetMessage(m_pNetManager);
+
+		m_pServer->Start(true);
+		CommandLoop();
 		cout << "Waitting server end ..." << endl;
-		JoinThread(m_Thread);
+		m_pServer->Stop();
+		m_pServer->Join();
+
+		//模块销毁
+		SAFE_DELETE(m_pNetManager);
+		SAFE_DELETE(m_pServer);
 		::WSACleanup();
 
 		return 0;
@@ -150,30 +167,31 @@ namespace XX004
 
 	bool MainBase::StarStep(int step)
 	{
-		float r = 0;
-		bool ok = m_pServer->OnStart(step, r);
-		MoveCursorBack(24);
-		cout << "Start step:" << step << " r:" << (int)(r * 100) << "%";
-		if (ok)
-		{
-			MoveCursorBack(24);
-			cout << endl << "Start complete" << endl;
-			m_StartSemaphore.post();
-			return true;
-		}
-		return false;
+		//float r = 0;
+		//bool ok = m_pServer->OnStart(step, r);
+		//MoveCursorBack(24);
+		//cout << "Start step:" << step << " r:" << (int)(r * 100) << "%";
+		//if (ok)
+		//{
+		//	MoveCursorBack(24);
+		//	cout << endl << "Start complete" << endl;
+		//	m_StartSemaphore.post();
+		//	return true;
+		//}
+		//return false;
+		return true;
 	}
 
 	bool MainBase::UpdateStep(UInt64 &sectick)
 	{
-		//处理网络消息、模块更新
-		m_pNetManager->OnUpdate();
-		m_pServer->OnUpdate();
-		if (TimeUtil::GetTickCount() - sectick >= 1000)
-		{
-			sectick += 1000;
-			m_pServer->OnUpdatePerSecond();
-		}
+		////处理网络消息、模块更新
+		//m_pNetManager->OnUpdate();
+		//m_pServer->OnUpdate();
+		//if (TimeUtil::GetTickCount() - sectick >= 1000)
+		//{
+		//	sectick += 1000;
+		//	m_pServer->OnUpdatePerSecond();
+		//}
 
 		if (!m_IsRunning)
 		{
@@ -184,16 +202,33 @@ namespace XX004
 
 	bool MainBase::StopStep(int step)
 	{
-		float r = 0;
-		bool ok = m_pServer->OnStop(step, r);
-		MoveCursorBack(24);
-		cout << "Stop Step:" << step << " r:" << (int)(r * 100) << "%";
-		if (ok)
+		//float r = 0;
+		//bool ok = m_pServer->OnStop(step, r);
+		//MoveCursorBack(24);
+		//cout << "Stop Step:" << step << " r:" << (int)(r * 100) << "%";
+		//if (ok)
+		//{
+		//	MoveCursorBack(24);
+		//	cout << endl << "Stop complete" << endl;
+		//	return true;
+		//}
+		//return false;
+		return true;
+	}
+
+	void MainBase::CommandLoop()
+	{
+		cout << "Start command ..." << endl;
+		while (true)
 		{
-			MoveCursorBack(24);
-			cout << endl << "Stop complete" << endl;
-			return true;
+			string cmd;
+			cin >> cmd;
+			if (cmd.compare(COMMAND_QUIT) == 0)
+			{
+				m_IsRunning = false;
+				break;
+			}
+			cout << "Unknow command:" << cmd << endl;
 		}
-		return false;
 	}
 }

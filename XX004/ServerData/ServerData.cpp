@@ -29,9 +29,8 @@ namespace XX004
 		pMgr->RegisterMessageCallBack(1000, [this](NetDataItem *item){this->F1(item); });
 	}
 
-	bool ServerData::OnStart(int step, float &r)
+	bool ServerData::OnInitStep(int step, float &r)
 	{
-		//ServerMain::GetCurMain()->GetNetManager()->Test(2);
 		//r = step / 80.0f;
 		//return step >= 80;
 		r = 1;
@@ -48,11 +47,10 @@ namespace XX004
 		//cout << "ServerData::OnUpdatePerSecond()" << TimeUtil::GetCurrentMillisecond() << endl;
 	}
 
-	bool ServerData::OnStop(int step, float &r)
+	bool ServerData::OnReleaseStep(int step, float &r)
 	{
 		//r = step / 50.0f;
 		//return step >= 50;
-
 		r = 1;
 		return true;
 	}

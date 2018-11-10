@@ -27,16 +27,16 @@ namespace XX004
 		virtual void RegisterNetMessage(NetManagerBase *pMgr);
 
 		//启动服务
-		virtual bool OnStart(int step, float &r);
+		virtual bool OnInitStep(int step, float &r);
+
+		//停止服务
+		virtual bool OnReleaseStep(int step, float &r);
 
 		//帧更新
 		virtual void OnUpdate();
 
 		//秒更新
 		virtual void OnUpdatePerSecond();
-
-		//停止服务
-		virtual bool OnStop(int step, float &r);
 
 	private:
 		void F1(NetDataItem *item);
