@@ -24,7 +24,7 @@ namespace XX004
 
 	protected:
 		//注册网络消息
-		virtual void RegisterNetMessage(NetManager *pMgr);
+		virtual void RegisterNetMessage(NetManagerBase *pMgr);
 
 		//启动服务
 		virtual bool OnStart(int step, float &r);

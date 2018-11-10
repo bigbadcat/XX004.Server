@@ -157,14 +157,14 @@
     <ClCompile Include="NetManagerData.cpp" />
     <ClCompile Include="NetTest.cpp" />
     <ClCompile Include="ServerData.cpp" />
-    <ClCompile Include="ServerMainData.cpp" />
+    <ClCompile Include="MainData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MySQLTest.h" />
     <ClInclude Include="NetManagerData.h" />
     <ClInclude Include="NetTest.h" />
     <ClInclude Include="ServerData.h" />
-    <ClInclude Include="ServerMainData.h" />
+    <ClInclude Include="MainData.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

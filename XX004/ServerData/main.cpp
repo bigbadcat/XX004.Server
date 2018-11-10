@@ -12,11 +12,9 @@
 #include <string>
 #include "MySQLTest.h"
 #include "NetTest.h"
-#include "ServerMainData.h"
+#include "MainData.h"
 #include <vld.h>
 using namespace std;
-
-
 
 int main(int argc, char *argv[])
 {
@@ -31,7 +29,7 @@ int main(int argc, char *argv[])
 
 	int ret = 0;
 	{
-		XX004::ServerMainData server;
+		XX004::MainData server;
 		ret = server.Run();
 	}
 

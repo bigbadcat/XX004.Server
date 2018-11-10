@@ -11,7 +11,7 @@
 #ifndef __ServerBase_h__
 #define __ServerBase_h__
 
-#include "NetManager.h"
+#include "NetManagerBase.h"
 
 namespace XX004
 {
@@ -23,7 +23,7 @@ namespace XX004
 		virtual ~ServerBase();
 
 		//注册网络消息
-		virtual void RegisterNetMessage(NetManager *pMgr) = 0;
+		virtual void RegisterNetMessage(NetManagerBase *pMgr) = 0;
 
 		//启动服务
 		//step:启动分步计数

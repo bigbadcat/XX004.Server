@@ -1,15 +1,15 @@
 ﻿/*******************************************************
 * Copyright (c) 2018-2088, By XuXiang all rights reserved.
 *
-* FileName: NetManager.h
+* FileName: NetManagerBase.h
 * Summary: 网络管理的基类。
 *
 * Author: XuXiang
 * Date: 2018-10-24 20:52
 *******************************************************/
 
-#ifndef __NetManager_h__
-#define __NetManager_h__
+#ifndef __NetManagerBaseBase_h__
+#define __NetManagerBaseBase_h__
 
 #include <map>
 #include <functional>
@@ -46,12 +46,12 @@ namespace XX004
 	typedef std::map<Int32, NetMessageCallBack> MessageCallBackMap;
 	typedef std::queue<NetDataItem*> NetDataItemQueue;
 		
-	//网络连接对象
-	class NetManager : public INetProcesser
+	//网络管理
+	class NetManagerBase : public INetProcesser
 	{
 	public:
-		NetManager();
-		virtual ~NetManager();
+		NetManagerBase();
+		virtual ~NetManagerBase();
 
 		//启动网络 ipaddress:IP地址。 port:端口号。
 		void Start(const string &ipaddress, int port);
@@ -102,4 +102,4 @@ namespace XX004
 	};
 }
 
-#endif	//__NetManager_h__
+#endif	//__NetManagerBase_h__

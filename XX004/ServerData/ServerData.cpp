@@ -10,7 +10,6 @@
 
 #include "ServerData.h"
 #include "NetManagerData.h"
-#include "ServerMain.h"
 #include "Util/TimeUtil.h"
 #include "Net/NetMessage.h"
 using namespace XX004::Net;
@@ -25,7 +24,7 @@ namespace XX004
 	{
 	}
 
-	void ServerData::RegisterNetMessage(NetManager *pMgr)
+	void ServerData::RegisterNetMessage(NetManagerBase *pMgr)
 	{
 		pMgr->RegisterMessageCallBack(1000, [this](NetDataItem *item){this->F1(item); });
 	}

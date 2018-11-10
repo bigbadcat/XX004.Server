@@ -1,14 +1,14 @@
 ﻿/*******************************************************
 * Copyright (c) 2018-2088, By XuXiang all rights reserved.
 *
-* FileName: NetManager.cpp
+* FileName: NetManagerBase.cpp
 * Summary: 网络管理的基类。
 *
 * Author: XuXiang
 * Date: 2018-10-24 20:52
 *******************************************************/
 
-#include "NetManager.h"
+#include "NetManagerBase.h"
 #include "Util/DataUtil.h"
 #include <iostream>
 #include <string>
@@ -24,11 +24,11 @@ namespace XX004
 		len = 0;
 	}
 
-	NetManager::NetManager()
+	NetManagerBase::NetManagerBase()
 	{
 	}
 
-	NetManager::~NetManager()
+	NetManagerBase::~NetManagerBase()
 	{
 		while (m_CacheQueue.size() > 0)
 		{
@@ -50,31 +50,31 @@ namespace XX004
 		}
 	}
 
-	void NetManager::Start(const string &ipaddress, int port)
+	void NetManagerBase::Start(const string &ipaddress, int port)
 	{
 		m_Server.SetProcesser(this);
 		m_Server.Start(ipaddress, port);
 	}
 
-	void NetManager::Stop()
+	void NetManagerBase::Stop()
 	{
 		m_Server.Stop();
 	}
 
-	void NetManager::OnConnected(NetConnection *connection)
+	void NetManagerBase::OnConnected(NetConnection *connection)
 	{
-		//cout << "NetManager::OnConnected ip:" << connection->GetIPAddress() << " port:" << connection->GetPort() << endl;
+		//cout << "NetManagerBase::OnConnected ip:" << connection->GetIPAddress() << " port:" << connection->GetPort() << endl;
 	}
 
-	void NetManager::OnDisconnected(NetConnection *connection)
+	void NetManagerBase::OnDisconnected(NetConnection *connection)
 	{
-		//cout << "NetManager::OnDisconnected ip:" << connection->GetIPAddress() << " port:" << connection->GetPort() << endl;
+		//cout << "NetManagerBase::OnDisconnected ip:" << connection->GetIPAddress() << " port:" << connection->GetPort() << endl;
 	}
 
-	void NetManager::OnRecvData(NetConnection *connection, const NetPackageHeader& header, Byte *buffer)
+	void NetManagerBase::OnRecvData(NetConnection *connection, const NetPackageHeader& header, Byte *buffer)
 	{
 		//解析网络消息并添加到队列中
-		cout << "NetManager::OnRecvData ip:" << connection->GetIPAddress() << " port:" << connection->GetPort();
+		cout << "NetManagerBase::OnRecvData ip:" << connection->GetIPAddress() << " port:" << connection->GetPort();
 		cout << " cmd:" << header.Command << " len:" << header.BodySize << endl;
 
 		//包头相关处理
@@ -99,22 +99,22 @@ namespace XX004
 		//}
 	}
 
-	void NetManager::RegisterMessageCallBack(Int32 cmd, NetMessageCallBack call)
+	void NetManagerBase::RegisterMessageCallBack(Int32 cmd, NetMessageCallBack call)
 	{
 		m_CallBack[cmd] = call;
 	}
 
-	void NetManager::UnregisterMessageCallBack(Int32 cmd)
+	void NetManagerBase::UnregisterMessageCallBack(Int32 cmd)
 	{
 		m_CallBack.erase(cmd);
 	}
 
-	void NetManager::UnregisterAllCallBack()
+	void NetManagerBase::UnregisterAllCallBack()
 	{
 		m_CallBack.clear();
 	}
 
-	void NetManager::OnUpdate()
+	void NetManagerBase::OnUpdate()
 	{
 		//分发接收消息队列
 		if (m_RecvQueue.size() > 0)
@@ -138,7 +138,7 @@ namespace XX004
 		//写入发送消息队列
 	}
 
-	NetDataItem* NetManager::CreateNetDataItem()
+	NetDataItem* NetManagerBase::CreateNetDataItem()
 	{
 		NetDataItem *item = NULL;
 		if (m_CacheQueue.size() > 0)
@@ -154,7 +154,7 @@ namespace XX004
 		return item;
 	}
 
-	//void NetManager::Test(Int32 cmd)
+	//void NetManagerBase::Test(Int32 cmd)
 	//{
 	//	MessageCallBackMap::iterator itr = m_CallBack.find(cmd);
 	//	if (itr != m_CallBack.end())

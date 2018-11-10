@@ -1,16 +1,16 @@
 ﻿/*******************************************************
 * Copyright (c) 2018-2088, By XuXiang all rights reserved.
 *
-* FileName: ServerMain.cpp
+* FileName: MainBase.cpp
 * Summary: 程序入口管理的基类。
 *
 * Author: XuXiang
 * Date: 2018-08-13 22:43
 *******************************************************/
 
-#include "ServerMain.h"
+#include "MainBase.h"
 #include "Util/TimeUtil.h"
-#include "NetManager.h"
+#include "NetManagerBase.h"
 #include "ServerBase.h"
 #include <iostream>
 #include <assert.h>
@@ -18,18 +18,18 @@
 
 namespace XX004
 {
-	ServerMain* ServerMain::pCurMain = NULL;
+	MainBase* MainBase::pCurMain = NULL;
 
-	const Int64 ServerMain::FRAME_GAP = 100;
+	const Int64 MainBase::FRAME_GAP = 100;
 
-	const string ServerMain::COMMAND_QUIT = "/q";
+	const string MainBase::COMMAND_QUIT = "/q";
 
-	ServerMain::ServerMain() : m_pNetManager(NULL), m_pServer(NULL), m_IsRunning(false)
+	MainBase::MainBase() : m_pNetManager(NULL), m_pServer(NULL), m_IsRunning(false)
 	{
 		pCurMain = this;
 	}
 
-	ServerMain::~ServerMain()
+	MainBase::~MainBase()
 	{
 		if (pCurMain == this)
 		{
@@ -39,7 +39,7 @@ namespace XX004
 		SAFE_DELETE(m_pServer);
 	}
 
-	int ServerMain::Run()
+	int MainBase::Run()
 	{
 		//初始化网络
 		WORD wVersionRequested;
@@ -54,7 +54,7 @@ namespace XX004
 		}
 
 		//启动服务循环
-		m_Thread = thread([](ServerMain *t){t->ThreadProcess(); }, this);
+		m_Thread = thread([](MainBase *t){t->ThreadProcess(); }, this);
 
 		//等待初始化完毕的信号后开始命令循环
 		m_StartSemaphore.wait();
@@ -78,7 +78,7 @@ namespace XX004
 		return 0;
 	}
 
-	void ServerMain::ThreadProcess()
+	void MainBase::ThreadProcess()
 	{
 		
 
@@ -100,7 +100,7 @@ namespace XX004
 		SAFE_DELETE(m_pServer);		
 	}
 
-	void ServerMain::SeverLoop()
+	void MainBase::SeverLoop()
 	{
 		int state = 0;				//状态 0初始化 1更新 2停止 3跳出
 		int startstep = 0, stopstep = 0;
@@ -148,7 +148,7 @@ namespace XX004
 		}
 	}
 
-	bool ServerMain::StarStep(int step)
+	bool MainBase::StarStep(int step)
 	{
 		float r = 0;
 		bool ok = m_pServer->OnStart(step, r);
@@ -164,7 +164,7 @@ namespace XX004
 		return false;
 	}
 
-	bool ServerMain::UpdateStep(UInt64 &sectick)
+	bool MainBase::UpdateStep(UInt64 &sectick)
 	{
 		//处理网络消息、模块更新
 		m_pNetManager->OnUpdate();
@@ -182,7 +182,7 @@ namespace XX004
 		return false;
 	}
 
-	bool ServerMain::StopStep(int step)
+	bool MainBase::StopStep(int step)
 	{
 		float r = 0;
 		bool ok = m_pServer->OnStop(step, r);

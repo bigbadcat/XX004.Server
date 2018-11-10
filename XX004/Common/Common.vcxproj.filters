@@ -27,7 +27,6 @@
     <ClInclude Include="Net\NetPackageHeader.h">
       <Filter>Net</Filter>
     </ClInclude>
-    <ClInclude Include="ServerMain.h" />
     <ClInclude Include="Net\NetSocketThread.h">
       <Filter>Net</Filter>
     </ClInclude>
@@ -38,7 +37,6 @@
     <ClInclude Include="Net\NetConnectionThread.h">
       <Filter>Net</Filter>
     </ClInclude>
-    <ClInclude Include="NetManager.h" />
     <ClInclude Include="ServerBase.h" />
     <ClInclude Include="Core\semaphore.h">
       <Filter>Core</Filter>
@@ -52,6 +50,8 @@
     <ClInclude Include="Net\NetDefine.h">
       <Filter>Net</Filter>
     </ClInclude>
+    <ClInclude Include="MainBase.h" />
+    <ClInclude Include="NetManagerBase.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Net\NetServer.cpp">
@@ -69,7 +69,6 @@
     <ClCompile Include="Net\NetPackageHeader.cpp">
       <Filter>Net</Filter>
     </ClCompile>
-    <ClCompile Include="ServerMain.cpp" />
     <ClCompile Include="Net\NetSocketThread.cpp">
       <Filter>Net</Filter>
     </ClCompile>
@@ -79,7 +78,6 @@
     <ClCompile Include="Net\NetConnectionThread.cpp">
       <Filter>Net</Filter>
     </ClCompile>
-    <ClCompile Include="NetManager.cpp" />
     <ClCompile Include="ServerBase.cpp" />
     <ClCompile Include="Core\semaphore.cpp">
       <Filter>Core</Filter>
@@ -90,5 +88,7 @@
     <ClCompile Include="Net\NetMessage.cpp">
       <Filter>Net</Filter>
     </ClCompile>
+    <ClCompile Include="MainBase.cpp" />
+    <ClCompile Include="NetManagerBase.cpp" />
   </ItemGroup>
 </Project>

@@ -4,15 +4,15 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MySQLTest.cpp" />
     <ClCompile Include="NetTest.cpp" />
-    <ClCompile Include="ServerMainData.cpp" />
     <ClCompile Include="NetManagerData.cpp" />
     <ClCompile Include="ServerData.cpp" />
+    <ClCompile Include="MainData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MySQLTest.h" />
     <ClInclude Include="NetTest.h" />
-    <ClInclude Include="ServerMainData.h" />
     <ClInclude Include="NetManagerData.h" />
     <ClInclude Include="ServerData.h" />
+    <ClInclude Include="MainData.h" />
   </ItemGroup>
 </Project>

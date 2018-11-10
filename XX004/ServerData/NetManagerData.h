@@ -11,11 +11,11 @@
 #ifndef __NetManagerData_h__
 #define __NetManagerData_h__
 
-#include "NetManager.h"
+#include "NetManagerBase.h"
 
 namespace XX004
 {
-	class NetManagerData : public NetManager
+	class NetManagerData : public NetManagerBase
 	{
 	public:
 		NetManagerData();
