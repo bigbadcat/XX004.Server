@@ -94,6 +94,19 @@ namespace XX004
 			return ret;
 		}
 
+		void NetConnectionManager::RemoveConnection(NetConnection* con)
+		{
+			SOCKET s = con->GetSocket();
+			for (ConnectionVector::iterator itr = m_ConnectionSets.begin(); itr != m_ConnectionSets.end(); ++itr)
+			{
+				NetConnectionSet *pset = *itr;
+				if (pset->GetConnection(s) != NULL)
+				{
+					pset->CloseConnection(con);
+				}
+			}
+		}
+
 		void NetConnectionManager::OnRemoveConnection(NetConnection* con)
 		{
 			if (m_pServer != NULL)
@@ -104,7 +117,7 @@ namespace XX004
 
 		NetConnection* NetConnectionManager::GetConnection(SOCKET s)
 		{
-			//逐个线程查找
+			//逐个集合查找
 			NetConnection *ret = NULL;
 			for (ConnectionVector::iterator itr = m_ConnectionSets.begin(); ret == NULL && itr != m_ConnectionSets.end(); ++itr)
 			{

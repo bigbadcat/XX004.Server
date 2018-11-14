@@ -24,7 +24,7 @@ namespace XX004
 	struct NetDataItem
 	{
 		//连接标识
-		SOCKET s;
+		Int64 sid;
 
 		//远端标识
 		RemoteKey key;
@@ -75,12 +75,17 @@ namespace XX004
 		//帧更新
 		virtual void OnUpdate();
 
+		
+
 		//void Test(Int32 cmd);
 
 	private:
 
 		//创建一个数据项
-		NetDataItem* CreateNetDataItem();
+		NetDataItem* GetNetDataItem();
+
+		//回收数据对象
+		void CacheNetDataItem(NetDataItem *item);
 
 		//消息集合
 		MessageCallBackMap m_CallBack;
@@ -90,16 +95,20 @@ namespace XX004
 		//要发送的数据队列
 		NetDataItemQueue m_SendQueue;
 
+		//发送队列锁
+		std::mutex m_SendMutex;
+
 		//接收到的数据队列
 		NetDataItemQueue m_RecvQueue;
 
-		//发送锁
+		//接收队列锁
 		std::mutex m_RecvMutex;
 
 		//缓存队列
 		NetDataItemQueue m_CacheQueue;
 
-
+		//缓存队列锁
+		std::mutex m_CacheMutex;
 
 
 
@@ -121,7 +130,13 @@ namespace XX004
 		//分发消息给Server
 		void Dispatch();
 
+		//发送数据
+		void Send(Int64 sid, int command, Byte *buffer, int len);
+
 	private:
+		//提交网络数据
+		void Post(NetDataItem *item);
+
 		//线程过程
 		void ThreadProcess();
 

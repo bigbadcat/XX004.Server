@@ -12,6 +12,7 @@
 #include "NetManagerData.h"
 #include "Util/TimeUtil.h"
 #include "Net/NetMessage.h"
+#include "MainBase.h"
 using namespace XX004::Net;
 
 namespace XX004
@@ -61,14 +62,17 @@ namespace XX004
 		nms.Unpack(item->data, 0);
 		cout << "text:" << nms.Value << endl;
 
-		////准备回复数据		
-		//NetMessageIntString res;
-		//res.Value1 = 0;
-		//res.Value2 = nms.Value + "hhhhh";
+		//准备回复数据		
+		NetMessageIntString res;
+		res.Value1 = 0;
+		res.Value2 = nms.Value + "hhhhh";
 
-		//Byte recvdata[1024];
-		//int index = 0;
-		//index = res.Pack(recvdata, index);
+		Byte recvdata[1024];
+		int index = 0;
+		index = res.Pack(recvdata, index);
+
+		NetManagerBase *pNetMgr = MainBase::GetCurMain()->GetNetManager();
+		pNetMgr->Send(item->sid, 1050, recvdata, index);
 
 		////回复的数据头
 		//NetPackageHeader sendhead;
@@ -81,7 +85,5 @@ namespace XX004
 		//sendsize = sendhead.Pack(sendbuff + sendsize, sendsize);
 		//::memcpy_s(sendbuff + sendsize, 1024 - sendsize, recvdata, index);
 		//sendsize += index;
-
-		//con->AddSendData(sendbuff, sendsize);
 	}
 }

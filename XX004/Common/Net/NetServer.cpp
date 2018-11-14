@@ -51,6 +51,12 @@ namespace XX004
 			m_pListener->Select();
 			m_pConnectionManager->SelectSocket();
 		}
+
+		NetConnection* NetServer::GetGetConnection(SOCKET s)
+		{
+			return m_pConnectionManager->GetConnection(s);
+		}
+
 //
 //		void NetServer::SetRemote(NetConnection* con, const RemoteKey& key) 
 //		{ 
@@ -63,10 +69,10 @@ namespace XX004
 //			return NULL;
 //		}
 //
-//		void NetServer::CloseConnection(NetConnection* con)
-//		{
-//			//m_pConnectionManager->RemoveConnection(con);
-//		}
+		void NetServer::CloseConnection(NetConnection* con)
+		{
+			m_pConnectionManager->RemoveConnection(con);
+		}
 //
 //		void NetServer::CloseConnection(const RemoteKey& key)
 //		{

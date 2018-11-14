@@ -49,6 +49,9 @@ namespace XX004
 
 			//获取连接
 			NetConnection* GetConnection(SOCKET s);
+
+			//关闭连接
+			void CloseConnection(NetConnection *con);
 			
 			//获取管理者
 			inline NetConnectionManager* GetManager()const { return m_pManager; }

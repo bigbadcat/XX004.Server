@@ -81,6 +81,10 @@ namespace XX004
 		int NetConnectionSet::OnSocketWrite(SOCKET s)
 		{
 			NetConnection *pcon = m_Connections[s];
+			if (pcon == NULL)
+			{
+				return 0;
+			}
 			return pcon->DoSend();
 		}
 
@@ -88,6 +92,10 @@ namespace XX004
 		{
 			//连接断开
 			NetConnection *pcon = m_Connections[s];
+			if (pcon == NULL)
+			{
+				return;
+			}
 			if (m_pManager != NULL)
 			{
 				m_pManager->OnRemoveConnection(pcon);
@@ -187,6 +195,12 @@ namespace XX004
 		{
 			ConnectionMap::iterator itr = m_Connections.find(s);
 			return itr == m_Connections.end() ? NULL : itr->second;
+		}
+
+		void NetConnectionSet::CloseConnection(NetConnection *con)
+		{
+			assert(con != NULL);
+			OnSocketClose(con->GetSocket());
 		}
 	}
 }

@@ -11,6 +11,7 @@
 #include "NetManagerBase.h"
 #include "Util/DataUtil.h"
 #include <iostream>
+#include <assert.h>
 #include <string>
 using namespace std;
 
@@ -18,7 +19,7 @@ namespace XX004
 {
 	void NetDataItem::Reset()
 	{
-		s = SOCKET_ERROR;
+		sid = 0;
 		key = RemoteKey(RemoteType::RT_UNKNOW, 0);
 		cmd = 0;
 		len = 0;
@@ -80,8 +81,8 @@ namespace XX004
 		//包头相关处理
 
 		//加入消息队列
-		NetDataItem *item = CreateNetDataItem();
-		item->s = connection->GetSocket();
+		NetDataItem *item = GetNetDataItem();
+		item->sid = (Int64)connection->GetSocket();
 		item->key = connection->GetRemote();
 		item->cmd = header.Command;
 		item->len = header.BodySize;
@@ -112,20 +113,36 @@ namespace XX004
 		
 	}
 
-	NetDataItem* NetManagerBase::CreateNetDataItem()
+
+
+	NetDataItem* NetManagerBase::GetNetDataItem()
 	{
+		//先从缓存队列中获取
 		NetDataItem *item = NULL;
-		if (m_CacheQueue.size() > 0)
 		{
-			item = m_CacheQueue.front();			
-			m_CacheQueue.pop();
+			std::unique_lock<std::mutex> lock(m_CacheMutex);
+			if (m_CacheQueue.size() > 0)
+			{
+				item = m_CacheQueue.front();
+				m_CacheQueue.pop();
+			}
 		}
-		else
+		
+		//没有再创建
+		if (item == NULL)
 		{
 			item = new NetDataItem();
 		}
 		item->Reset();
 		return item;
+	}
+
+	void NetManagerBase::CacheNetDataItem(NetDataItem *item)
+	{
+		assert(item != NULL);
+
+		std::unique_lock<std::mutex> lock(m_CacheMutex);
+		m_CacheQueue.push(item);
 	}
 
 	//void NetManagerBase::Test(Int32 cmd)
@@ -160,23 +177,54 @@ namespace XX004
 
 	void NetManagerBase::Dispatch()
 	{
-		//分发接收消息队列
-		if (m_RecvQueue.size() > 0)
+		//先进行非线程安全的只读判断
+		if (m_RecvQueue.size() <= 0)
+		{
+			return;
+		}
+
+		//先锁定队列，将消息都拿出来，解锁队列
+		static NetDataItemQueue temp_queue;
 		{
 			std::unique_lock<std::mutex> lock(m_RecvMutex);
 			while (m_RecvQueue.size() > 0)
 			{
 				NetDataItem *item = m_RecvQueue.front();
 				m_RecvQueue.pop();
-
-				MessageCallBackMap::iterator itr = m_CallBack.find(item->cmd);
-				if (itr != m_CallBack.end())
-				{
-					(itr->second)(item);
-				}
-				m_CacheQueue.push(item);
+				temp_queue.push(item);
 			}
 		}
+			
+		//分发消息
+		while (temp_queue.size() > 0)
+		{
+			NetDataItem *item = temp_queue.front();
+			temp_queue.pop();
+			MessageCallBackMap::iterator itr = m_CallBack.find(item->cmd);
+			if (itr != m_CallBack.end())
+			{
+				(itr->second)(item);
+			}
+			CacheNetDataItem(item);
+		}
+	}
+
+	void NetManagerBase::Send(Int64 sid, int command, Byte *buffer, int len)
+	{
+		NetDataItem *item = GetNetDataItem();
+		item->sid = sid;
+		item->key = RemoteKey();
+		item->cmd = command;
+		::memcpy_s(item->data, NET_PACKAGE_MAX_SIZE, buffer, len);
+		item->len = len;
+		Post(item);
+	}
+
+	void NetManagerBase::Post(NetDataItem *item)
+	{
+		assert(item != NULL);
+		std::unique_lock<std::mutex> lock(m_SendMutex);
+		m_SendQueue.push(item);
 	}
 
 	void NetManagerBase::ThreadProcess()
@@ -196,7 +244,52 @@ namespace XX004
 
 	void NetManagerBase::OnPostSend()
 	{
+		//先进行非线程安全的只读判断
+		if (m_SendQueue.size() <= 0)
+		{
+			return;
+		}
 
+		//先锁定队列，将消息都拿出来，解锁队列
+		static NetDataItemQueue temp_queue;
+		{
+			std::unique_lock<std::mutex> lock(m_SendMutex);
+			while (m_SendQueue.size() > 0)
+			{
+				NetDataItem *item = m_SendQueue.front();
+				m_SendQueue.pop();
+				temp_queue.push(item);
+			}
+		}
+
+		//分发消息
+		while (temp_queue.size() > 0)
+		{
+			NetDataItem *item = temp_queue.front();
+			temp_queue.pop();
+			NetConnection *pcon = m_Server.GetGetConnection((SOCKET)item->sid);
+			if (pcon != NULL)
+			{
+				NetPackageHeader sendhead;
+				sendhead.SetSign();
+				sendhead.Command = item->cmd;
+				sendhead.BodySize = item->len;
+
+				static Byte sendbuff[1024];
+				int sendsize = 0;
+				sendsize = sendhead.Pack(sendbuff, sendsize);
+				::memcpy_s(sendbuff + sendsize, 1024 - sendsize, item->data, item->len);
+				sendsize += item->len;
+
+				bool cansend = pcon->AddSendData(sendbuff, sendsize);
+				if (!cansend)
+				{
+					//同一网络周期内发送数据量过大或者该连接速度太低把数据缓冲区挤爆了，要断掉连接
+					assert(false);
+				}		
+			}
+			CacheNetDataItem(item);
+		}
 	}
 
 	void NetManagerBase::OnSocketSelect()

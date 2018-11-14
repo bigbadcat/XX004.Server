@@ -52,6 +52,9 @@ namespace XX004
 			NetConnection* AddConnection(SOCKET s);
 
 			//移除连接
+			void RemoveConnection(NetConnection* con);
+
+			//有连接被移除
 			void OnRemoveConnection(NetConnection* con);
 
 			//获取连接
