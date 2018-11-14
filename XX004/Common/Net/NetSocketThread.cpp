@@ -107,10 +107,10 @@ namespace XX004
 				int ret = ::select(0, &readfds, &writefds, &exceptfds, &timeout);		//windows下nfds参数无用，可传入0
 				if (ret > 0)
 				{
+					needremove.clear();
 					for (SocketMap::iterator itr = m_Sockets.begin(); itr != m_Sockets.end(); ++itr)
 					{
 						SOCKET s = itr->second->GetSocket();
-						needremove.clear();
 
 						//先判断是否有异常
 						if (FD_ISSET(s, &exceptfds) != 0)

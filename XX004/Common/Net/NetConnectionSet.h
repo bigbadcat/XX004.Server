@@ -1,15 +1,15 @@
 ﻿/*******************************************************
 * Copyright (c) 2018-2088, By XuXiang all rights reserved.
 *
-* FileName: NetConnectionThread.h
-* Summary: 网络通信模块服务端连接线程。
+* FileName: NetConnectionSet.h
+* Summary: 网络通信模块服务端连接集合。
 *
 * Author: XuXiang
 * Date: 2018-09-12 23:23
 *******************************************************/
 
-#ifndef __NetConnectionThread_h__
-#define __NetConnectionThread_h__
+#ifndef __NetConnectionSet_h__
+#define __NetConnectionSet_h__
 
 #include "NetConnection.h"
 #include "NetSocketThread.h"
@@ -22,23 +22,27 @@ namespace XX004
 		class NetConnectionManager;
 
 		//网络连接线程，管理一组连接
-		class NetConnectionThread : public NetSocketThread
+		class NetConnectionSet
 		{
 			typedef std::map<SOCKET, NetConnection*> ConnectionMap;
 
 		public:
 			//构造析构函数
-			NetConnectionThread();
-			virtual ~NetConnectionThread();
+			NetConnectionSet();
+			virtual ~NetConnectionSet();
+
 
 			//Socket可以读取数据了
-			virtual int OnSocketRead(NetSocketWrap *wrap);
+			int OnSocketRead(SOCKET s);
 
 			//Socket可以写入数据了
-			virtual int OnSocketWrite(NetSocketWrap *wrap);
+			int OnSocketWrite(SOCKET s);
 
-			//Socket关闭了，此时wrap的Socket成员已经被重置成SOCKET_ERROR
-			virtual void OnSocketClose(NetSocketWrap *wrap);
+			//Socket关闭
+			void OnSocketClose(SOCKET s);
+
+			//选择Socket处理
+			void SelectSocket();
 
 			//添加连接
 			NetConnection* AddConnection(SOCKET s);
@@ -56,14 +60,6 @@ namespace XX004
 			//一个线程管理的最大连接数
 			static const std::size_t MAX_CONNECTION_NUMBER = 64;
 
-		protected:
-
-			//线程开始
-			virtual void OnBegin();
-
-			//线程结束
-			virtual void OnEnd();
-
 		private:
 
 			//所属的管理者
@@ -75,4 +71,4 @@ namespace XX004
 	}
 }
 
-#endif	//__NetConnectionThread_h__
+#endif	//__NetConnectionSet_h__

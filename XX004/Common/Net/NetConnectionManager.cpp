@@ -10,7 +10,7 @@
 
 #include "NetConnectionManager.h"
 #include "NetServer.h"
-#include "NetConnectionThread.h"
+#include "NetConnectionSet.h"
 #include <assert.h>
 
 namespace XX004
@@ -24,71 +24,81 @@ namespace XX004
 
 		NetConnectionManager::~NetConnectionManager()
 		{
-			Stop();
-			Join();
-			for (ConnectionVector::iterator itr = m_ConnectionThreads.begin(); itr != m_ConnectionThreads.end(); ++itr)
+			Release();
+		}
+
+		void NetConnectionManager::Init()
+		{
+
+		}
+
+		void NetConnectionManager::Release()
+		{
+			for (ConnectionVector::iterator itr = m_ConnectionSets.begin(); itr != m_ConnectionSets.end(); ++itr)
 			{
 				delete (*itr);
 			}
-			m_ConnectionThreads.clear();
+			m_ConnectionSets.clear();
 		}
 
-		void NetConnectionManager::Start()
+		void NetConnectionManager::SelectSocket()
 		{
-			for (ConnectionVector::iterator itr = m_ConnectionThreads.begin(); itr != m_ConnectionThreads.end(); ++itr)
+			for (ConnectionVector::iterator itr = m_ConnectionSets.begin(); itr != m_ConnectionSets.end(); ++itr)
 			{
-				(*itr)->Start();
+				(*itr)->SelectSocket();
 			}
 		}
 
-		void NetConnectionManager::Stop()
-		{
-			for (ConnectionVector::iterator itr = m_ConnectionThreads.begin(); itr != m_ConnectionThreads.end(); ++itr)
-			{
-				(*itr)->Stop();
-			}
-		}
+		//void NetConnectionManager::Start()
+		//{
+		//	for (ConnectionVector::iterator itr = m_ConnectionThreads.begin(); itr != m_ConnectionThreads.end(); ++itr)
+		//	{
+		//		(*itr)->Start();
+		//	}
+		//}
 
-		void NetConnectionManager::Join()
-		{
-			for (ConnectionVector::iterator itr = m_ConnectionThreads.begin(); itr != m_ConnectionThreads.end(); ++itr)
-			{
-				(*itr)->Join();
-			}
-		}
+		//void NetConnectionManager::Stop()
+		//{
+		//	for (ConnectionVector::iterator itr = m_ConnectionThreads.begin(); itr != m_ConnectionThreads.end(); ++itr)
+		//	{
+		//		(*itr)->Stop();
+		//	}
+		//}
+
+		//void NetConnectionManager::Join()
+		//{
+		//	for (ConnectionVector::iterator itr = m_ConnectionThreads.begin(); itr != m_ConnectionThreads.end(); ++itr)
+		//	{
+		//		(*itr)->Join();
+		//	}
+		//}
 
 		NetConnection* NetConnectionManager::AddConnection(SOCKET s)
 		{
-			//找一个线程加入连接
+			//找一个集合加入连接
 			NetConnection *ret = NULL;
-			for (ConnectionVector::iterator itr = m_ConnectionThreads.begin(); ret == NULL && itr != m_ConnectionThreads.end(); ++itr)
+			for (ConnectionVector::iterator itr = m_ConnectionSets.begin(); ret == NULL && itr != m_ConnectionSets.end(); ++itr)
 			{
 				ret = (*itr)->AddConnection(s);
 			}
 
-			//没有线程可以加入连接了，创建新的线程
+			//没有线程可以加入集合了，创建新的线程
 			if (ret == NULL)
 			{
-				NetConnectionThread *connection_thread = new NetConnectionThread();
-				m_ConnectionThreads.push_back(connection_thread);
-				connection_thread->SetManager(this);
-				connection_thread->Start();
-				ret = connection_thread->AddConnection(s);
+				NetConnectionSet *connection_set = new NetConnectionSet();
+				m_ConnectionSets.push_back(connection_set);
+				connection_set->SetManager(this);
+				ret = connection_set->AddConnection(s);
 			}
 
 			return ret;
 		}
 
-		void NetConnectionManager::RemoveConnection(NetConnection* con)
+		void NetConnectionManager::OnRemoveConnection(NetConnection* con)
 		{
 			if (m_pServer != NULL)
 			{
 				m_pServer->OnDisconnect(con);
-			}
-			ConnectionMap::iterator itr = m_RemoteToConnection.find(con->GetRemote());
-			if (itr != m_RemoteToConnection.end())
-			{
-				m_RemoteToConnection.erase(itr);
 			}
 		}
 
@@ -96,24 +106,24 @@ namespace XX004
 		{
 			//逐个线程查找
 			NetConnection *ret = NULL;
-			for (ConnectionVector::iterator itr = m_ConnectionThreads.begin(); ret == NULL && itr != m_ConnectionThreads.end(); ++itr)
+			for (ConnectionVector::iterator itr = m_ConnectionSets.begin(); ret == NULL && itr != m_ConnectionSets.end(); ++itr)
 			{
 				ret = (*itr)->GetConnection(s);
 			}
 			return ret;
 		}
 
-		void NetConnectionManager::SetRemote(NetConnection* con, const RemoteKey& key)
-		{
-			con->SetRemote(key);
-			m_RemoteToConnection[key] = con;
-		}
+		//void NetConnectionManager::SetRemote(NetConnection* con, const RemoteKey& key)
+		//{
+		//	con->SetRemote(key);
+		//	m_RemoteToConnection[key] = con;
+		//}
 
-		NetConnection* NetConnectionManager::GetConnection(const RemoteKey& key)
-		{
-			ConnectionMap::iterator itr = m_RemoteToConnection.find(key);
-			return itr == m_RemoteToConnection.end() ? NULL : itr->second;
-		}
+		//NetConnection* NetConnectionManager::GetConnection(const RemoteKey& key)
+		//{
+		//	ConnectionMap::iterator itr = m_RemoteToConnection.find(key);
+		//	return itr == m_RemoteToConnection.end() ? NULL : itr->second;
+		//}
 
 		void NetConnectionManager::OnRecvPackage(NetConnection *con)
 		{

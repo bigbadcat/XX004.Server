@@ -95,6 +95,7 @@ namespace XX004
 		while (m_State == ServerState::SS_UPDATE)
 		{
 			UInt64 t_loopstart = TimeUtil::GetTickCount();		//循环开始的时间
+			pNetMgr->Dispatch();
 			OnUpdate();
 			if (t_loopstart - t_sectick >= 1000)
 			{

@@ -34,48 +34,64 @@ namespace XX004
 
 		void NetServer::Start(const string &ipaddress, int port)
 		{
-			//cout << "NetServer::Start ipaddress:" << ipaddress << " port:" << port << endl;
-			m_pListener->Start(ipaddress, port);
+			cout << "NetServer::Start ipaddress:" << ipaddress << " port:" << port << endl;
+			m_pListener->Start(port);
+			m_pConnectionManager->Init();
 		}
 
 		void NetServer::Stop()
 		{
-			//先通知停掉，再等待结束
+			cout << "NetServer::Stop" << endl;
 			m_pListener->Stop();
-			m_pConnectionManager->Stop();
-			m_pListener->Join();
-			m_pConnectionManager->Join();
+			m_pConnectionManager->Release();
 		}
 
-		void NetServer::SetRemote(NetConnection* con, const RemoteKey& key) 
-		{ 
-			m_pConnectionManager->SetRemote(con, key);
-		}
-
-		NetConnection* NetServer::GetConnection(const RemoteKey& key)
-		{ 
-			return m_pConnectionManager->GetConnection(key); 
-		}
-
-		void NetServer::CloseConnection(NetConnection* con)
+		void NetServer::SelectSocket()
 		{
-			m_pConnectionManager->RemoveConnection(con);
+			m_pListener->Select();
+			m_pConnectionManager->SelectSocket();
 		}
-
-		void NetServer::CloseConnection(const RemoteKey& key)
-		{
-			NetConnection *con = m_pConnectionManager->GetConnection(key);
-			if (con != NULL)
-			{
-				m_pConnectionManager->RemoveConnection(con);
-			}			
-		}
+//
+//		void NetServer::SetRemote(NetConnection* con, const RemoteKey& key) 
+//		{ 
+//			//m_pConnectionManager->SetRemote(con, key);
+//		}
+//
+//		NetConnection* NetServer::GetConnection(const RemoteKey& key)
+//		{ 
+//			//return m_pConnectionManager->GetConnection(key); 
+//			return NULL;
+//		}
+//
+//		void NetServer::CloseConnection(NetConnection* con)
+//		{
+//			//m_pConnectionManager->RemoveConnection(con);
+//		}
+//
+//		void NetServer::CloseConnection(const RemoteKey& key)
+//		{
+///*			NetConnection *con = m_pConnectionManager->GetConnection(key);
+//			if (con != NULL)
+//			{
+//				m_pConnectionManager->RemoveConnection(con);
+//			}	*/		
+//		}
 
 		void NetServer::OnConnect(SOCKET s)
 		{
 			//添加到连接管理器
 			if (m_pConnectionManager != NULL)
 			{
+				//NetConnection *con = new NetConnection();
+				//con->SetSocket(s);
+				//cout << "OnConnect ip:" << con->GetIPAddress() << " port:" << con->GetPort() << endl;
+				//cout << "close in 5 second..." << endl;
+
+				//std::chrono::milliseconds dura(5000);
+				//std::this_thread::sleep_for(dura);
+				//SAFE_DELETE(con)
+
+
 				NetConnection* con = m_pConnectionManager->AddConnection(s);
 				cout << "OnConnect ip:" << con->GetIPAddress() << " port:" << con->GetPort() << endl;
 				if (m_pProcesser != NULL)

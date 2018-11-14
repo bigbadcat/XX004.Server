@@ -20,6 +20,8 @@ namespace XX004
 
 		//网络数据包最大尺寸 MTU可用大小为1480
 		const int NET_PACKAGE_MAX_SIZE = 1024;
+
+#define SAFE_CLOSE_SOCKET(s) if (s!=SOCKET_ERROR){::closesocket(s); s=SOCKET_ERROR;}
 	}
 }
 

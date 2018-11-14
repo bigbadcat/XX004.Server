@@ -21,27 +21,26 @@ namespace XX004
 	namespace Net
 	{
 		class NetServer;
-		class NetConnectionThread;
+		class NetConnectionSet;
 
 		//网络连接管理，通过管理多个连接线程实现
 		class NetConnectionManager
 		{
-			typedef std::vector<NetConnectionThread*> ConnectionVector;
-			typedef std::map<RemoteKey, NetConnection*> ConnectionMap;
+			typedef std::vector<NetConnectionSet*> ConnectionVector;
 
 		public:
 			//构造析构函数
 			NetConnectionManager();
 			virtual ~NetConnectionManager();
 
-			//启动
-			void Start();
+			//初始化
+			void Init();
 			
-			//停止
-			void Stop();
+			//释放
+			void Release();
 
-			//等待完全结束
-			void Join();
+			//选择Socket处理
+			void SelectSocket();
 
 			//设置服务端
 			inline void SetServer(NetServer *p) { m_pServer = p; }
@@ -53,16 +52,16 @@ namespace XX004
 			NetConnection* AddConnection(SOCKET s);
 
 			//移除连接
-			void RemoveConnection(NetConnection* con);
+			void OnRemoveConnection(NetConnection* con);
 
 			//获取连接
 			NetConnection* GetConnection(SOCKET s);
 
-			//设置远端标识
-			void SetRemote(NetConnection* con, const RemoteKey& key);
+			////设置远端标识
+			//void SetRemote(NetConnection* con, const RemoteKey& key);
 
-			//获取连接
-			NetConnection* GetConnection(const RemoteKey& key);
+			////获取连接
+			//NetConnection* GetConnection(const RemoteKey& key);
 
 			//有连接接收到数据包了
 			void OnRecvPackage(NetConnection *con);
@@ -72,10 +71,8 @@ namespace XX004
 			NetServer *m_pServer;
 
 			//连接线程
-			ConnectionVector m_ConnectionThreads;
+			ConnectionVector m_ConnectionSets;
 
-			//远端标识到连接映射
-			ConnectionMap m_RemoteToConnection;
 		};
 	}
 }

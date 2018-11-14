@@ -53,11 +53,11 @@ namespace XX004
 		NetManagerBase();
 		virtual ~NetManagerBase();
 
-		//启动网络 ipaddress:IP地址。 port:端口号。
-		void Start(const string &ipaddress, int port);
+		////启动网络 ipaddress:IP地址。 port:端口号。
+		//void Start(const string &ipaddress, int port);
 
-		//停止网络
-		void Stop();
+		////停止网络
+		//void Stop();
 
 		virtual void OnConnected(NetConnection *connection);
 		virtual void OnDisconnected(NetConnection *connection);
@@ -85,8 +85,7 @@ namespace XX004
 		//消息集合
 		MessageCallBackMap m_CallBack;
 
-		//网络服务端模块
-		NetServer m_Server;
+		
 
 		//要发送的数据队列
 		NetDataItemQueue m_SendQueue;
@@ -99,6 +98,48 @@ namespace XX004
 
 		//缓存队列
 		NetDataItemQueue m_CacheQueue;
+
+
+
+
+
+
+
+		//------------------------------------------------
+
+	public:
+
+		//启动网络
+		void Start();
+
+		//停止网络
+		void Stop();
+
+		//等待网络
+		void Join();
+
+		//分发消息给Server
+		void Dispatch();
+
+	private:
+		//线程过程
+		void ThreadProcess();
+
+		//提交发送的数据给Net
+		virtual void OnPostSend();
+
+		//处理Socket
+		virtual void OnSocketSelect();
+
+		//是否运行
+		bool m_IsRunning;
+
+		//网络处理线程
+		thread m_Thread;
+
+		//网络服务端模块
+		NetServer m_Server;
+
 	};
 }
 

@@ -81,11 +81,15 @@ namespace XX004
 		assert(m_pServer != NULL);
 		m_pServer->RegisterNetMessage(m_pNetManager);
 
+		m_pNetManager->Start();
 		m_pServer->Start(true);
 		CommandLoop();
 		cout << "Waitting server end ..." << endl;
-		m_pServer->Stop();
+		m_pServer->Stop();		//Server停止还需要依赖网络，如逻辑服停止后需要把服务器状态数据提交给数据服
 		m_pServer->Join();
+		cout << "Waitting net end ..." << endl;
+		m_pNetManager->Stop();
+		m_pNetManager->Join();
 
 		//模块销毁
 		SAFE_DELETE(m_pNetManager);
@@ -106,7 +110,7 @@ namespace XX004
 		m_pServer = OnCreateServer();
 		assert(m_pServer != NULL);
 		m_pServer->RegisterNetMessage(m_pNetManager);
-		m_pNetManager->Start("127.0.0.1", 9000);
+		//m_pNetManager->Start("127.0.0.1", 9000);
 
 		//服务器中
 		SeverLoop();

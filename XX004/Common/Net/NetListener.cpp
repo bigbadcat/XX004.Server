@@ -10,6 +10,7 @@
 
 #include "NetListener.h"
 #include "NetServer.h"
+#include "NetDefine.h"
 #include <assert.h>
 #include <iostream>
 using namespace std;
@@ -18,90 +19,72 @@ namespace XX004
 {
 	namespace Net
 	{
-		NetListener::NetListener() : m_Port(0), m_pServer(NULL)
+		NetListener::NetListener() : m_Socket(SOCKET_ERROR), m_Port(0), m_pServer(NULL)
 		{
 		}
 
 		NetListener::~NetListener()
 		{
+			SAFE_CLOSE_SOCKET(m_Socket)
 		}
 
-		void NetListener::Start(const string &ipaddress, int port)
+		void NetListener::Start(int port)
 		{
-			m_IPAddress = ipaddress;
-			m_Port = port;
-			NetSocketThread::Start();
+			cout << "NetListener::Start port:" << port << endl;
+			m_Port = port;			
+			assert(m_Port > 0);
+			assert(m_Socket == SOCKET_ERROR);
+			m_Socket = CreateListenSocket();
+			assert(m_Socket != SOCKET_ERROR);
 		}
 
-		int NetListener::OnSocketRead(NetSocketWrap *wrap)
+		void NetListener::Stop()
 		{
-			sockaddr_in r_addr;
-			int addr_size = sizeof(r_addr);
-			::memset(&r_addr, 0, sizeof(r_addr));
-			SOCKET rs = ::accept(wrap->GetSocket(), (sockaddr*)&r_addr, &addr_size);
-			if (rs == SOCKET_ERROR)
+			cout << "NetListener::Stop"<< endl;
+			SAFE_CLOSE_SOCKET(m_Socket)
+		}
+
+		void NetListener::Select()
+		{
+			if (m_Socket == SOCKET_ERROR)
 			{
-				cout << "accept socket err:" << WSAGetLastError() << endl;
-				return 1;
+				return;
 			}
 
-			//非阻塞
-			bool noblocking = true;
-			u_long argp = noblocking ? 1 : 0;
-			int ret = ::ioctlsocket(rs, FIONBIO, &argp);
-			if (ret != 0)
+			fd_set readfds;
+			fd_set writefds;
+			fd_set exceptfds;
+			FD_ZERO(&readfds);
+			FD_ZERO(&writefds);
+			FD_ZERO(&exceptfds);
+			FD_SET(m_Socket, &readfds);
+			FD_SET(m_Socket, &exceptfds);
+			timeval timeout;
+			timeout.tv_sec = 0;
+			timeout.tv_usec = 0;
+			int ret = ::select(0, &readfds, &writefds, &exceptfds, &timeout);		//windows下nfds参数无用，可传入0
+			if (ret > 0)
 			{
-				cout << "set remote socket noblocking err:" << WSAGetLastError() << endl;
-				::closesocket(rs);
-				return 2;
-			}
-
-			struct linger so_linger;
-			so_linger.l_onoff = 1;
-			so_linger.l_linger = 5;
-			ret = ::setsockopt(rs, SOL_SOCKET, SO_LINGER, (char*)&so_linger, sizeof so_linger);
-			if (ret != 0)
-			{
-				cout << "setsockopt err:" << WSAGetLastError() << endl;
-				::closesocket(rs);
-				return 3;
-			}
-
-			if (m_pServer != NULL)
-			{
-				m_pServer->OnConnect(rs);
-			}
-
-			return 0;
-		}
-
-		int NetListener::OnSocketWrite(NetSocketWrap *wrap)
-		{
-			return 0;
-		}
-
-		void NetListener::OnSocketClose(NetSocketWrap *wrap)
-		{
-		}
-
-		void NetListener::OnBegin()
-		{
-			assert(m_IPAddress.length() > 0 && m_Port > 0);
-
-			//创建监听用的socket
-			if (m_ListenSocket.GetSocket() == SOCKET_ERROR)
-			{
-				SOCKET s = CreateListenSocket();
-				if (s != SOCKET_ERROR)
+				//先判断是否有异常
+				if (FD_ISSET(m_Socket, &exceptfds) != 0)
 				{
-					m_ListenSocket.SetSocket(s);
-					AddSocket(&m_ListenSocket);
+					cout << "listener socket exception" << endl;
+					SAFE_CLOSE_SOCKET(m_Socket)
+				}
+				if (FD_ISSET(m_Socket, &readfds) != 0)
+				{
+					if (OnSocketRead() != 0)
+					{
+						cout << "listener socket read error" << endl;
+						SAFE_CLOSE_SOCKET(m_Socket)
+					}
 				}
 			}
-		}
-
-		void NetListener::OnEnd()
-		{
+			else if (ret == SOCKET_ERROR)
+			{
+				cout << "select listener socket err:" << WSAGetLastError() << endl;
+				SAFE_CLOSE_SOCKET(m_Socket)
+			}
 		}
 
 		SOCKET NetListener::CreateListenSocket()
@@ -148,6 +131,48 @@ namespace XX004
 				return SOCKET_ERROR;
 			}
 			return s;
+		}
+
+		int NetListener::OnSocketRead()
+		{
+			sockaddr_in r_addr;
+			int addr_size = sizeof(r_addr);
+			::memset(&r_addr, 0, sizeof(r_addr));
+			SOCKET rs = ::accept(m_Socket, (sockaddr*)&r_addr, &addr_size);
+			if (rs == SOCKET_ERROR)
+			{
+				cout << "accept socket err:" << WSAGetLastError() << endl;
+				return 1;
+			}
+
+			//非阻塞
+			bool noblocking = true;
+			u_long argp = noblocking ? 1 : 0;
+			int ret = ::ioctlsocket(rs, FIONBIO, &argp);
+			if (ret != 0)
+			{
+				cout << "set remote socket noblocking err:" << WSAGetLastError() << endl;
+				::closesocket(rs);
+				return 2;
+			}
+
+			struct linger so_linger;
+			so_linger.l_onoff = 1;
+			so_linger.l_linger = 5;
+			ret = ::setsockopt(rs, SOL_SOCKET, SO_LINGER, (char*)&so_linger, sizeof so_linger);
+			if (ret != 0)
+			{
+				cout << "setsockopt err:" << WSAGetLastError() << endl;
+				::closesocket(rs);
+				return 3;
+			}
+
+			if (m_pServer != NULL)
+			{
+				m_pServer->OnConnect(rs);
+			}
+
+			return 0;
 		}
 	}
 }

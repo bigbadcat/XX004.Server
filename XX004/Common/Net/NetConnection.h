@@ -48,14 +48,20 @@ namespace XX004
 
 			//场景服
 			RT_SCENE = 6,
+
+			//区服
+			RT_REGION = 7,
 		};
 
 		//网络连接对象
-		class NetConnection : public NetSocketWrap
+		class NetConnection
 		{
 		public:
 			NetConnection();
 			virtual ~NetConnection();
+
+			//获取Sokcet ret:Socket
+			inline SOCKET GetSocket()const { return m_Socket; }
 
 			//判断是否需要读数据
 			virtual bool IsNeedRead() { return NET_BUFFER_SIZE - m_RecvLen >= NET_PACKAGE_MAX_SIZE; }
@@ -98,20 +104,21 @@ namespace XX004
 			//远端标识
 			RemoteKey m_Remote;
 
+			//Socket句柄
+			SOCKET m_Socket;
+
 			//IP地址。
 			std::string m_IPAddress;
 
 			//端口号。
 			int m_Port;
 
+
 			//收发缓冲区
 			Byte m_SendBuffer[NET_BUFFER_SIZE];
 
 			//发送长度
 			int m_SendLen;
-
-			//发送锁
-			std::mutex m_SendMutex;
 
 			//接收缓冲区
 			Byte m_RecvBuffer[NET_BUFFER_SIZE];

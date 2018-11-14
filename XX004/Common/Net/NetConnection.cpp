@@ -18,23 +18,25 @@ namespace XX004
 {
 	namespace Net
 	{
-		NetConnection::NetConnection() : m_Port(0), m_SendLen(0), m_RecvLen(0)
+		NetConnection::NetConnection() : m_Socket(SOCKET_ERROR), m_Port(0), m_SendLen(0), m_RecvLen(0)
 		{
 		}
 		
 		NetConnection::~NetConnection()
 		{
+			SAFE_CLOSE_SOCKET(m_Socket);
 		}
 
 		bool NetConnection::IsNeedWrite()
 		{
-			std::unique_lock<std::mutex> lock(m_SendMutex);
 			return m_SendLen > 0;
 		}
 
 		void NetConnection::SetSocket(SOCKET s)
 		{
-			NetSocketWrap::SetSocket(s);
+			m_Socket = s;
+			m_IPAddress = "";
+			m_Port = 0;
 			if (s == SOCKET_ERROR)
 			{
 				return;
@@ -43,7 +45,7 @@ namespace XX004
 			SOCKADDR addr;
 			int addr_len = sizeof(addr);
 			ZeroMemory(&addr, addr_len);
-			int ret = getpeername(s, &addr, &addr_len);
+			int ret = getpeername(m_Socket, &addr, &addr_len);
 			if (ret == 0)
 			{
 				if (addr.sa_family == AF_INET)
@@ -69,7 +71,6 @@ namespace XX004
 		bool NetConnection::AddSendData(Byte *buffer, int len)
 		{
 			//数据超过缓冲区大小了，不能添加
-			std::unique_lock<std::mutex> lock(m_SendMutex);
 			if (m_SendLen + len > NET_BUFFER_SIZE)
 			{
 				return false;
@@ -127,7 +128,6 @@ namespace XX004
 
 		int NetConnection::DoSend()
 		{
-			std::unique_lock<std::mutex> lock(m_SendMutex);
 			if (m_SendLen > 0)
 			{
 				int ret = ::send(GetSocket(), (char*)m_SendBuffer, m_SendLen, 0);

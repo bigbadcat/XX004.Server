@@ -50,16 +50,16 @@ namespace XX004
 		}
 	}
 
-	void NetManagerBase::Start(const string &ipaddress, int port)
-	{
-		m_Server.SetProcesser(this);
-		m_Server.Start(ipaddress, port);
-	}
+	//void NetManagerBase::Start(const string &ipaddress, int port)
+	//{
+	//	m_Server.SetProcesser(this);
+	//	m_Server.Start(ipaddress, port);
+	//}
 
-	void NetManagerBase::Stop()
-	{
-		m_Server.Stop();
-	}
+	//void NetManagerBase::Stop()
+	//{
+	//	m_Server.Stop();
+	//}
 
 	void NetManagerBase::OnConnected(NetConnection *connection)
 	{
@@ -90,13 +90,6 @@ namespace XX004
 			std::unique_lock<std::mutex> lock(m_RecvMutex);
 			m_RecvQueue.push(item);
 		}
-
-		////分发消息
-		//MessageCallBackMap::iterator itr = m_CallBack.find(header.Command);
-		//if (itr != m_CallBack.end())
-		//{
-		//	(itr->second)(connection, header.Command, buffer);
-		//}
 	}
 
 	void NetManagerBase::RegisterMessageCallBack(Int32 cmd, NetMessageCallBack call)
@@ -116,26 +109,7 @@ namespace XX004
 
 	void NetManagerBase::OnUpdate()
 	{
-		//分发接收消息队列
-		if (m_RecvQueue.size() > 0)
-		{
-			std::unique_lock<std::mutex> lock(m_RecvMutex);
-			if (m_RecvQueue.size() > 0)
-			{
-				NetDataItem *item = m_RecvQueue.front();
-				m_RecvQueue.pop();
-
-				MessageCallBackMap::iterator itr = m_CallBack.find(item->cmd);
-				if (itr != m_CallBack.end())
-				{
-					(itr->second)(item);
-				}
-				m_CacheQueue.push(item);
-			}
-			
-		}
-
-		//写入发送消息队列
+		
 	}
 
 	NetDataItem* NetManagerBase::CreateNetDataItem()
@@ -162,4 +136,71 @@ namespace XX004
 	//		(itr->second)(cmd, NULL);
 	//	}
 	//}
+
+	//------------------------------------------------
+
+	void NetManagerBase::Start()
+	{
+		cout << "NetManagerBase::Start" << endl;
+		JoinThread(m_Thread);
+		m_IsRunning = true;
+		m_Thread = thread([](NetManagerBase *t){t->ThreadProcess(); }, this);
+	}
+
+	void NetManagerBase::Stop()
+	{
+		cout << "NetManagerBase::Stop" << endl;
+		m_IsRunning = false;
+	}
+
+	void NetManagerBase::Join()
+	{
+		JoinThread(m_Thread);
+	}
+
+	void NetManagerBase::Dispatch()
+	{
+		//分发接收消息队列
+		if (m_RecvQueue.size() > 0)
+		{
+			std::unique_lock<std::mutex> lock(m_RecvMutex);
+			while (m_RecvQueue.size() > 0)
+			{
+				NetDataItem *item = m_RecvQueue.front();
+				m_RecvQueue.pop();
+
+				MessageCallBackMap::iterator itr = m_CallBack.find(item->cmd);
+				if (itr != m_CallBack.end())
+				{
+					(itr->second)(item);
+				}
+				m_CacheQueue.push(item);
+			}
+		}
+	}
+
+	void NetManagerBase::ThreadProcess()
+	{
+		m_Server.SetProcesser(this);
+		m_Server.Start("127.0.0.1", 9000);
+
+		std::chrono::milliseconds dura(100);
+		while (m_IsRunning)
+		{
+			this->OnPostSend();
+			this->OnSocketSelect();
+			std::this_thread::sleep_for(dura);
+		}
+		m_Server.Stop();
+	}
+
+	void NetManagerBase::OnPostSend()
+	{
+
+	}
+
+	void NetManagerBase::OnSocketSelect()
+	{
+		m_Server.SelectSocket();
+	}
 }

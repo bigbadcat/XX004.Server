@@ -19,14 +19,8 @@ namespace XX004
 	{
 		class NetServer;
 
-		class NetListenerSocketWrap : public NetSocketWrap
-		{
-			//判断是否需要写数据
-			virtual bool IsNeedWrite() { return false; }
-		};
-
 		//服务端的网络连接监听者		
-		class NetListener : public NetSocketThread
+		class NetListener
 		{
 		public:
 			//构造析构函数
@@ -34,43 +28,34 @@ namespace XX004
 			virtual ~NetListener();
 
 			//启动监听。
-			//ipaddress:IP地址。
 			//port:端口号。
-			void Start(const string &ipaddress, int port);
+			void Start(int port);
 
-			//Socket可以读取数据了
-			virtual int OnSocketRead(NetSocketWrap *wrap);
-
-			//Socket可以写入数据了
-			virtual int OnSocketWrite(NetSocketWrap *wrap);
-
-			//Socket关闭了，此时wrap的Socket成员已经被重置成SOCKET_ERROR
-			virtual void OnSocketClose(NetSocketWrap *wrap);
+			//停止监听
+			void Stop();
 
 			//设置服务端
 			inline void SetServer(NetServer *p) { m_pServer = p; }
 
-		protected:
+			//获取服务端
+			inline NetServer* GetServer()const { return m_pServer; }
 
-			//线程开始
-			virtual void OnBegin();
-
-			//线程结束
-			virtual void OnEnd();
+			//选择Socket处理
+			void Select();
 
 		private:
 
 			//创建监听Socket
 			SOCKET CreateListenSocket();
 
-			//IP地址。
-			string m_IPAddress;
+			//Socket可以读取数据了
+			int OnSocketRead();
+
+			//Socket句柄
+			SOCKET m_Socket;
 
 			//端口号。
 			int m_Port;
-
-			//监听Socket
-			NetListenerSocketWrap m_ListenSocket;
 
 			//网络服务端
 			NetServer *m_pServer;
