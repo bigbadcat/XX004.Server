@@ -58,14 +58,14 @@ namespace XX004
 
 	void ServerData::F1(NetDataItem *item)
 	{
-		NetMessageString nms;
-		nms.Unpack(item->data, 0);
-		cout << "text:" << nms.Value << endl;
+		NetMessageIntString req;
+		req.Unpack(item->data, 0);
+		cout << "index:" << req.Value1 << " text:" << req.Value2 << endl;
 
 		//准备回复数据		
 		NetMessageIntString res;
 		res.Value1 = 0;
-		res.Value2 = nms.Value + "hhhhh";
+		res.Value2 = req.Value2 + "hhhhh";
 
 		Byte recvdata[1024];
 		int index = 0;
@@ -73,17 +73,5 @@ namespace XX004
 
 		NetManagerBase *pNetMgr = MainBase::GetCurMain()->GetNetManager();
 		pNetMgr->Send(item->sid, 1050, recvdata, index);
-
-		////回复的数据头
-		//NetPackageHeader sendhead;
-		//sendhead.SetSign();
-		//sendhead.Command = 1050;
-		//sendhead.BodySize = index;
-
-		//Byte sendbuff[1024];
-		//int sendsize = 0;
-		//sendsize = sendhead.Pack(sendbuff + sendsize, sendsize);
-		//::memcpy_s(sendbuff + sendsize, 1024 - sendsize, recvdata, index);
-		//sendsize += index;
 	}
 }

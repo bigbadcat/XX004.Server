@@ -11,7 +11,6 @@
 #ifndef __ServerData_h__
 #define __ServerData_h__
 
-#include "Macro.h"
 #include "ServerBase.h"
 
 namespace XX004

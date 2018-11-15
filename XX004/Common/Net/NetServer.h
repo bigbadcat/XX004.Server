@@ -62,17 +62,8 @@ namespace XX004
 			//获取连接
 			NetConnection* GetGetConnection(SOCKET s);
 
-			////设置远端标识
-			//void SetRemote(NetConnection* con, const RemoteKey& key);
-
-			////获取连接
-			//NetConnection* GetConnection(const RemoteKey& key);
-
 			//关闭连接
 			void CloseConnection(NetConnection* con);
-
-			////关闭连接
-			//void CloseConnection(const RemoteKey& key);
 
 			//设置网络处理者，处理者生命周期不由NetServer管理
 			inline void SetProcesser(INetProcesser *p) { m_pProcesser = p; }

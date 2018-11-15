@@ -16,6 +16,7 @@
 #include <queue>
 #include "Net/NetServer.h"
 #include "Net/NetMessage.h"
+#include "Core\semaphore.h"
 using namespace XX004::Net;
 
 namespace XX004
@@ -26,9 +27,6 @@ namespace XX004
 		//连接标识
 		Int64 sid;
 
-		//远端标识
-		RemoteKey key;
-
 		//协议号
 		Int32 cmd;
 
@@ -38,6 +36,7 @@ namespace XX004
 		//消息数据长度
 		int len;
 
+		//清空数据
 		void Reset();
 	};
 	
@@ -53,12 +52,6 @@ namespace XX004
 		NetManagerBase();
 		virtual ~NetManagerBase();
 
-		////启动网络 ipaddress:IP地址。 port:端口号。
-		//void Start(const string &ipaddress, int port);
-
-		////停止网络
-		//void Stop();
-
 		virtual void OnConnected(NetConnection *connection);
 		virtual void OnDisconnected(NetConnection *connection);
 		virtual void OnRecvData(NetConnection *connection, const NetPackageHeader& header, Byte *buffer);
@@ -72,12 +65,20 @@ namespace XX004
 		//注销所有网络消息处理函数
 		void UnregisterAllCallBack();
 
-		//帧更新
-		virtual void OnUpdate();
+		//启动网络
+		void Start();
 
-		
+		//停止网络
+		void Stop();
 
-		//void Test(Int32 cmd);
+		//等待网络
+		void Join();
+
+		//分发消息给Server
+		void Dispatch();
+
+		//发送数据
+		void Send(Int64 sid, int command, Byte *buffer, int len);
 
 	private:
 
@@ -87,10 +88,20 @@ namespace XX004
 		//回收数据对象
 		void CacheNetDataItem(NetDataItem *item);
 
+		//线程过程
+		void ThreadProcess();
+
+		//提交发送的数据给Net
+		void OnPostSend();
+
+		//处理Socket
+		virtual void OnSocketSelect();
+
+		//提交数据到Net
+		virtual void OnPost(NetDataItem *item);
+
 		//消息集合
 		MessageCallBackMap m_CallBack;
-
-		
 
 		//要发送的数据队列
 		NetDataItemQueue m_SendQueue;
@@ -110,42 +121,6 @@ namespace XX004
 		//缓存队列锁
 		std::mutex m_CacheMutex;
 
-
-
-
-
-		//------------------------------------------------
-
-	public:
-
-		//启动网络
-		void Start();
-
-		//停止网络
-		void Stop();
-
-		//等待网络
-		void Join();
-
-		//分发消息给Server
-		void Dispatch();
-
-		//发送数据
-		void Send(Int64 sid, int command, Byte *buffer, int len);
-
-	private:
-		//提交网络数据
-		void Post(NetDataItem *item);
-
-		//线程过程
-		void ThreadProcess();
-
-		//提交发送的数据给Net
-		virtual void OnPostSend();
-
-		//处理Socket
-		virtual void OnSocketSelect();
-
 		//是否运行
 		bool m_IsRunning;
 
@@ -154,6 +129,9 @@ namespace XX004
 
 		//网络服务端模块
 		NetServer m_Server;
+
+		//启动信号
+		xxstd::semaphore m_InitSemaphore;
 
 	};
 }

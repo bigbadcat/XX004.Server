@@ -20,7 +20,6 @@ namespace XX004
 	void NetDataItem::Reset()
 	{
 		sid = 0;
-		key = RemoteKey(RemoteType::RT_UNKNOW, 0);
 		cmd = 0;
 		len = 0;
 	}
@@ -51,17 +50,6 @@ namespace XX004
 		}
 	}
 
-	//void NetManagerBase::Start(const string &ipaddress, int port)
-	//{
-	//	m_Server.SetProcesser(this);
-	//	m_Server.Start(ipaddress, port);
-	//}
-
-	//void NetManagerBase::Stop()
-	//{
-	//	m_Server.Stop();
-	//}
-
 	void NetManagerBase::OnConnected(NetConnection *connection)
 	{
 		//cout << "NetManagerBase::OnConnected ip:" << connection->GetIPAddress() << " port:" << connection->GetPort() << endl;
@@ -83,7 +71,6 @@ namespace XX004
 		//加入消息队列
 		NetDataItem *item = GetNetDataItem();
 		item->sid = (Int64)connection->GetSocket();
-		item->key = connection->GetRemote();
 		item->cmd = header.Command;
 		item->len = header.BodySize;
 		::memcpy_s(item->data, NET_PACKAGE_MAX_SIZE, buffer, item->len);
@@ -108,60 +95,13 @@ namespace XX004
 		m_CallBack.clear();
 	}
 
-	void NetManagerBase::OnUpdate()
-	{
-		
-	}
-
-
-
-	NetDataItem* NetManagerBase::GetNetDataItem()
-	{
-		//先从缓存队列中获取
-		NetDataItem *item = NULL;
-		{
-			std::unique_lock<std::mutex> lock(m_CacheMutex);
-			if (m_CacheQueue.size() > 0)
-			{
-				item = m_CacheQueue.front();
-				m_CacheQueue.pop();
-			}
-		}
-		
-		//没有再创建
-		if (item == NULL)
-		{
-			item = new NetDataItem();
-		}
-		item->Reset();
-		return item;
-	}
-
-	void NetManagerBase::CacheNetDataItem(NetDataItem *item)
-	{
-		assert(item != NULL);
-
-		std::unique_lock<std::mutex> lock(m_CacheMutex);
-		m_CacheQueue.push(item);
-	}
-
-	//void NetManagerBase::Test(Int32 cmd)
-	//{
-	//	MessageCallBackMap::iterator itr = m_CallBack.find(cmd);
-	//	if (itr != m_CallBack.end())
-	//	{
-	//		(itr->second)(cmd, NULL);
-	//	}
-	//}
-
-	//------------------------------------------------
-
 	void NetManagerBase::Start()
 	{
 		cout << "NetManagerBase::Start" << endl;
 		JoinThread(m_Thread);
 		m_IsRunning = true;
 		m_Thread = thread([](NetManagerBase *t){t->ThreadProcess(); }, this);
+		m_InitSemaphore.wait();
 	}
 
 	void NetManagerBase::Stop()
@@ -194,7 +134,7 @@ namespace XX004
 				temp_queue.push(item);
 			}
 		}
-			
+
 		//分发消息
 		while (temp_queue.size() > 0)
 		{
@@ -213,24 +153,50 @@ namespace XX004
 	{
 		NetDataItem *item = GetNetDataItem();
 		item->sid = sid;
-		item->key = RemoteKey();
 		item->cmd = command;
 		::memcpy_s(item->data, NET_PACKAGE_MAX_SIZE, buffer, len);
 		item->len = len;
-		Post(item);
+		{
+			std::unique_lock<std::mutex> lock(m_SendMutex);
+			m_SendQueue.push(item);
+		}
 	}
 
-	void NetManagerBase::Post(NetDataItem *item)
+	NetDataItem* NetManagerBase::GetNetDataItem()
+	{
+		//先从缓存队列中获取
+		NetDataItem *item = NULL;
+		{
+			std::unique_lock<std::mutex> lock(m_CacheMutex);
+			if (m_CacheQueue.size() > 0)
+			{
+				item = m_CacheQueue.front();
+				m_CacheQueue.pop();
+			}
+		}
+		
+		//没有再创建
+		if (item == NULL)
+		{
+			item = new NetDataItem();
+		}
+		item->Reset();
+		return item;
+	}
+
+	void NetManagerBase::CacheNetDataItem(NetDataItem *item)
 	{
 		assert(item != NULL);
-		std::unique_lock<std::mutex> lock(m_SendMutex);
-		m_SendQueue.push(item);
+
+		std::unique_lock<std::mutex> lock(m_CacheMutex);
+		m_CacheQueue.push(item);
 	}
 
 	void NetManagerBase::ThreadProcess()
 	{
 		m_Server.SetProcesser(this);
 		m_Server.Start("127.0.0.1", 9000);
+		m_InitSemaphore.post();
 
 		std::chrono::milliseconds dura(100);
 		while (m_IsRunning)
@@ -262,32 +228,12 @@ namespace XX004
 			}
 		}
 
-		//分发消息
+		//提交发送数据
 		while (temp_queue.size() > 0)
 		{
 			NetDataItem *item = temp_queue.front();
 			temp_queue.pop();
-			NetConnection *pcon = m_Server.GetGetConnection((SOCKET)item->sid);
-			if (pcon != NULL)
-			{
-				NetPackageHeader sendhead;
-				sendhead.SetSign();
-				sendhead.Command = item->cmd;
-				sendhead.BodySize = item->len;
-
-				static Byte sendbuff[1024];
-				int sendsize = 0;
-				sendsize = sendhead.Pack(sendbuff, sendsize);
-				::memcpy_s(sendbuff + sendsize, 1024 - sendsize, item->data, item->len);
-				sendsize += item->len;
-
-				bool cansend = pcon->AddSendData(sendbuff, sendsize);
-				if (!cansend)
-				{
-					//同一网络周期内发送数据量过大或者该连接速度太低把数据缓冲区挤爆了，要断掉连接
-					assert(false);
-				}		
-			}
+			OnPost(item);
 			CacheNetDataItem(item);
 		}
 	}
@@ -295,5 +241,31 @@ namespace XX004
 	void NetManagerBase::OnSocketSelect()
 	{
 		m_Server.SelectSocket();
+	}
+
+	void NetManagerBase::OnPost(NetDataItem *item)
+	{
+		NetConnection *pcon = m_Server.GetGetConnection((SOCKET)item->sid);
+		if (pcon != NULL)
+		{
+			NetPackageHeader sendhead;
+			sendhead.SetSign();
+			sendhead.Command = item->cmd;
+			sendhead.BodySize = item->len;
+
+			static Byte sendbuff[1024];
+			int sendsize = 0;
+			sendsize = sendhead.Pack(sendbuff, sendsize);
+			::memcpy_s(sendbuff + sendsize, 1024 - sendsize, item->data, item->len);
+			sendsize += item->len;
+
+			bool cansend = pcon->AddSendData(sendbuff, sendsize);
+			if (!cansend)
+			{
+				//同一网络周期内发送数据量过大或者该连接速度太低把数据缓冲区挤爆了，要断掉连接
+				m_Server.CloseConnection(pcon);
+				pcon = NULL;
+			}
+		}
 	}
 }
