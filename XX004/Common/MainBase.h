@@ -51,6 +51,7 @@ namespace XX004
 		//命令循环
 		void CommandLoop();
 
+
 		//当前Main对象
 		static MainBase* pCurMain;
 
@@ -60,14 +61,12 @@ namespace XX004
 		//退出命令
 		static const string COMMAND_QUIT;
 
+
 		//网络管理
 		NetManagerBase* m_pNetManager;
 
 		//服务对象
 		ServerBase* m_pServer;
-
-		//逻辑处理线程
-		thread m_Thread;
 	};
 }
 

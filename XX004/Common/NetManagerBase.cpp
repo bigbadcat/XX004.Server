@@ -17,6 +17,11 @@ using namespace std;
 
 namespace XX004
 {
+	NetDataItem::NetDataItem()
+	{
+		Reset();
+	}
+
 	void NetDataItem::Reset()
 	{
 		sid = 0;

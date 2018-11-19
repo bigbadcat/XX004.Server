@@ -13,10 +13,10 @@
 
 #include <map>
 #include <mutex>
+#include <WinSock2.h>
 #include "../Macro.h"
 #include "NetDefine.h"
 #include "NetPackageHeader.h"
-#include "NetSocketThread.h"
 
 namespace XX004
 {
@@ -64,10 +64,10 @@ namespace XX004
 			inline SOCKET GetSocket()const { return m_Socket; }
 
 			//判断是否需要读数据
-			virtual bool IsNeedRead() { return NET_BUFFER_SIZE - m_RecvLen >= NET_PACKAGE_MAX_SIZE; }
+			inline bool IsNeedRead() { return NET_BUFFER_SIZE - m_RecvLen >= NET_PACKAGE_MAX_SIZE; }
 
 			//判断是否需要写数据
-			virtual bool IsNeedWrite();
+			inline bool IsNeedWrite() { return m_SendLen > 0;}
 
 			//设置Socket
 			virtual void SetSocket(SOCKET s);

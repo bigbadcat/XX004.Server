@@ -11,7 +11,7 @@
 #ifndef __NetListener_h__
 #define __NetListener_h__
 
-#include "NetSocketThread.h"
+#include <WinSock2.h>
 
 namespace XX004
 {

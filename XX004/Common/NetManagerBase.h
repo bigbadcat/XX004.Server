@@ -36,6 +36,9 @@ namespace XX004
 		//消息数据长度
 		int len;
 
+		//构造函数
+		NetDataItem();
+
 		//清空数据
 		void Reset();
 	};
@@ -100,6 +103,7 @@ namespace XX004
 		//提交数据到Net
 		virtual void OnPost(NetDataItem *item);
 
+		
 		//消息集合
 		MessageCallBackMap m_CallBack;
 

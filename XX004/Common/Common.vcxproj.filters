@@ -27,9 +27,6 @@
     <ClInclude Include="Net\NetPackageHeader.h">
       <Filter>Net</Filter>
     </ClInclude>
-    <ClInclude Include="Net\NetSocketThread.h">
-      <Filter>Net</Filter>
-    </ClInclude>
     <ClInclude Include="Macro.h" />
     <ClInclude Include="Util\DataUtil.h">
       <Filter>Util</Filter>
@@ -67,9 +64,6 @@
       <Filter>Net</Filter>
     </ClCompile>
     <ClCompile Include="Net\NetPackageHeader.cpp">
-      <Filter>Net</Filter>
-    </ClCompile>
-    <ClCompile Include="Net\NetSocketThread.cpp">
       <Filter>Net</Filter>
     </ClCompile>
     <ClCompile Include="Util\DataUtil.cpp">

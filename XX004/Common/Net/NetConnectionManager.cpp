@@ -49,30 +49,6 @@ namespace XX004
 			}
 		}
 
-		//void NetConnectionManager::Start()
-		//{
-		//	for (ConnectionVector::iterator itr = m_ConnectionThreads.begin(); itr != m_ConnectionThreads.end(); ++itr)
-		//	{
-		//		(*itr)->Start();
-		//	}
-		//}
-
-		//void NetConnectionManager::Stop()
-		//{
-		//	for (ConnectionVector::iterator itr = m_ConnectionThreads.begin(); itr != m_ConnectionThreads.end(); ++itr)
-		//	{
-		//		(*itr)->Stop();
-		//	}
-		//}
-
-		//void NetConnectionManager::Join()
-		//{
-		//	for (ConnectionVector::iterator itr = m_ConnectionThreads.begin(); itr != m_ConnectionThreads.end(); ++itr)
-		//	{
-		//		(*itr)->Join();
-		//	}
-		//}
-
 		NetConnection* NetConnectionManager::AddConnection(SOCKET s)
 		{
 			//找一个集合加入连接
@@ -100,7 +76,7 @@ namespace XX004
 			for (ConnectionVector::iterator itr = m_ConnectionSets.begin(); itr != m_ConnectionSets.end(); ++itr)
 			{
 				NetConnectionSet *pset = *itr;
-				if (pset->GetConnection(s) != NULL)
+				if (pset->IsContain(s) != NULL)
 				{
 					pset->CloseConnection(con);
 				}
@@ -125,18 +101,6 @@ namespace XX004
 			}
 			return ret;
 		}
-
-		//void NetConnectionManager::SetRemote(NetConnection* con, const RemoteKey& key)
-		//{
-		//	con->SetRemote(key);
-		//	m_RemoteToConnection[key] = con;
-		//}
-
-		//NetConnection* NetConnectionManager::GetConnection(const RemoteKey& key)
-		//{
-		//	ConnectionMap::iterator itr = m_RemoteToConnection.find(key);
-		//	return itr == m_RemoteToConnection.end() ? NULL : itr->second;
-		//}
 
 		void NetConnectionManager::OnRecvPackage(NetConnection *con)
 		{

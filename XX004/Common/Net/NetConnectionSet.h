@@ -12,7 +12,6 @@
 #define __NetConnectionSet_h__
 
 #include "NetConnection.h"
-#include "NetSocketThread.h"
 
 namespace XX004
 {
@@ -49,6 +48,9 @@ namespace XX004
 
 			//获取连接
 			NetConnection* GetConnection(SOCKET s);
+
+			//是否包含了连接
+			bool IsContain(SOCKET s)const { return m_Connections.find(s) != m_Connections.cend(); }
 
 			//关闭连接
 			void CloseConnection(NetConnection *con);

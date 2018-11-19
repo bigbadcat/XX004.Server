@@ -9,12 +9,10 @@
 *******************************************************/
 
 #include "MainBase.h"
-#include "Util/TimeUtil.h"
 #include "NetManagerBase.h"
 #include "ServerBase.h"
 #include <iostream>
 #include <assert.h>
-#include <chrono>
 
 namespace XX004
 {
@@ -60,6 +58,7 @@ namespace XX004
 		assert(m_pServer != NULL);
 		m_pServer->RegisterNetMessage(m_pNetManager);
 
+		//模块运行
 		m_pNetManager->Start();
 		m_pServer->Start(true);
 		CommandLoop();

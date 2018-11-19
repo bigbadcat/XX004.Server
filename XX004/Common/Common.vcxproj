@@ -30,7 +30,6 @@
     <ClInclude Include="Net\NetMessage.h" />
     <ClInclude Include="Net\NetPackageHeader.h" />
     <ClInclude Include="Net\NetServer.h" />
-    <ClInclude Include="Net\NetSocketThread.h" />
     <ClInclude Include="ServerBase.h" />
     <ClInclude Include="MainBase.h" />
     <ClInclude Include="Util\DataUtil.h" />
@@ -46,7 +45,6 @@
     <ClCompile Include="Net\NetMessage.cpp" />
     <ClCompile Include="Net\NetPackageHeader.cpp" />
     <ClCompile Include="Net\NetServer.cpp" />
-    <ClCompile Include="Net\NetSocketThread.cpp" />
     <ClCompile Include="ServerBase.cpp" />
     <ClCompile Include="MainBase.cpp" />
     <ClCompile Include="Util\DataUtil.cpp" />

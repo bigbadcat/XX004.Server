@@ -27,11 +27,6 @@ namespace XX004
 			SAFE_CLOSE_SOCKET(m_Socket);
 		}
 
-		bool NetConnection::IsNeedWrite()
-		{
-			return m_SendLen > 0;
-		}
-
 		void NetConnection::SetSocket(SOCKET s)
 		{
 			m_Socket = s;

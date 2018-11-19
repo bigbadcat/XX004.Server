@@ -60,12 +60,6 @@ namespace XX004
 			//获取连接
 			NetConnection* GetConnection(SOCKET s);
 
-			////设置远端标识
-			//void SetRemote(NetConnection* con, const RemoteKey& key);
-
-			////获取连接
-			//NetConnection* GetConnection(const RemoteKey& key);
-
 			//有连接接收到数据包了
 			void OnRecvPackage(NetConnection *con);
 
