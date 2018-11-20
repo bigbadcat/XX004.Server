@@ -13,6 +13,7 @@
 
 #include <map>
 #include <mutex>
+#include <iostream>
 #include <WinSock2.h>
 #include "../Macro.h"
 #include "NetDefine.h"
@@ -25,33 +26,7 @@ namespace XX004
 		//远端唯一标识。
 		typedef std::pair<int, Int64> RemoteKey;
 
-		//远端类型。
-		enum RemoteType
-		{
-			//未知
-			RT_UNKNOW = 0,
-
-			//玩家客户端。
-			RT_CLIENT = 1,
-
-			//网关
-			RT_GATE = 2,
-
-			//登陆服
-			RT_LOGIN = 3,
-
-			//数据服
-			RT_DATA = 4,
-
-			//世界服
-			RT_WORLD = 5,
-
-			//场景服
-			RT_SCENE = 6,
-
-			//区服
-			RT_REGION = 7,
-		};
+		std::ostream & operator<<(std::ostream &out, RemoteKey &key);
 
 		//网络连接对象
 		class NetConnection
@@ -59,6 +34,12 @@ namespace XX004
 		public:
 			NetConnection();
 			virtual ~NetConnection();
+
+			//获取唯一编号
+			inline UInt64 GetUniqueID()const { return  m_UniqueID; }
+
+			//设置位移编号
+			inline void SetUniqueID(UInt64 uid) { m_UniqueID = uid; }
 
 			//获取Sokcet ret:Socket
 			inline SOCKET GetSocket()const { return m_Socket; }
@@ -101,6 +82,9 @@ namespace XX004
 			int DoSend();
 
 		private:
+			//连接唯一标识
+			UInt64 m_UniqueID;
+
 			//远端标识
 			RemoteKey m_Remote;
 

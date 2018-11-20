@@ -38,6 +38,8 @@ namespace XX004
 		virtual void OnUpdatePerSecond();
 
 	private:
+		void OnConnect(NetDataItem *item);
+		void OnDisconnect(NetDataItem *item);
 		void F1(NetDataItem *item);
 	};
 }

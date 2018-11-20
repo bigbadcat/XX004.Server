@@ -52,9 +52,9 @@ namespace XX004
 			m_pConnectionManager->SelectSocket();
 		}
 
-		NetConnection* NetServer::GetGetConnection(SOCKET s)
+		NetConnection* NetServer::GetGetConnection(UInt64 uid)
 		{
-			return m_pConnectionManager->GetConnection(s);
+			return m_pConnectionManager->GetConnection(uid);
 		}
 
 		void NetServer::CloseConnection(NetConnection* con)

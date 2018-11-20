@@ -18,7 +18,13 @@ namespace XX004
 {
 	namespace Net
 	{
-		NetConnection::NetConnection() : m_Socket(SOCKET_ERROR), m_Port(0), m_SendLen(0), m_RecvLen(0)
+		std::ostream & operator<<(std::ostream &out, RemoteKey &key)
+		{
+			out << "[" << key.first << "," << key.second << "]";
+			return out;
+		}
+
+		NetConnection::NetConnection() : m_UniqueID(0), m_Socket(SOCKET_ERROR), m_Port(0), m_SendLen(0), m_RecvLen(0)
 		{
 		}
 		

@@ -24,7 +24,9 @@ namespace XX004
 
 	void NetDataItem::Reset()
 	{
-		sid = 0;
+		op = NetOperateType::NOT_UNKNOW;
+		uid = 0;
+		key = RemoteKey(RemoteType::RT_UNKNOW, 0);
 		cmd = 0;
 		len = 0;
 	}
@@ -58,11 +60,27 @@ namespace XX004
 	void NetManagerBase::OnConnected(NetConnection *connection)
 	{
 		//cout << "NetManagerBase::OnConnected ip:" << connection->GetIPAddress() << " port:" << connection->GetPort() << endl;
+		NetDataItem *item = GetNetDataItem();
+		item->op = NetOperateType::NOT_CONNECT;
+		item->uid = connection->GetUniqueID();
+		item->key = connection->GetRemote();
+		{
+			std::unique_lock<std::mutex> lock(m_RecvMutex);
+			m_RecvQueue.push(item);
+		}
 	}
 
 	void NetManagerBase::OnDisconnected(NetConnection *connection)
 	{
 		//cout << "NetManagerBase::OnDisconnected ip:" << connection->GetIPAddress() << " port:" << connection->GetPort() << endl;
+		NetDataItem *item = GetNetDataItem();
+		item->op = NetOperateType::NOT_DISCONNECT;
+		item->uid = connection->GetUniqueID();
+		item->key = connection->GetRemote();
+		{
+			std::unique_lock<std::mutex> lock(m_RecvMutex);
+			m_RecvQueue.push(item);
+		}
 	}
 
 	void NetManagerBase::OnRecvData(NetConnection *connection, const NetPackageHeader& header, Byte *buffer)
@@ -71,11 +89,15 @@ namespace XX004
 		cout << "NetManagerBase::OnRecvData ip:" << connection->GetIPAddress() << " port:" << connection->GetPort();
 		cout << " cmd:" << header.Command << " len:" << header.BodySize << endl;
 
+		//内置协议
+
 		//包头相关处理
 
 		//加入消息队列
 		NetDataItem *item = GetNetDataItem();
-		item->sid = (Int64)connection->GetSocket();
+		item->op = NetOperateType::NOT_DATA;
+		item->uid = connection->GetUniqueID();
+		item->key = connection->GetRemote();
 		item->cmd = header.Command;
 		item->len = header.BodySize;
 		::memcpy_s(item->data, NET_PACKAGE_MAX_SIZE, buffer, item->len);
@@ -88,6 +110,12 @@ namespace XX004
 	void NetManagerBase::RegisterMessageCallBack(Int32 cmd, NetMessageCallBack call)
 	{
 		m_CallBack[cmd] = call;
+	}
+
+	NetMessageCallBack NetManagerBase::GetMessageCallBack(Int32 cmd)const
+	{
+		MessageCallBackMap::const_iterator citr = m_CallBack.find(cmd);
+		return citr == m_CallBack.cend() ? NULL : citr->second;
 	}
 
 	void NetManagerBase::UnregisterMessageCallBack(Int32 cmd)
@@ -145,19 +173,49 @@ namespace XX004
 		{
 			NetDataItem *item = temp_queue.front();
 			temp_queue.pop();
-			MessageCallBackMap::iterator itr = m_CallBack.find(item->cmd);
-			if (itr != m_CallBack.end())
+			if (item->op == NetOperateType::NOT_CONNECT)
 			{
-				(itr->second)(item);
+				if (m_OnConnectCallBack != NULL)
+				{
+					m_OnConnectCallBack(item);
+				}
 			}
+			else if (item->op == NetOperateType::NOT_DISCONNECT)
+			{
+				if (m_OnDisconnectCallBack != NULL)
+				{
+					m_OnDisconnectCallBack(item);
+				}
+			}
+			else if (item->op == NetOperateType::NOT_DATA)
+			{
+				MessageCallBackMap::iterator itr = m_CallBack.find(item->cmd);
+				if (itr != m_CallBack.end())
+				{
+					(itr->second)(item);
+				}
+			}			
 			CacheNetDataItem(item);
 		}
 	}
 
-	void NetManagerBase::Send(Int64 sid, int command, Byte *buffer, int len)
+	void NetManagerBase::Update(UInt64 uid, const RemoteKey& key)
 	{
 		NetDataItem *item = GetNetDataItem();
-		item->sid = sid;
+		item->op = NetOperateType::NOT_UPDATE;
+		item->uid = uid;
+		item->key = key;
+		{
+			std::unique_lock<std::mutex> lock(m_SendMutex);
+			m_SendQueue.push(item);
+		}
+	}
+
+	void NetManagerBase::Send(UInt64 uid, int command, Byte *buffer, int len)
+	{
+		NetDataItem *item = GetNetDataItem();
+		item->op = NetOperateType::NOT_DATA;
+		item->uid = uid;
 		item->cmd = command;
 		::memcpy_s(item->data, NET_PACKAGE_MAX_SIZE, buffer, len);
 		item->len = len;
@@ -250,26 +308,33 @@ namespace XX004
 
 	void NetManagerBase::OnPost(NetDataItem *item)
 	{
-		NetConnection *pcon = m_Server.GetGetConnection((SOCKET)item->sid);
+		NetConnection *pcon = m_Server.GetGetConnection(item->uid);
 		if (pcon != NULL)
 		{
-			NetPackageHeader sendhead;
-			sendhead.SetSign();
-			sendhead.Command = item->cmd;
-			sendhead.BodySize = item->len;
-
-			static Byte sendbuff[1024];
-			int sendsize = 0;
-			sendsize = sendhead.Pack(sendbuff, sendsize);
-			::memcpy_s(sendbuff + sendsize, 1024 - sendsize, item->data, item->len);
-			sendsize += item->len;
-
-			bool cansend = pcon->AddSendData(sendbuff, sendsize);
-			if (!cansend)
+			if (item->op == NetOperateType::NOT_UPDATE)
 			{
-				//同一网络周期内发送数据量过大或者该连接速度太低把数据缓冲区挤爆了，要断掉连接
-				m_Server.CloseConnection(pcon);
-				pcon = NULL;
+				pcon->SetRemote(item->key);
+			}
+			else if (item->op == NetOperateType::NOT_DATA)
+			{
+				NetPackageHeader sendhead;
+				sendhead.SetSign();
+				sendhead.Command = item->cmd;
+				sendhead.BodySize = item->len;
+
+				static Byte sendbuff[1024];
+				int sendsize = 0;
+				sendsize = sendhead.Pack(sendbuff, sendsize);
+				::memcpy_s(sendbuff + sendsize, 1024 - sendsize, item->data, item->len);
+				sendsize += item->len;
+
+				bool cansend = pcon->AddSendData(sendbuff, sendsize);
+				if (!cansend)
+				{
+					//同一网络周期内发送数据量过大或者该连接速度太低把数据缓冲区挤爆了，要断掉连接
+					m_Server.CloseConnection(pcon);
+					pcon = NULL;
+				}
 			}
 		}
 	}

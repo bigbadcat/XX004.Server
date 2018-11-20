@@ -27,6 +27,7 @@ namespace XX004
 		class NetConnectionManager
 		{
 			typedef std::vector<NetConnectionSet*> ConnectionVector;
+			typedef std::map<UInt64, NetConnection*> NetConnectionMap;
 
 		public:
 			//构造析构函数
@@ -58,7 +59,7 @@ namespace XX004
 			void OnRemoveConnection(NetConnection* con);
 
 			//获取连接
-			NetConnection* GetConnection(SOCKET s);
+			NetConnection* GetConnection(UInt64 uid);
 
 			//有连接接收到数据包了
 			void OnRecvPackage(NetConnection *con);
@@ -69,6 +70,9 @@ namespace XX004
 
 			//连接线程
 			ConnectionVector m_ConnectionSets;
+
+			//连接查询索引
+			NetConnectionMap m_ConnectionIndex;
 
 		};
 	}

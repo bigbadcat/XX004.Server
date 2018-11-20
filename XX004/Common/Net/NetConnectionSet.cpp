@@ -184,7 +184,9 @@ namespace XX004
 			}
 			assert(m_Connections.find(s) == m_Connections.end());
 
+			static UInt64 cur_uid = 0;
 			NetConnection *pcon = new NetConnection();
+			pcon->SetUniqueID(++cur_uid);
 			pcon->SetSocket(s);
 			m_Connections.insert(ConnectionMap::value_type(s, pcon));
 

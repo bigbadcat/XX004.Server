@@ -34,6 +34,7 @@ namespace XX004
 
 		void NetConnectionManager::Release()
 		{
+			m_ConnectionIndex.clear();
 			for (ConnectionVector::iterator itr = m_ConnectionSets.begin(); itr != m_ConnectionSets.end(); ++itr)
 			{
 				delete (*itr);
@@ -66,6 +67,7 @@ namespace XX004
 				connection_set->SetManager(this);
 				ret = connection_set->AddConnection(s);
 			}
+			m_ConnectionIndex.insert(NetConnectionMap::value_type(ret->GetUniqueID(), ret));
 
 			return ret;
 		}
@@ -73,6 +75,7 @@ namespace XX004
 		void NetConnectionManager::RemoveConnection(NetConnection* con)
 		{
 			SOCKET s = con->GetSocket();
+			m_ConnectionIndex.erase(con->GetUniqueID());
 			for (ConnectionVector::iterator itr = m_ConnectionSets.begin(); itr != m_ConnectionSets.end(); ++itr)
 			{
 				NetConnectionSet *pset = *itr;
@@ -91,14 +94,9 @@ namespace XX004
 			}
 		}
 
-		NetConnection* NetConnectionManager::GetConnection(SOCKET s)
+		NetConnection* NetConnectionManager::GetConnection(UInt64 uid)
 		{
-			//逐个集合查找
-			NetConnection *ret = NULL;
-			for (ConnectionVector::iterator itr = m_ConnectionSets.begin(); ret == NULL && itr != m_ConnectionSets.end(); ++itr)
-			{
-				ret = (*itr)->GetConnection(s);
-			}
+			NetConnection *ret = m_ConnectionIndex[uid];
 			return ret;
 		}
 

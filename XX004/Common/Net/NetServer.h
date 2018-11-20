@@ -60,7 +60,7 @@ namespace XX004
 			void SelectSocket();
 
 			//获取连接
-			NetConnection* GetGetConnection(SOCKET s);
+			NetConnection* GetGetConnection(UInt64 uid);
 
 			//关闭连接
 			void CloseConnection(NetConnection* con);

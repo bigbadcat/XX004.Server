@@ -16,16 +16,41 @@
 #include <queue>
 #include "Net/NetServer.h"
 #include "Net/NetMessage.h"
-#include "Core\semaphore.h"
+#include "Core/semaphore.h"
 using namespace XX004::Net;
 
 namespace XX004
 {
+	//网络操作类型
+	enum NetOperateType
+	{
+		//未知
+		NOT_UNKNOW = 0,
+
+		//建立连接
+		NOT_CONNECT = 1,
+
+		//断开连接
+		NOT_DISCONNECT = 2,
+
+		//网络数据
+		NOT_DATA = 3,
+
+		//更新数据
+		NOT_UPDATE = 4,
+	};
+
 	//网络数据项
 	struct NetDataItem
 	{
+		//操作类型(NetOperateType)
+		int op;
+
 		//连接标识
-		Int64 sid;
+		UInt64 uid;
+
+		//远端标识
+		RemoteKey key;
 
 		//协议号
 		Int32 cmd;
@@ -35,6 +60,7 @@ namespace XX004
 
 		//消息数据长度
 		int len;
+
 
 		//构造函数
 		NetDataItem();
@@ -59,8 +85,24 @@ namespace XX004
 		virtual void OnDisconnected(NetConnection *connection);
 		virtual void OnRecvData(NetConnection *connection, const NetPackageHeader& header, Byte *buffer);
 
+
+		//设置建立连接回调
+		inline void SetOnConnectCallBack(NetMessageCallBack call) { m_OnConnectCallBack = call; }
+
+		//获取建立连接回调
+		inline NetMessageCallBack GetOnConnectCallBack()const { return m_OnConnectCallBack; }
+
+		//设置断开连接回调
+		inline void SetOnDisconnectCallBack(NetMessageCallBack call) { m_OnDisconnectCallBack = call; }
+
+		//获取断开连接回调
+		inline NetMessageCallBack GetOnDisconnectCallBack()const { return m_OnDisconnectCallBack; }
+
 		//注册网络消息处理函数
 		void RegisterMessageCallBack(Int32 cmd, NetMessageCallBack call);
+
+		//获取消息回调
+		NetMessageCallBack GetMessageCallBack(Int32 cmd)const;
 
 		//注销网络消息处理函数
 		void UnregisterMessageCallBack(Int32 cmd);
@@ -80,8 +122,11 @@ namespace XX004
 		//分发消息给Server
 		void Dispatch();
 
+		//更新连接信息
+		void Update(UInt64 uid, const RemoteKey& key);
+
 		//发送数据
-		void Send(Int64 sid, int command, Byte *buffer, int len);
+		void Send(UInt64 uid, int command, Byte *buffer, int len);
 
 	private:
 
@@ -103,7 +148,13 @@ namespace XX004
 		//提交数据到Net
 		virtual void OnPost(NetDataItem *item);
 
-		
+
+		//建立连接回调
+		NetMessageCallBack m_OnConnectCallBack;
+
+		//断开连接回调
+		NetMessageCallBack m_OnDisconnectCallBack;
+
 		//消息集合
 		MessageCallBackMap m_CallBack;
 

@@ -15,6 +15,34 @@ namespace XX004
 {
 	namespace Net
 	{
+		//远端类型。
+		enum RemoteType
+		{
+			//未知
+			RT_UNKNOW = 0,
+
+			//玩家客户端。
+			RT_CLIENT = 1,
+
+			//网关
+			RT_GATE = 2,
+
+			//登陆服
+			RT_LOGIN = 3,
+
+			//数据服
+			RT_DATA = 4,
+
+			//世界服
+			RT_WORLD = 5,
+
+			//场景服
+			RT_SCENE = 6,
+
+			//区服
+			RT_REGION = 7,
+		};
+
 		//网络缓冲区大小
 		const int NET_BUFFER_SIZE = 8 * 1024;
 
