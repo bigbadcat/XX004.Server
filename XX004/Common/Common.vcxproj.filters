@@ -49,6 +49,9 @@
     <ClInclude Include="Net\NetConnectionSet.h">
       <Filter>Net</Filter>
     </ClInclude>
+    <ClInclude Include="Util\ByteBuffer.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Net\NetServer.cpp">
@@ -83,6 +86,9 @@
     <ClCompile Include="NetManagerBase.cpp" />
     <ClCompile Include="Net\NetConnectionSet.cpp">
       <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\ByteBuffer.cpp">
+      <Filter>Util</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

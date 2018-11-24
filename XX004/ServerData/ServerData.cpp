@@ -84,8 +84,12 @@ namespace XX004
 		index = res.Pack(recvdata, index);
 
 		NetManagerBase *pNetMgr = MainBase::GetCurMain()->GetNetManager();
-		pNetMgr->Update(item->uid, RemoteKey(RemoteType::RT_CLIENT, 1));
-		//pNetMgr->Send(RemoteKey(RemoteType::RT_CLIENT, 1), 1050, recvdata, index);
-		pNetMgr->Close(RemoteKey(RemoteType::RT_CLIENT, 1));
+		if (item->key.first == RemoteType::RT_UNKNOW)
+		{
+			pNetMgr->Update(item->uid, RemoteKey(RemoteType::RT_CLIENT, 1));
+		}
+		
+		pNetMgr->Send(RemoteKey(RemoteType::RT_CLIENT, 1), 1050, recvdata, index);
+		//pNetMgr->Close(RemoteKey(RemoteType::RT_CLIENT, 1));
 	}
 }

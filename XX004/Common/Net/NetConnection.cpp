@@ -24,7 +24,8 @@ namespace XX004
 			return out;
 		}
 
-		NetConnection::NetConnection() : m_UniqueID(0), m_RemoteType(RemoteType::RT_UNKNOW), m_RoleID(0), m_Socket(SOCKET_ERROR), m_Port(0), m_SendLen(0), m_RecvLen(0)
+		NetConnection::NetConnection() : m_UniqueID(0), m_RemoteType(RemoteType::RT_UNKNOW), m_RoleID(0), m_Socket(SOCKET_ERROR), m_Port(0),
+			m_SendBuffer(NET_BUFFER_SIZE), m_RecvBuffer(NET_BUFFER_SIZE)
 		{
 		}
 		
@@ -77,38 +78,21 @@ namespace XX004
 
 		bool NetConnection::AddSendData(Byte *buffer, int len)
 		{
-			//数据超过缓冲区大小了，不能添加
-			if (m_SendLen + len > NET_BUFFER_SIZE)
-			{
-				return false;
-			}
-
-			::memcpy_s(m_SendBuffer + m_SendLen, NET_BUFFER_SIZE - m_SendLen, buffer, len);
-			m_SendLen += len;
-			return true;
+			return m_SendBuffer.AddData(buffer, len);
 		}
 
 		bool NetConnection::AddRecvData(Byte *buffer, int len)
 		{
-			//数据超过缓冲区大小了，不能写入
-			if (m_RecvLen + len > NET_BUFFER_SIZE)
-			{
-				return false;
-			}
-
-			::memcpy_s(m_RecvBuffer + m_RecvLen, NET_BUFFER_SIZE - m_RecvLen, buffer, len);
-			m_RecvLen += len;
-
-			return true;
+			return m_RecvBuffer.AddData(buffer, len);
 		}
 
 		int NetConnection::CheckRecvPackage()
 		{
 			if (m_RecvHeader.Sign == 0)
 			{
-				if (m_RecvLen >= NetPackageHeader::HEADER_SIZE)
+				if (m_RecvBuffer.GetLength() >= NetPackageHeader::HEADER_SIZE)
 				{
-					m_RecvHeader.Unpack(m_RecvBuffer, 0);
+					m_RecvHeader.Unpack(m_RecvBuffer.GetData(), 0);
 					if (m_RecvHeader.Sign != NetPackageHeader::HEADER_SIGN || m_RecvHeader.BodySize > NET_PACKAGE_MAX_SIZE)
 					{
 						return -1;
@@ -116,7 +100,7 @@ namespace XX004
 				}
 			}
 
-			bool have = m_RecvHeader.Sign != 0 && m_RecvLen >= (m_RecvHeader.BodySize + NetPackageHeader::HEADER_SIZE);
+			bool have = m_RecvHeader.Sign != 0 && m_RecvBuffer.GetLength() >= (m_RecvHeader.BodySize + NetPackageHeader::HEADER_SIZE);
 			return have ? 1 : 0;
 		}
 
@@ -125,26 +109,21 @@ namespace XX004
 			//获取数据包
 			int datasize = m_RecvHeader.BodySize + NetPackageHeader::HEADER_SIZE;
 			header = m_RecvHeader;
-			::memcpy_s(buffer, NET_PACKAGE_MAX_SIZE, m_RecvBuffer + NetPackageHeader::HEADER_SIZE, m_RecvHeader.BodySize);
+			m_RecvBuffer.GetData(buffer, NetPackageHeader::HEADER_SIZE, m_RecvHeader.BodySize);
 
 			//清除数据包
-			m_RecvLen -= datasize;
-			::memcpy_s(m_RecvBuffer, NET_BUFFER_SIZE, m_RecvBuffer + datasize, m_RecvLen);		//数据回移
+			m_RecvBuffer.RemoveData(datasize);
 			m_RecvHeader.Reset();
 		}
 
 		int NetConnection::DoSend()
 		{
-			if (m_SendLen > 0)
+			if (m_SendBuffer.GetLength() > 0)
 			{
-				int ret = ::send(GetSocket(), (char*)m_SendBuffer, m_SendLen, 0);
+				int ret = ::send(GetSocket(), (char*)m_SendBuffer.GetData(), m_SendBuffer.GetLength(), 0);
 				if (ret > 0)
-				{
-					m_SendLen -= ret;
-					if (m_SendLen > 0)
-					{
-						::memcpy_s(m_SendBuffer, NET_BUFFER_SIZE, m_SendBuffer + ret, m_SendLen);	//数据回移
-					}					
+				{		
+					m_SendBuffer.RemoveData(ret);
 				}
 				else if (ret == SOCKET_ERROR)
 				{

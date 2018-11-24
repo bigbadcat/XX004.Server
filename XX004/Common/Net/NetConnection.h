@@ -18,6 +18,7 @@
 #include "../Macro.h"
 #include "NetDefine.h"
 #include "NetPackageHeader.h"
+#include "../Util/ByteBuffer.h"
 
 namespace XX004
 {
@@ -45,10 +46,10 @@ namespace XX004
 			inline SOCKET GetSocket()const { return m_Socket; }
 
 			//判断是否需要读数据
-			inline bool IsNeedRead() { return NET_BUFFER_SIZE - m_RecvLen >= NET_PACKAGE_MAX_SIZE; }
+			inline bool IsNeedRead() { return NET_BUFFER_SIZE - m_RecvBuffer.GetLength() >= NET_PACKAGE_MAX_SIZE; }
 
 			//判断是否需要写数据
-			inline bool IsNeedWrite() { return m_SendLen > 0;}
+			inline bool IsNeedWrite() { return m_SendBuffer.GetLength() > 0;}
 
 			//设置Socket
 			virtual void SetSocket(SOCKET s);
@@ -112,18 +113,11 @@ namespace XX004
 			//端口号。
 			int m_Port;
 
-
 			//收发缓冲区
-			Byte m_SendBuffer[NET_BUFFER_SIZE];
-
-			//发送长度
-			int m_SendLen;
+			ByteBuffer m_SendBuffer;
 
 			//接收缓冲区
-			Byte m_RecvBuffer[NET_BUFFER_SIZE];
-
-			//接收长度
-			int m_RecvLen;
+			ByteBuffer m_RecvBuffer;
 
 			//接收的数据头
 			NetPackageHeader m_RecvHeader;

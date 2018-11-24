@@ -32,6 +32,7 @@
     <ClInclude Include="Net\NetServer.h" />
     <ClInclude Include="ServerBase.h" />
     <ClInclude Include="MainBase.h" />
+    <ClInclude Include="Util\ByteBuffer.h" />
     <ClInclude Include="Util\DataUtil.h" />
     <ClInclude Include="Util\TimeUtil.h" />
   </ItemGroup>
@@ -47,6 +48,7 @@
     <ClCompile Include="Net\NetServer.cpp" />
     <ClCompile Include="ServerBase.cpp" />
     <ClCompile Include="MainBase.cpp" />
+    <ClCompile Include="Util\ByteBuffer.cpp" />
     <ClCompile Include="Util\DataUtil.cpp" />
     <ClCompile Include="Util\TimeUtil.cpp" />
   </ItemGroup>
