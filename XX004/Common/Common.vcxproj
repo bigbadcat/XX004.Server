@@ -34,6 +34,7 @@
     <ClInclude Include="MainBase.h" />
     <ClInclude Include="Util\ByteBuffer.h" />
     <ClInclude Include="Util\DataUtil.h" />
+    <ClInclude Include="Util\LockQueue.h" />
     <ClInclude Include="Util\TimeUtil.h" />
   </ItemGroup>
   <ItemGroup>

@@ -37,24 +37,6 @@ namespace XX004
 
 	NetManagerBase::~NetManagerBase()
 	{
-		while (m_CacheQueue.size() > 0)
-		{
-			NetDataItem *item = m_CacheQueue.front();
-			m_CacheQueue.pop();
-			SAFE_DELETE(item);
-		}
-		while (m_SendQueue.size() > 0)
-		{
-			NetDataItem *item = m_SendQueue.front();
-			m_SendQueue.pop();
-			SAFE_DELETE(item);
-		}
-		while (m_RecvQueue.size() > 0)
-		{
-			NetDataItem *item = m_RecvQueue.front();
-			m_RecvQueue.pop();
-			SAFE_DELETE(item);
-		}
 	}
 
 	void NetManagerBase::OnConnected(NetConnection *connection)
@@ -64,10 +46,7 @@ namespace XX004
 		item->op = NetOperateType::NOT_CONNECT;
 		item->uid = connection->GetUniqueID();
 		item->key = connection->GetRemote();
-		{
-			std::unique_lock<std::mutex> lock(m_RecvMutex);
-			m_RecvQueue.push(item);
-		}
+		m_RecvQueue.Push(item);
 	}
 
 	void NetManagerBase::OnDisconnected(NetConnection *connection)
@@ -77,10 +56,7 @@ namespace XX004
 		item->op = NetOperateType::NOT_DISCONNECT;
 		item->uid = connection->GetUniqueID();
 		item->key = connection->GetRemote();
-		{
-			std::unique_lock<std::mutex> lock(m_RecvMutex);
-			m_RecvQueue.push(item);
-		}
+		m_RecvQueue.Push(item);
 	}
 
 	void NetManagerBase::OnRecvData(NetConnection *connection, const NetPackageHeader& header, Byte *buffer)
@@ -101,10 +77,7 @@ namespace XX004
 		item->cmd = header.Command;
 		item->len = header.BodySize;
 		::memcpy_s(item->data, NET_PACKAGE_MAX_SIZE, buffer, item->len);
-		{
-			std::unique_lock<std::mutex> lock(m_RecvMutex);
-			m_RecvQueue.push(item);
-		}
+		OnAddRecvData(item);		
 	}
 
 	void NetManagerBase::RegisterMessageCallBack(Int32 cmd, NetMessageCallBack call)
@@ -151,50 +124,21 @@ namespace XX004
 	void NetManagerBase::Dispatch()
 	{
 		//先进行非线程安全的只读判断
-		if (m_RecvQueue.size() <= 0)
+		if (m_RecvQueue.GetSize() <= 0)
 		{
 			return;
 		}
 
 		//先锁定队列，将消息都拿出来，解锁队列
 		static NetDataItemQueue temp_queue;
-		{
-			std::unique_lock<std::mutex> lock(m_RecvMutex);
-			while (m_RecvQueue.size() > 0)
-			{
-				NetDataItem *item = m_RecvQueue.front();
-				m_RecvQueue.pop();
-				temp_queue.push(item);
-			}
-		}
+		m_RecvQueue.MoveAll(temp_queue);
 
 		//分发消息
 		while (temp_queue.size() > 0)
 		{
 			NetDataItem *item = temp_queue.front();
 			temp_queue.pop();
-			if (item->op == NetOperateType::NOT_CONNECT)
-			{
-				if (m_OnConnectCallBack != NULL)
-				{
-					m_OnConnectCallBack(item);
-				}
-			}
-			else if (item->op == NetOperateType::NOT_DISCONNECT)
-			{
-				if (m_OnDisconnectCallBack != NULL)
-				{
-					m_OnDisconnectCallBack(item);
-				}
-			}
-			else if (item->op == NetOperateType::NOT_DATA)
-			{
-				MessageCallBackMap::iterator itr = m_CallBack.find(item->cmd);
-				if (itr != m_CallBack.end())
-				{
-					(itr->second)(item);
-				}
-			}			
+			OnDispatch(item);
 			CacheNetDataItem(item);
 		}
 	}
@@ -205,10 +149,7 @@ namespace XX004
 		item->op = NetOperateType::NOT_UPDATE;
 		item->uid = uid;
 		item->key = key;
-		{
-			std::unique_lock<std::mutex> lock(m_SendMutex);
-			m_SendQueue.push(item);
-		}
+		m_SendQueue.Push(item);
 	}
 
 	void NetManagerBase::Send(UInt64 uid, int command, Byte *buffer, int len)
@@ -219,10 +160,7 @@ namespace XX004
 		item->cmd = command;
 		::memcpy_s(item->data, NET_PACKAGE_MAX_SIZE, buffer, len);
 		item->len = len;
-		{
-			std::unique_lock<std::mutex> lock(m_SendMutex);
-			m_SendQueue.push(item);
-		}
+		m_SendQueue.Push(item);
 	}
 
 	void NetManagerBase::Send(const RemoteKey& key, int command, Byte *buffer, int len)
@@ -233,10 +171,7 @@ namespace XX004
 		item->cmd = command;
 		::memcpy_s(item->data, NET_PACKAGE_MAX_SIZE, buffer, len);
 		item->len = len;
-		{
-			std::unique_lock<std::mutex> lock(m_SendMutex);
-			m_SendQueue.push(item);
-		}
+		m_SendQueue.Push(item);
 	}
 
 	void NetManagerBase::Close(UInt64 uid)
@@ -244,10 +179,7 @@ namespace XX004
 		NetDataItem *item = GetNetDataItem();
 		item->op = NetOperateType::NOT_CLOSE;
 		item->uid = uid;
-		{
-			std::unique_lock<std::mutex> lock(m_SendMutex);
-			m_SendQueue.push(item);
-		}
+		m_SendQueue.Push(item);
 	}
 
 	void NetManagerBase::Close(const RemoteKey& key)
@@ -255,28 +187,22 @@ namespace XX004
 		NetDataItem *item = GetNetDataItem();
 		item->op = NetOperateType::NOT_CLOSE;
 		item->key = key;
-		{
-			std::unique_lock<std::mutex> lock(m_SendMutex);
-			m_SendQueue.push(item);
-		}
+		m_SendQueue.Push(item);
+	}
+
+	void NetManagerBase::OnAddRecvData(NetDataItem *item)
+	{
+		//默认放入分发队列，网关会重写此函数，对网络数据进行转发
+		m_RecvQueue.Push(item);
 	}
 
 	NetDataItem* NetManagerBase::GetNetDataItem()
 	{
 		//先从缓存队列中获取
-		NetDataItem *item = NULL;
-		{
-			std::unique_lock<std::mutex> lock(m_CacheMutex);
-			if (m_CacheQueue.size() > 0)
-			{
-				item = m_CacheQueue.front();
-				m_CacheQueue.pop();
-			}
-		}
-		
-		//没有再创建
+		NetDataItem *item = m_CacheQueue.TryPop();
 		if (item == NULL)
 		{
+			//没有再创建
 			item = new NetDataItem();
 		}
 		item->Reset();
@@ -286,9 +212,33 @@ namespace XX004
 	void NetManagerBase::CacheNetDataItem(NetDataItem *item)
 	{
 		assert(item != NULL);
+		m_CacheQueue.Push(item);
+	}
 
-		std::unique_lock<std::mutex> lock(m_CacheMutex);
-		m_CacheQueue.push(item);
+	void NetManagerBase::OnDispatch(NetDataItem *item)
+	{
+		if (item->op == NetOperateType::NOT_CONNECT)
+		{
+			if (m_OnConnectCallBack != NULL)
+			{
+				m_OnConnectCallBack(item);
+			}
+		}
+		else if (item->op == NetOperateType::NOT_DISCONNECT)
+		{
+			if (m_OnDisconnectCallBack != NULL)
+			{
+				m_OnDisconnectCallBack(item);
+			}
+		}
+		else if (item->op == NetOperateType::NOT_DATA)
+		{
+			MessageCallBackMap::iterator itr = m_CallBack.find(item->cmd);
+			if (itr != m_CallBack.end())
+			{
+				(itr->second)(item);
+			}
+		}
 	}
 
 	void NetManagerBase::ThreadProcess()
@@ -310,22 +260,14 @@ namespace XX004
 	void NetManagerBase::OnPostSend()
 	{
 		//先进行非线程安全的只读判断
-		if (m_SendQueue.size() <= 0)
+		if (m_SendQueue.GetSize() <= 0)
 		{
 			return;
 		}
 
 		//先锁定队列，将消息都拿出来，解锁队列
 		static NetDataItemQueue temp_queue;
-		{
-			std::unique_lock<std::mutex> lock(m_SendMutex);
-			while (m_SendQueue.size() > 0)
-			{
-				NetDataItem *item = m_SendQueue.front();
-				m_SendQueue.pop();
-				temp_queue.push(item);
-			}
-		}
+		m_SendQueue.MoveAll(temp_queue);
 
 		//提交发送数据
 		while (temp_queue.size() > 0)
@@ -344,7 +286,6 @@ namespace XX004
 
 	void NetManagerBase::OnPost(NetDataItem *item)
 	{
-		
 		if (item->op == NetOperateType::NOT_DATA)
 		{
 			OnPostData(item);

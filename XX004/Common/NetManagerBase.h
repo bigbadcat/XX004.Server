@@ -17,6 +17,7 @@
 #include "Net/NetServer.h"
 #include "Net/NetMessage.h"
 #include "Core/semaphore.h"
+#include "Util/LockQueue.h"
 using namespace XX004::Net;
 
 namespace XX004
@@ -76,6 +77,7 @@ namespace XX004
 	typedef std::function<void(NetDataItem*)> NetMessageCallBack;
 	typedef std::map<Int32, NetMessageCallBack> MessageCallBackMap;
 	typedef std::queue<NetDataItem*> NetDataItemQueue;
+	typedef LockQueue<NetDataItem> NetDataItemLockQueue;
 		
 	//网络管理
 	class NetManagerBase : public INetProcesser
@@ -140,6 +142,10 @@ namespace XX004
 		//关闭连接
 		void Close(const RemoteKey& key);
 
+	protected:
+		//添加接收到的数据
+		virtual void OnAddRecvData(NetDataItem *item);
+
 	private:
 
 		//创建一个数据项
@@ -147,6 +153,9 @@ namespace XX004
 
 		//回收数据对象
 		void CacheNetDataItem(NetDataItem *item);
+
+		//分发消息
+		void OnDispatch(NetDataItem *item);
 
 		//线程过程
 		void ThreadProcess();
@@ -174,22 +183,13 @@ namespace XX004
 		MessageCallBackMap m_CallBack;
 
 		//要发送的数据队列
-		NetDataItemQueue m_SendQueue;
-
-		//发送队列锁
-		std::mutex m_SendMutex;
+		NetDataItemLockQueue m_SendQueue;
 
 		//接收到的数据队列
-		NetDataItemQueue m_RecvQueue;
-
-		//接收队列锁
-		std::mutex m_RecvMutex;
+		NetDataItemLockQueue m_RecvQueue;
 
 		//缓存队列
-		NetDataItemQueue m_CacheQueue;
-
-		//缓存队列锁
-		std::mutex m_CacheMutex;
+		NetDataItemLockQueue m_CacheQueue;
 
 		//是否运行
 		bool m_IsRunning;
