@@ -60,7 +60,13 @@ namespace XX004
 			void SelectSocket();
 
 			//获取连接
-			NetConnection* GetGetConnection(UInt64 uid);
+			NetConnection* GetConnection(UInt64 uid);
+
+			//获取连接
+			NetConnection* GetConnection(const RemoteKey &key);
+
+			//设置连接标识
+			void SetRemote(UInt64 uid, const RemoteKey &key);
 
 			//关闭连接
 			void CloseConnection(NetConnection* con);

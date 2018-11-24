@@ -85,6 +85,7 @@ namespace XX004
 
 		NetManagerBase *pNetMgr = MainBase::GetCurMain()->GetNetManager();
 		pNetMgr->Update(item->uid, RemoteKey(RemoteType::RT_CLIENT, 1));
-		pNetMgr->Send(item->uid, 1050, recvdata, index);
+		//pNetMgr->Send(RemoteKey(RemoteType::RT_CLIENT, 1), 1050, recvdata, index);
+		pNetMgr->Close(RemoteKey(RemoteType::RT_CLIENT, 1));
 	}
 }

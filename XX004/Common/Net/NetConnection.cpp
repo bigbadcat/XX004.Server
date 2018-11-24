@@ -24,7 +24,7 @@ namespace XX004
 			return out;
 		}
 
-		NetConnection::NetConnection() : m_UniqueID(0), m_Socket(SOCKET_ERROR), m_Port(0), m_SendLen(0), m_RecvLen(0)
+		NetConnection::NetConnection() : m_UniqueID(0), m_RemoteType(RemoteType::RT_UNKNOW), m_RoleID(0), m_Socket(SOCKET_ERROR), m_Port(0), m_SendLen(0), m_RecvLen(0)
 		{
 		}
 		
@@ -67,6 +67,12 @@ namespace XX004
 			{
 				cout << "getpeername err:" << WSAGetLastError() << endl;
 			}
+		}
+
+		void NetConnection::SetRemote(const RemoteKey& key)
+		{
+			m_RemoteType = key.first;
+			m_RoleID = m_RemoteType == RemoteType::RT_CLIENT ? key.second : 0;
 		}
 
 		bool NetConnection::AddSendData(Byte *buffer, int len)

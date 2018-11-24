@@ -38,6 +38,9 @@ namespace XX004
 
 		//更新数据
 		NOT_UPDATE = 4,
+
+		//关闭连接
+		NOT_CLOSE = 5,
 	};
 
 	//网络数据项
@@ -128,6 +131,15 @@ namespace XX004
 		//发送数据
 		void Send(UInt64 uid, int command, Byte *buffer, int len);
 
+		//发送数据
+		void Send(const RemoteKey& key, int command, Byte *buffer, int len);
+
+		//关闭连接
+		void Close(UInt64 uid);
+
+		//关闭连接
+		void Close(const RemoteKey& key);
+
 	private:
 
 		//创建一个数据项
@@ -146,7 +158,10 @@ namespace XX004
 		virtual void OnSocketSelect();
 
 		//提交数据到Net
-		virtual void OnPost(NetDataItem *item);
+		void OnPost(NetDataItem *item);
+
+		//提交发送的网络数据
+		virtual void OnPostData(NetDataItem *item);
 
 
 		//建立连接回调

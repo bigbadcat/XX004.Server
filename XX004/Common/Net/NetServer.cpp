@@ -52,9 +52,19 @@ namespace XX004
 			m_pConnectionManager->SelectSocket();
 		}
 
-		NetConnection* NetServer::GetGetConnection(UInt64 uid)
+		NetConnection* NetServer::GetConnection(UInt64 uid)
 		{
 			return m_pConnectionManager->GetConnection(uid);
+		}
+
+		NetConnection* NetServer::GetConnection(const RemoteKey &key)
+		{
+			return m_pConnectionManager->GetConnection(key);
+		}
+
+		void NetServer::SetRemote(UInt64 uid, const RemoteKey &key)
+		{
+			m_pConnectionManager->SetRemote(uid, key);
 		}
 
 		void NetServer::CloseConnection(NetConnection* con)

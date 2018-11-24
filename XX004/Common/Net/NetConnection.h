@@ -54,10 +54,22 @@ namespace XX004
 			virtual void SetSocket(SOCKET s);
 
 			//获取远端标识
-			inline const RemoteKey& GetRemote()const { return m_Remote; }
+			inline RemoteKey GetRemote()const { return RemoteKey(m_RemoteType, m_RoleID); }
 
 			//设置远端标识
-			inline void SetRemote(const RemoteKey& key) { m_Remote = key; }
+			void SetRemote(const RemoteKey& key);
+
+			//获取远端类型
+			inline int GetRomoteType()const { return m_RemoteType; }
+
+			//设置远端类型
+			inline void SetRomoteType(int type) { m_RemoteType = type; }
+
+			//获取角色id
+			inline Int64 GetRoleID()const { return m_RoleID; }
+
+			//设置角色id
+			inline void SetRoleID(Int64 roleid) { m_RoleID = roleid; }
 
 			//获取IP地址
 			inline const std::string& GetIPAddress()const { return m_IPAddress; }
@@ -85,8 +97,11 @@ namespace XX004
 			//连接唯一标识
 			UInt64 m_UniqueID;
 
-			//远端标识
-			RemoteKey m_Remote;
+			//远端类型
+			int m_RemoteType;
+
+			//角色标识(仅客户端连接有用)
+			Int64 m_RoleID;
 
 			//Socket句柄
 			SOCKET m_Socket;

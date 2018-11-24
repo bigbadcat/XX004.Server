@@ -35,6 +35,8 @@ namespace XX004
 		void NetConnectionManager::Release()
 		{
 			m_ConnectionIndex.clear();
+			m_InternalConnections.clear();
+			m_ClientConnections.clear();
 			for (ConnectionVector::iterator itr = m_ConnectionSets.begin(); itr != m_ConnectionSets.end(); ++itr)
 			{
 				delete (*itr);
@@ -88,16 +90,60 @@ namespace XX004
 
 		void NetConnectionManager::OnRemoveConnection(NetConnection* con)
 		{
+			int type = con->GetRomoteType();
+			if (type == RemoteType::RT_CLIENT)
+			{
+				m_ClientConnections.erase(con->GetRoleID());
+			}
+			else
+			{
+				m_InternalConnections.erase(type);
+			}
+
 			if (m_pServer != NULL)
 			{
 				m_pServer->OnDisconnect(con);
 			}
 		}
 
-		NetConnection* NetConnectionManager::GetConnection(UInt64 uid)
+		NetConnection* NetConnectionManager::GetConnection(UInt64 uid)const
 		{
-			NetConnection *ret = m_ConnectionIndex[uid];
-			return ret;
+			NetConnectionMap::const_iterator itr = m_ConnectionIndex.find(uid);
+			return itr == m_ConnectionIndex.cend() ? NULL : itr->second;
+		}
+
+		NetConnection* NetConnectionManager::GetConnection(const RemoteKey &key)const
+		{
+			assert(key.first != RemoteType::RT_UNKNOW);
+			if (key.first == RemoteType::RT_CLIENT)
+			{
+				//客户端连接
+				ClientConnectionMap::const_iterator itr = m_ClientConnections.find(key.second);
+				return itr == m_ClientConnections.cend() ? NULL : itr->second;
+			}
+			else
+			{
+				//内部连接
+				InternalConnectionMap::const_iterator itr = m_InternalConnections.find(key.first);
+				return itr == m_InternalConnections.cend() ? NULL : itr->second;
+			}
+			return NULL;
+		}
+
+		void NetConnectionManager::SetRemote(UInt64 uid, const RemoteKey &key)
+		{
+			NetConnection *con = GetConnection(uid);
+			assert(con->GetRomoteType() == RemoteType::RT_UNKNOW && con->GetRoleID() == 0);			//必须是小白连接
+			assert(key.first != RemoteType::RT_UNKNOW);		//参数合法
+			con->SetRemote(key);
+			if (key.first == RemoteType::RT_CLIENT)
+			{
+				m_ClientConnections[key.second] = con;
+			}
+			else
+			{
+				m_InternalConnections[key.first] = con;
+			}
 		}
 
 		void NetConnectionManager::OnRecvPackage(NetConnection *con)

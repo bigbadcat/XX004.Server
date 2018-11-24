@@ -28,6 +28,8 @@ namespace XX004
 		{
 			typedef std::vector<NetConnectionSet*> ConnectionVector;
 			typedef std::map<UInt64, NetConnection*> NetConnectionMap;
+			typedef std::map<int, NetConnection*> InternalConnectionMap;
+			typedef std::map<Int64, NetConnection*> ClientConnectionMap;
 
 		public:
 			//构造析构函数
@@ -59,7 +61,13 @@ namespace XX004
 			void OnRemoveConnection(NetConnection* con);
 
 			//获取连接
-			NetConnection* GetConnection(UInt64 uid);
+			NetConnection* GetConnection(UInt64 uid)const;
+
+			//获取连接
+			NetConnection* GetConnection(const RemoteKey &key)const;
+
+			//设置连接标识
+			void SetRemote(UInt64 uid, const RemoteKey &key);
 
 			//有连接接收到数据包了
 			void OnRecvPackage(NetConnection *con);
@@ -73,6 +81,12 @@ namespace XX004
 
 			//连接查询索引
 			NetConnectionMap m_ConnectionIndex;
+
+			//内部连接
+			InternalConnectionMap m_InternalConnections;
+
+			//客户端连接
+			ClientConnectionMap m_ClientConnections;
 
 		};
 	}

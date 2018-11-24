@@ -225,6 +225,42 @@ namespace XX004
 		}
 	}
 
+	void NetManagerBase::Send(const RemoteKey& key, int command, Byte *buffer, int len)
+	{
+		NetDataItem *item = GetNetDataItem();
+		item->op = NetOperateType::NOT_DATA;
+		item->key = key;
+		item->cmd = command;
+		::memcpy_s(item->data, NET_PACKAGE_MAX_SIZE, buffer, len);
+		item->len = len;
+		{
+			std::unique_lock<std::mutex> lock(m_SendMutex);
+			m_SendQueue.push(item);
+		}
+	}
+
+	void NetManagerBase::Close(UInt64 uid)
+	{
+		NetDataItem *item = GetNetDataItem();
+		item->op = NetOperateType::NOT_CLOSE;
+		item->uid = uid;
+		{
+			std::unique_lock<std::mutex> lock(m_SendMutex);
+			m_SendQueue.push(item);
+		}
+	}
+
+	void NetManagerBase::Close(const RemoteKey& key)
+	{
+		NetDataItem *item = GetNetDataItem();
+		item->op = NetOperateType::NOT_CLOSE;
+		item->key = key;
+		{
+			std::unique_lock<std::mutex> lock(m_SendMutex);
+			m_SendQueue.push(item);
+		}
+	}
+
 	NetDataItem* NetManagerBase::GetNetDataItem()
 	{
 		//先从缓存队列中获取
@@ -308,33 +344,47 @@ namespace XX004
 
 	void NetManagerBase::OnPost(NetDataItem *item)
 	{
-		NetConnection *pcon = m_Server.GetGetConnection(item->uid);
+		
+		if (item->op == NetOperateType::NOT_DATA)
+		{
+			OnPostData(item);
+		}
+		else if (item->op == NetOperateType::NOT_UPDATE)
+		{
+			m_Server.SetRemote(item->uid, item->key);
+		}
+		else if (item->op == NetOperateType::NOT_CLOSE)
+		{
+			NetConnection *pcon = item->uid != 0 ? m_Server.GetConnection(item->uid) : m_Server.GetConnection(item->key);
+			if (pcon != NULL)
+			{
+				m_Server.CloseConnection(pcon);
+			}
+		}
+	}
+
+	void NetManagerBase::OnPostData(NetDataItem *item)
+	{
+		NetConnection *pcon = item->uid != 0 ? m_Server.GetConnection(item->uid) : m_Server.GetConnection(item->key);
 		if (pcon != NULL)
 		{
-			if (item->op == NetOperateType::NOT_UPDATE)
-			{
-				pcon->SetRemote(item->key);
-			}
-			else if (item->op == NetOperateType::NOT_DATA)
-			{
-				NetPackageHeader sendhead;
-				sendhead.SetSign();
-				sendhead.Command = item->cmd;
-				sendhead.BodySize = item->len;
+			NetPackageHeader sendhead;
+			sendhead.SetSign();
+			sendhead.Command = item->cmd;
+			sendhead.BodySize = item->len;
 
-				static Byte sendbuff[1024];
-				int sendsize = 0;
-				sendsize = sendhead.Pack(sendbuff, sendsize);
-				::memcpy_s(sendbuff + sendsize, 1024 - sendsize, item->data, item->len);
-				sendsize += item->len;
+			static Byte sendbuff[1024];
+			int sendsize = 0;
+			sendsize = sendhead.Pack(sendbuff, sendsize);
+			::memcpy_s(sendbuff + sendsize, 1024 - sendsize, item->data, item->len);
+			sendsize += item->len;
 
-				bool cansend = pcon->AddSendData(sendbuff, sendsize);
-				if (!cansend)
-				{
-					//同一网络周期内发送数据量过大或者该连接速度太低把数据缓冲区挤爆了，要断掉连接
-					m_Server.CloseConnection(pcon);
-					pcon = NULL;
-				}
+			bool cansend = pcon->AddSendData(sendbuff, sendsize);
+			if (!cansend)
+			{
+				//同一网络周期内发送数据量过大或者该连接速度太低把数据缓冲区挤爆了，要断掉连接
+				m_Server.CloseConnection(pcon);
+				pcon = NULL;
 			}
 		}
 	}
