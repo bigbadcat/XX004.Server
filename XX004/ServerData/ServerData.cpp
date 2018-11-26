@@ -30,6 +30,7 @@ namespace XX004
 		pMgr->SetOnConnectCallBack([this](NetDataItem *item){this->OnConnect(item); });
 		pMgr->SetOnDisconnectCallBack([this](NetDataItem *item){this->OnDisconnect(item); });
 		pMgr->RegisterMessageCallBack(1000, [this](NetDataItem *item){this->F1(item); });
+		pMgr->RegisterMessageCallBack(1050, [this](NetDataItem *item){this->F2(item); });
 	}
 
 	bool ServerData::OnInitStep(int step, float &r)
@@ -60,7 +61,7 @@ namespace XX004
 
 	void ServerData::OnConnect(NetDataItem *item)
 	{
-		cout << "ServerData::OnConnect uid:" << item->uid << endl;
+		cout << "ServerData::OnConnect uid:" << item->uid << " key:" << item->key << endl;
 	}
 
 	void ServerData::OnDisconnect(NetDataItem *item)
@@ -91,5 +92,12 @@ namespace XX004
 		
 		pNetMgr->Send(RemoteKey(RemoteType::RT_CLIENT, 1), 1050, recvdata, index);
 		//pNetMgr->Close(RemoteKey(RemoteType::RT_CLIENT, 1));
+	}
+
+	void ServerData::F2(NetDataItem *item)
+	{
+		NetMessageIntString req;
+		req.Unpack(item->data, 0);
+		cout << "result:" << req.Value1 << " text:" << req.Value2 << endl;
 	}
 }

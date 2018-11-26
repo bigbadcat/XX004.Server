@@ -41,6 +41,7 @@ namespace XX004
 		void OnConnect(NetDataItem *item);
 		void OnDisconnect(NetDataItem *item);
 		void F1(NetDataItem *item);
+		void F2(NetDataItem *item);
 	};
 }
 

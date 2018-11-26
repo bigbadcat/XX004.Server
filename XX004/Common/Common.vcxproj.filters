@@ -55,6 +55,9 @@
     <ClInclude Include="Util\LockQueue.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="Net\NetInternalConnection.h">
+      <Filter>Net</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Net\NetServer.cpp">
@@ -92,6 +95,9 @@
     </ClCompile>
     <ClCompile Include="Util\ByteBuffer.cpp">
       <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Net\NetInternalConnection.cpp">
+      <Filter>Net</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

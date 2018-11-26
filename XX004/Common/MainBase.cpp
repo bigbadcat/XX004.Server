@@ -88,7 +88,17 @@ namespace XX004
 			{
 				break;
 			}
-			cout << "Unknow command:" << cmd << endl;
+			else if (cmd.compare("c1") == 0)
+			{
+				NetMessageIntString req;
+				req.Value1 = 0;
+				req.Value2 = "xxxxxxxx";
+				m_pNetManager->Send(RemoteKey(RemoteType::RT_DATA, 1), 1000, &req);
+			}
+			else
+			{
+				cout << "Unknow command:" << cmd << endl;
+			}			
 		}
 	}
 }

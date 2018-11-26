@@ -1,15 +1,15 @@
 ﻿/*******************************************************
 * Copyright (c) 2018-2088, By XuXiang all rights reserved.
 *
-* FileName: NetConnection.h
-* Summary: 网络通信模块服务端连接。
+* FileName: NetInternalConnection.h
+* Summary: 网络通信模块服务内部连接。
 *
 * Author: XuXiang
-* Date: 2018-07-30 23:06
+* Date: 2018-11-26 14:49
 *******************************************************/
 
-#ifndef __NetConnection_h__
-#define __NetConnection_h__
+#ifndef __NetInternalConnection_h__
+#define __NetInternalConnection_h__
 
 #include <map>
 #include <mutex>
@@ -24,23 +24,35 @@ namespace XX004
 {
 	namespace Net
 	{
-		//远端唯一标识。
+		//连接状态
+		enum ConnectionState
+		{
+			//未连接
+			CS_NOT_CONNECTED = 0,
+
+			//连接中
+			CS_CONNECTING = 1,
+
+			//已连接
+			CS_CONNECTED = 2,
+		};
+
 		typedef std::pair<int, Int64> RemoteKey;
 
-		std::ostream & operator<<(std::ostream &out, RemoteKey &key);
-
-		//网络连接对象
-		class NetConnection
+		class NetInternalConnection
 		{
 		public:
-			NetConnection();
-			virtual ~NetConnection();
+			NetInternalConnection();
+			virtual ~NetInternalConnection();
 
-			//获取唯一编号
-			inline UInt64 GetUniqueID()const { return  m_UniqueID; }
+			//初始化
+			void Init(int type, const string &ip, int port);
 
-			//设置位移编号
-			inline void SetUniqueID(UInt64 uid) { m_UniqueID = uid; }
+			//关闭连接
+			void Close();
+
+			//获取连接状态
+			inline int GetState()const { return m_State; }
 
 			//获取Sokcet ret:Socket
 			inline SOCKET GetSocket()const { return m_Socket; }
@@ -51,26 +63,17 @@ namespace XX004
 			//判断是否需要写数据
 			inline bool IsNeedWrite() { return m_SendBuffer.GetLength() > 0;}
 
-			//设置Socket
-			virtual void SetSocket(SOCKET s);
-
 			//获取远端标识
-			inline RemoteKey GetRemote()const { return RemoteKey(m_RemoteType, m_RoleID); }
+			inline RemoteKey GetRemote()const { return RemoteKey(m_RemoteType, 0); }
 
 			//设置远端标识
-			void SetRemote(const RemoteKey& key);
+			void SetRemote(const RemoteKey& key) { m_RemoteType = key.first; }
 
 			//获取远端类型
 			inline int GetRomoteType()const { return m_RemoteType; }
 
 			//设置远端类型
 			inline void SetRomoteType(int type) { m_RemoteType = type; }
-
-			//获取角色id
-			inline Int64 GetRoleID()const { return m_RoleID; }
-
-			//设置角色id
-			inline void SetRoleID(Int64 roleid) { m_RoleID = roleid; }
 
 			//获取IP地址
 			inline const std::string& GetIPAddress()const { return m_IPAddress; }
@@ -97,15 +100,32 @@ namespace XX004
 			//进行发送操作
 			int DoSend();
 
+			//选择IO操作
+			void Select();
+
 		private:
-			//连接唯一标识
-			UInt64 m_UniqueID;
+
+			//开始连接
+			void StartConnect();
+
+			//检测连接
+			void CheckConnect();
+
+			//检测输入输出
+			void CheckIO();
+
+			//Socket可以读取数据了
+			int OnSocketRead();
+
+			//Socket可以写入数据了
+			int OnSocketWrite();
+
+
+			//连接状态 0未连接 1连接中 2已连接
+			int m_State;
 
 			//远端类型
 			int m_RemoteType;
-
-			//角色标识(仅客户端连接有用)
-			Int64 m_RoleID;
 
 			//Socket句柄
 			SOCKET m_Socket;
@@ -128,4 +148,4 @@ namespace XX004
 	}
 }
 
-#endif	//__NetConnection_h__
+#endif	//__NetInternalConnection_h__

@@ -42,6 +42,9 @@ namespace XX004
 		//移除数据
 		void RemoveData(int len);
 
+		//清除数据
+		void Clear() { m_Length = 0; }
+
 	private:
 		//缓冲区数据
 		Byte *m_pData;

@@ -76,6 +76,22 @@ namespace XX004
 			m_RoleID = m_RemoteType == RemoteType::RT_CLIENT ? key.second : 0;
 		}
 
+		bool NetConnection::Send(Int32 cmd, Byte *buffer, int len)
+		{
+			NetPackageHeader sendhead;
+			sendhead.SetSign();
+			sendhead.Command = cmd;
+			sendhead.BodySize = len;
+
+			static Byte sendbuff[1024];
+			int sendsize = 0;
+			sendsize = sendhead.Pack(sendbuff, sendsize);
+			::memcpy_s(sendbuff + sendsize, 1024 - sendsize, buffer, len);
+			sendsize += len;
+
+			return AddSendData(sendbuff, sendsize);
+		}
+
 		bool NetConnection::AddSendData(Byte *buffer, int len)
 		{
 			return m_SendBuffer.AddData(buffer, len);
@@ -115,7 +131,7 @@ namespace XX004
 			m_RecvBuffer.RemoveData(datasize);
 			m_RecvHeader.Reset();
 		}
-
+		
 		int NetConnection::DoSend()
 		{
 			if (m_SendBuffer.GetLength() > 0)

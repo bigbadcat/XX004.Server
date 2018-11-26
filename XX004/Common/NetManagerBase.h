@@ -14,8 +14,10 @@
 #include <map>
 #include <functional>
 #include <queue>
+#include <string>
 #include "Net/NetServer.h"
 #include "Net/NetMessage.h"
+#include "Net/NetInternalConnection.h"
 #include "Core/semaphore.h"
 #include "Util/LockQueue.h"
 using namespace XX004::Net;
@@ -76,8 +78,12 @@ namespace XX004
 	//网络消息回调
 	typedef std::function<void(NetDataItem*)> NetMessageCallBack;
 	typedef std::map<Int32, NetMessageCallBack> MessageCallBackMap;
+	
 	typedef std::queue<NetDataItem*> NetDataItemQueue;
-	typedef LockQueue<NetDataItem> NetDataItemLockQueue;
+	typedef LockQueue<NetDataItem> NetDataItemLockQueue;	
+
+	typedef std::pair<int, std::pair<std::string, int> > InternalInfo;		//内部连接信息 type\ip\port
+	typedef std::map<int, NetInternalConnection*> InternalConnectionMap;	//内部连接集合
 		
 	//网络管理
 	class NetManagerBase : public INetProcesser
@@ -136,6 +142,9 @@ namespace XX004
 		//发送数据
 		void Send(const RemoteKey& key, int command, Byte *buffer, int len);
 
+		//发送数据
+		void Send(const RemoteKey& key, int command, NetMessage *msg);
+
 		//关闭连接
 		void Close(UInt64 uid);
 
@@ -145,6 +154,9 @@ namespace XX004
 	protected:
 		//添加接收到的数据
 		virtual void OnAddRecvData(NetDataItem *item);
+
+		//创建内部连接信息
+		virtual void OnCreateInternalInfo(std::vector<InternalInfo> &infos);
 
 	private:
 
@@ -172,6 +184,21 @@ namespace XX004
 		//提交发送的网络数据
 		virtual void OnPostData(NetDataItem *item);
 
+		//更新内部连接
+		void UpdateInternalConnection();
+
+
+		//是否运行
+		bool m_IsRunning;
+
+		//网络处理线程
+		thread m_Thread;
+
+		//网络服务端模块
+		NetServer m_Server;
+
+		//启动信号
+		xxstd::semaphore m_InitSemaphore;
 
 		//建立连接回调
 		NetMessageCallBack m_OnConnectCallBack;
@@ -191,18 +218,8 @@ namespace XX004
 		//缓存队列
 		NetDataItemLockQueue m_CacheQueue;
 
-		//是否运行
-		bool m_IsRunning;
-
-		//网络处理线程
-		thread m_Thread;
-
-		//网络服务端模块
-		NetServer m_Server;
-
-		//启动信号
-		xxstd::semaphore m_InitSemaphore;
-
+		//内部连接
+		InternalConnectionMap m_InternalConnections;
 	};
 }
 

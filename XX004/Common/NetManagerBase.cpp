@@ -37,6 +37,11 @@ namespace XX004
 
 	NetManagerBase::~NetManagerBase()
 	{
+		for (InternalConnectionMap::iterator itr = m_InternalConnections.begin(); itr != m_InternalConnections.end(); ++itr)
+		{
+			delete itr->second;
+		}
+		m_InternalConnections.clear();
 	}
 
 	void NetManagerBase::OnConnected(NetConnection *connection)
@@ -174,6 +179,17 @@ namespace XX004
 		m_SendQueue.Push(item);
 	}
 
+	void NetManagerBase::Send(const RemoteKey& key, int command, NetMessage *msg)
+	{
+		//static Byte buffer[NET_PACKAGE_MAX_SIZE];
+		NetDataItem *item = GetNetDataItem();
+		item->op = NetOperateType::NOT_DATA;
+		item->key = key;
+		item->cmd = command;
+		item->len = msg->Pack(item->data, 0);
+		m_SendQueue.Push(item);
+	}
+
 	void NetManagerBase::Close(UInt64 uid)
 	{
 		NetDataItem *item = GetNetDataItem();
@@ -194,6 +210,11 @@ namespace XX004
 	{
 		//默认放入分发队列，网关会重写此函数，对网络数据进行转发
 		m_RecvQueue.Push(item);
+	}
+
+	void NetManagerBase::OnCreateInternalInfo(std::vector<InternalInfo> &infos)
+	{
+
 	}
 
 	NetDataItem* NetManagerBase::GetNetDataItem()
@@ -238,6 +259,10 @@ namespace XX004
 			{
 				(itr->second)(item);
 			}
+			else
+			{
+				cout << "Unkonw command " << item->cmd << endl;
+			}
 		}
 	}
 
@@ -247,11 +272,23 @@ namespace XX004
 		m_Server.Start("127.0.0.1", 9000);
 		m_InitSemaphore.post();
 
+		//内部连接
+		vector<InternalInfo> infos;
+		OnCreateInternalInfo(infos);
+		for (vector<InternalInfo>::iterator itr = infos.begin(); itr != infos.end(); ++itr)
+		{
+			NetInternalConnection *con = new NetInternalConnection();
+			con->Init(itr->first, itr->second.first, itr->second.second);
+			m_InternalConnections.insert(InternalConnectionMap::value_type(con->GetRomoteType(), con));
+		}
+
+		//网络循环
 		std::chrono::milliseconds dura(100);
 		while (m_IsRunning)
 		{
-			this->OnPostSend();
-			this->OnSocketSelect();
+			OnPostSend();
+			OnSocketSelect();
+			UpdateInternalConnection();
 			std::this_thread::sleep_for(dura);
 		}
 		m_Server.Stop();
@@ -306,27 +343,98 @@ namespace XX004
 
 	void NetManagerBase::OnPostData(NetDataItem *item)
 	{
+		//看是否发往内部连接
+		if (item->key.first != RemoteType::RT_CLIENT)
+		{
+			InternalConnectionMap::iterator itr = m_InternalConnections.find(item->key.first);
+			if (itr != m_InternalConnections.end())
+			{
+				NetInternalConnection *internal_con = itr->second;
+				if (internal_con->GetState() == ConnectionState::CS_CONNECTED)
+				{
+					bool cansend = internal_con->Send(item->cmd, item->data, item->len);
+					if (!cansend)
+					{
+						internal_con->Close();
+					}
+					else
+					{
+						//实际上应该先缓存起来，等连接上了再发送
+						cout << "Internal connection send failed! type:" << item->key.first << endl;
+					}
+				}
+				else
+				{
+					//实际上应该先缓存起来，等连接上了再发送
+					cout << "Internal connection is not connected! type:" << item->key.first << endl;
+				}
+				return;
+			}
+		}
+
 		NetConnection *pcon = item->uid != 0 ? m_Server.GetConnection(item->uid) : m_Server.GetConnection(item->key);
 		if (pcon != NULL)
 		{
-			NetPackageHeader sendhead;
-			sendhead.SetSign();
-			sendhead.Command = item->cmd;
-			sendhead.BodySize = item->len;
-
-			static Byte sendbuff[1024];
-			int sendsize = 0;
-			sendsize = sendhead.Pack(sendbuff, sendsize);
-			::memcpy_s(sendbuff + sendsize, 1024 - sendsize, item->data, item->len);
-			sendsize += item->len;
-
-			bool cansend = pcon->AddSendData(sendbuff, sendsize);
+			bool cansend = pcon->Send(item->cmd, item->data, item->len);
 			if (!cansend)
 			{
 				//同一网络周期内发送数据量过大或者该连接速度太低把数据缓冲区挤爆了，要断掉连接
 				m_Server.CloseConnection(pcon);
 				pcon = NULL;
+				cout << "Connection send failed! key:" << item->key << endl;
 			}
+		}
+	}
+
+	void NetManagerBase::UpdateInternalConnection()
+	{
+		for (InternalConnectionMap::iterator itr = m_InternalConnections.begin(); itr != m_InternalConnections.end(); ++itr)
+		{
+			NetInternalConnection *con = itr->second;
+			int oldstate = con->GetState();
+			con->Select();
+			int state = con->GetState();
+			if (oldstate != state && (oldstate == ConnectionState::CS_CONNECTED || state == ConnectionState::CS_CONNECTED))
+			{
+				NetDataItem *item = GetNetDataItem();
+				item->op = oldstate == ConnectionState::CS_CONNECTED ? NetOperateType::NOT_DISCONNECT : NetOperateType::NOT_CONNECT;
+				item->key = con->GetRemote();
+				m_RecvQueue.Push(item);
+			}
+
+			do
+			{
+				int ret = con->CheckRecvPackage();
+				if (ret == 0)
+				{
+					break;
+				}
+				if (ret == -1)
+				{
+					con->Close();
+					NetDataItem *item = GetNetDataItem();
+					item->op = NetOperateType::NOT_DISCONNECT;
+					item->uid = 0;
+					item->key = con->GetRemote();
+					m_RecvQueue.Push(item);
+				}
+				if (ret == 1)
+				{
+					//获取消息
+					static Byte buffer[NET_PACKAGE_MAX_SIZE];
+					NetPackageHeader header;
+					con->TakeRecvPackage(header, buffer, NET_PACKAGE_MAX_SIZE);
+
+					//加入消息队列
+					NetDataItem *item = GetNetDataItem();
+					item->op = NetOperateType::NOT_DATA;
+					item->key = RemoteKey(con->GetRomoteType(), header.GUID);
+					item->cmd = header.Command;
+					item->len = header.BodySize;
+					::memcpy_s(item->data, NET_PACKAGE_MAX_SIZE, buffer, item->len);
+					OnAddRecvData(item);
+				}
+			} while (true);
 		}
 	}
 }

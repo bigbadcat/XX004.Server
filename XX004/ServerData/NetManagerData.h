@@ -22,6 +22,8 @@ namespace XX004
 		virtual ~NetManagerData();
 
 	protected:
+		//创建内部连接信息
+		virtual void OnCreateInternalInfo(std::vector<InternalInfo> &infos);
 
 	private:
 

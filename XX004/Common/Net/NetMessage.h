@@ -40,12 +40,12 @@ namespace XX004
 		};
 
 		//通用空消息体
-		class NetMessageEmpty : NetMessage
+		class NetMessageEmpty : public NetMessage
 		{
 		};
 
 		//通用消息体-Int
-		class NetMessageInt : NetMessage
+		class NetMessageInt : public NetMessage
 		{
 		public:
 
@@ -56,7 +56,7 @@ namespace XX004
 		};
 
 		//通用消息体-IntInt
-		class NetMessageIntInt : NetMessage
+		class NetMessageIntInt : public NetMessage
 		{
 		public:
 
@@ -68,7 +68,7 @@ namespace XX004
 		};
 
 		//通用消息体-Int64
-		class NetMessageInt64 : NetMessage
+		class NetMessageInt64 : public NetMessage
 		{
 		public:
 
@@ -79,7 +79,7 @@ namespace XX004
 		};
 
 		//通用消息体-IntInt64
-		class NetMessageIntInt64 : NetMessage
+		class NetMessageIntInt64 : public NetMessage
 		{
 		public:
 
@@ -91,7 +91,7 @@ namespace XX004
 		};
 
 		//通用消息体-String
-		class NetMessageString : NetMessage
+		class NetMessageString : public NetMessage
 		{
 		public:
 
@@ -102,7 +102,7 @@ namespace XX004
 		};
 
 		//通用消息体-IntString
-		class NetMessageIntString : NetMessage
+		class NetMessageIntString : public NetMessage
 		{
 		public:
 
