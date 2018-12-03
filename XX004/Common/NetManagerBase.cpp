@@ -355,12 +355,9 @@ namespace XX004
 					bool cansend = internal_con->Send(item->cmd, item->data, item->len);
 					if (!cansend)
 					{
-						internal_con->Close();
-					}
-					else
-					{
 						//实际上应该先缓存起来，等连接上了再发送
 						cout << "Internal connection send failed! type:" << item->key.first << endl;
+						internal_con->Close();
 					}
 				}
 				else

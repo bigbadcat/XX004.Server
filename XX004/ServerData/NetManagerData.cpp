@@ -22,6 +22,6 @@ namespace XX004
 
 	void NetManagerData::OnCreateInternalInfo(std::vector<InternalInfo> &infos)
 	{
-		infos.push_back(InternalInfo(RemoteType::RT_DATA, std::make_pair(string("127.0.0.1"), 9000)));
+		//infos.push_back(InternalInfo(RemoteType::RT_DATA, std::make_pair(string("127.0.0.1"), 9000)));
 	}
 }

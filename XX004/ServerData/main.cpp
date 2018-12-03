@@ -10,8 +10,8 @@
 
 #include <iostream>
 #include <string>
-#include "MySQLTest.h"
-#include "NetTest.h"
+//#include "MySQLTest.h"
+//#include "NetTest.h"
 #include "MainData.h"
 #include <vld.h>
 using namespace std;

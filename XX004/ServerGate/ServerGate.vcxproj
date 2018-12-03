@@ -107,6 +107,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -150,6 +151,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainGate.cpp" />
+    <ClCompile Include="NetManagerGate.cpp" />
+    <ClCompile Include="ServerGate.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MainGate.h" />
+    <ClInclude Include="NetManagerGate.h" />
+    <ClInclude Include="ServerGate.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

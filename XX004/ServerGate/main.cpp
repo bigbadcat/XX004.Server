@@ -8,35 +8,17 @@
 * Date: 2018-08-10 22:27
 *******************************************************/
 
-#include "Util/DataUtil.h"
-#include "ServerMain.h"
+#include "MainGate.h"
 #include <iostream>
 #include <vld.h>
 using namespace std;
 
-class ServerMainGate : public XX004::ServerMain
-{
-public:
-	ServerMainGate();
-	~ServerMainGate();
-
-private:
-
-};
-
-ServerMainGate::ServerMainGate()
-{
-}
-
-ServerMainGate::~ServerMainGate()
-{
-}
 
 int main(int argc, char *argv[])
 {
 	int ret = 0;
 	{
-		ServerMainGate server;
+		XX004::MainGate server;
 		ret = server.Run();
 	}
 
