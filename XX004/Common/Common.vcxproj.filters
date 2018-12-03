@@ -58,6 +58,9 @@
     <ClInclude Include="Net\NetInternalConnection.h">
       <Filter>Net</Filter>
     </ClInclude>
+    <ClInclude Include="Util\StringUtil.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Net\NetServer.cpp">
@@ -98,6 +101,9 @@
     </ClCompile>
     <ClCompile Include="Net\NetInternalConnection.cpp">
       <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\StringUtil.cpp">
+      <Filter>Util</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

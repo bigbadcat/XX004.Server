@@ -13,6 +13,7 @@
 
 #include "Macro.h"
 #include <string>
+#include <mutex>
 using namespace std;
 
 namespace XX004
@@ -67,6 +68,9 @@ namespace XX004
 
 		//服务对象
 		ServerBase* m_pServer;
+
+		//命令锁
+		mutex m_CmdLock;
 	};
 }
 

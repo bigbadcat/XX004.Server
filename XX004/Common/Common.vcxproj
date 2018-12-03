@@ -36,6 +36,7 @@
     <ClInclude Include="Util\ByteBuffer.h" />
     <ClInclude Include="Util\DataUtil.h" />
     <ClInclude Include="Util\LockQueue.h" />
+    <ClInclude Include="Util\StringUtil.h" />
     <ClInclude Include="Util\TimeUtil.h" />
   </ItemGroup>
   <ItemGroup>
@@ -53,6 +54,7 @@
     <ClCompile Include="MainBase.cpp" />
     <ClCompile Include="Util\ByteBuffer.cpp" />
     <ClCompile Include="Util\DataUtil.cpp" />
+    <ClCompile Include="Util\StringUtil.cpp" />
     <ClCompile Include="Util\TimeUtil.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
