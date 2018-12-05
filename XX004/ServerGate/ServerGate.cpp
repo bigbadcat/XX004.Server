@@ -30,6 +30,7 @@ namespace XX004
 		pMgr->SetOnConnectCallBack([this](NetDataItem *item){this->OnConnect(item); });
 		pMgr->SetOnDisconnectCallBack([this](NetDataItem *item){this->OnDisconnect(item); });
 		pMgr->RegisterMessageCallBack(1000, [this](NetDataItem *item){this->F1(item); });
+		pMgr->RegisterMessageCallBack(1050, [this](NetDataItem *item){this->F2(item); });
 	}
 
 	bool ServerGate::OnInitStep(int step, float &r)
@@ -48,6 +49,17 @@ namespace XX004
 	void ServerGate::OnUpdatePerSecond()
 	{
 		//cout << "ServerGate::OnUpdatePerSecond()" << TimeUtil::GetCurrentMillisecond() << endl;
+	}
+
+	void ServerGate::OnCommand(const std::string& cmd, const std::vector<std::string> &param)
+	{
+		if (cmd.compare("c1") == 0)
+		{
+			NetMessageIntString req;
+			req.Value1 = 0;
+			req.Value2 = "xxxxxxxx";
+			MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_DATA, 1), 1000, &req);
+		}
 	}
 
 	bool ServerGate::OnReleaseStep(int step, float &r)
@@ -91,5 +103,12 @@ namespace XX004
 		
 		pNetMgr->Send(RemoteKey(RemoteType::RT_CLIENT, 1), 1050, recvdata, index);
 		//pNetMgr->Close(RemoteKey(RemoteType::RT_CLIENT, 1));
+	}
+
+	void ServerGate::F2(NetDataItem *item)
+	{
+		NetMessageIntString req;
+		req.Unpack(item->data, 0);
+		cout << "result:" << req.Value1 << " text:" << req.Value2 << endl;
 	}
 }

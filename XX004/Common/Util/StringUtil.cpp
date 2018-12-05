@@ -24,7 +24,7 @@ namespace XX004
 		return s;
 	}
 
-	vector<string>& StringUtil::Split(std::string &s, std::string& sp, vector<string>& v)
+	vector<string>& StringUtil::Split(const std::string &s, const std::string& sp, vector<string>& v)
 	{
 		if (s.empty())
 		{
@@ -47,7 +47,7 @@ namespace XX004
 		return v;
 	}
 
-	vector<int>& StringUtil::SplitToInt(std::string &s, std::string& sp, vector<int>& v)
+	vector<int>& StringUtil::SplitToInt(const std::string &s, const std::string& sp, vector<int>& v)
 	{
 		vector<string> vs;		
 		Split(s, sp, vs);

@@ -31,26 +31,26 @@ namespace XX004
 		//sp:分隔符
 		//v:存储结果的容器
 		//ret:存储结果的容器自身
-		static vector<string>& Split(std::string &s, std::string& sp, vector<string>& v);
+		static vector<string>& Split(const std::string &s, const std::string& sp, vector<string>& v);
 
 		//拆分字符串
 		//s:要拆分的串
 		//sp:分隔符
 		//ret:拆分结果
-		static inline vector<string> Split(std::string &s, std::string& sp){ vector<string> v; return Split(s, sp, v); }
+		static inline vector<string> Split(const std::string &s, const std::string& sp){ vector<string> v; return Split(s, sp, v); }
 
 		//拆分字符串为整数数组
 		//s:要拆分的串
 		//sp:分隔符
 		//v:存储结果的容器
 		//ret:拆分结果
-		static vector<int>& SplitToInt(std::string &s, std::string& sp, vector<int>& v);
+		static vector<int>& SplitToInt(const std::string &s, const std::string& sp, vector<int>& v);
 
 		//拆分字符串为整数数组
 		//s:要拆分的串
 		//sp:分隔符
 		//ret:拆分结果
-		static inline vector<int> SplitToInt(std::string &s, std::string& sp) { vector<int> v; return SplitToInt(s, sp, v); }
+		static inline vector<int> SplitToInt(const std::string &s, const std::string& sp) { vector<int> v; return SplitToInt(s, sp, v); }
 	};
 }
 

@@ -80,24 +80,28 @@ namespace XX004
 	void MainBase::CommandLoop()
 	{
 		cout << "Start command ..." << endl;
+		char str[64];
 		while (true)
 		{
-			string cmd;
-			cin >> cmd;
+			//接收命令
+			cin.getline(str, sizeof(str));
+			
+			//如果输入内容超过缓冲区
+			if (!std::cin)
+			{
+				std::cin.clear(); // 清除错误标志位
+				std::cin.sync(); // 清除流
+			}
+
+			//提交命令
+			string cmd(str);
 			if (cmd.compare(COMMAND_QUIT) == 0)
 			{
 				break;
 			}
-			else if (cmd.compare("c1") == 0)
-			{
-				NetMessageIntString req;
-				req.Value1 = 0;
-				req.Value2 = "xxxxxxxx";
-				m_pNetManager->Send(RemoteKey(RemoteType::RT_DATA, 1), 1000, &req);
-			}
 			else
 			{
-				cout << "Unknow command:" << cmd << endl;
+				m_pServer->PostCommand(cmd);
 			}			
 		}
 	}

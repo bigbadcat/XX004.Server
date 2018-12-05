@@ -18,12 +18,6 @@ namespace XX004
 {
 	namespace Net
 	{
-		std::ostream & operator<<(std::ostream &out, RemoteKey &key)
-		{
-			out << "[" << key.first << "," << key.second << "]";
-			return out;
-		}
-
 		NetConnection::NetConnection() : m_UniqueID(0), m_RemoteType(RemoteType::RT_UNKNOW), m_RoleID(0), m_Socket(SOCKET_ERROR), m_Port(0),
 			m_SendBuffer(NET_BUFFER_SIZE), m_RecvBuffer(NET_BUFFER_SIZE)
 		{

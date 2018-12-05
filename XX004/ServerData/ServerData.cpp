@@ -51,6 +51,17 @@ namespace XX004
 		//cout << "ServerData::OnUpdatePerSecond()" << TimeUtil::GetCurrentMillisecond() << endl;
 	}
 
+	void ServerData::OnCommand(const std::string& cmd, const std::vector<std::string> &param)
+	{
+		//if (cmd.compare("c1") == 0)
+		//{
+		//	NetMessageIntString req;
+		//	req.Value1 = 0;
+		//	req.Value2 = "xxxxxxxx";
+		//	MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_DATA, 1), 1000, &req);
+		//}
+	}
+
 	bool ServerData::OnReleaseStep(int step, float &r)
 	{
 		//r = step / 50.0f;

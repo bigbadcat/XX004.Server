@@ -37,10 +37,14 @@ namespace XX004
 		//秒更新
 		virtual void OnUpdatePerSecond();
 
+		//收到命令
+		virtual void OnCommand(const std::string& cmd, const std::vector<std::string> &param);
+
 	private:
 		void OnConnect(NetDataItem *item);
 		void OnDisconnect(NetDataItem *item);
 		void F1(NetDataItem *item);
+		void F2(NetDataItem *item);
 	};
 }
 

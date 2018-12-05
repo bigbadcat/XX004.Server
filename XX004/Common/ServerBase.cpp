@@ -12,9 +12,54 @@
 #include "MainBase.h"
 #include <assert.h>
 #include "Util/TimeUtil.h"
+#include "Util/StringUtil.h"
 
 namespace XX004
 {
+	bool CommandInfo::Init(const string& line)
+	{
+		cmd.clear();
+		params.clear();
+
+		//空格分隔
+		static string SP(" ");
+		vector<string> splist;
+		bool iscmd = true;
+		StringUtil::Split(line, SP, splist);
+		for (vector<string>::iterator itr = splist.begin(); itr != splist.end(); ++itr)
+		{
+			string e = StringUtil::Trim(*itr);
+			if (e.size() > 0)
+			{
+				if (iscmd)
+				{
+					cmd = e;
+					iscmd = false;
+				}
+				else
+				{
+					params.push_back(e);
+				}
+			}
+		}
+
+		return IsValid();
+	}
+
+	std::ostream & operator<<(std::ostream &out, const CommandInfo &info)
+	{
+		out << info.cmd << ":";
+		for (vector<string>::const_iterator itr = info.params.cbegin(); itr != info.params.cend(); ++itr)
+		{
+			if (itr != info.params.cbegin())
+			{
+				out << ",";
+			}
+			out << *itr;
+		}
+		return out;
+	}
+
 	const Int64 ServerBase::FRAME_GAP = 100;
 
 	ServerBase::ServerBase() : m_State(ServerState::SS_CREATE)
@@ -58,6 +103,24 @@ namespace XX004
 		JoinThread(m_Thread);
 	}
 
+	void ServerBase::PostCommand(const string& cmd_line)
+	{
+		CommandInfo *pinfo = new CommandInfo(cmd_line);
+		if (pinfo->IsValid())
+		{
+			m_Cmds.Push(pinfo);
+		}
+		else
+		{
+			SAFE_DELETE(pinfo);
+		}
+	}
+
+	void ServerBase::OnCommand(const string& cmd, const vector<string> &param)
+	{
+
+	}
+
 	void ServerBase::ThreadProcess()
 	{
 		//服务器完整周期 初始->更新->销毁
@@ -70,19 +133,40 @@ namespace XX004
 		m_State = ServerState::SS_END;
 	}
 
+	void ServerBase::HandleCommand()
+	{
+		//先进行不安全的次数只读判断
+		if (m_Cmds.GetSize() <= 0)
+		{
+			return;
+		}
+
+		static queue<CommandInfo*> temp_queue;
+		m_Cmds.MoveAll(temp_queue);
+
+		//分发命令
+		while (temp_queue.size() > 0)
+		{
+			CommandInfo *item = temp_queue.front();
+			temp_queue.pop();
+			OnCommand(item->cmd, item->params);
+			SAFE_DELETE(item);
+		}
+	}
+
 	void ServerBase::Init()
 	{
 		//分步初始化
 		float r = 0;
 		int step = 0;
 		bool ok = false;
-		std::chrono::milliseconds dura(50);
+		chrono::milliseconds dura(50);
 		do
 		{
 			ok = OnInitStep(++step, r);
 			MoveCursorBack(24);
 			cout << "Init step:" << step << " r:" << (int)(r * 100) << "%";
-			std::this_thread::sleep_for(dura);
+			this_thread::sleep_for(dura);
 		} while (!ok);
 		MoveCursorBack(24);
 		cout << endl << "Init complete" << endl;
@@ -96,6 +180,7 @@ namespace XX004
 		{
 			UInt64 t_loopstart = TimeUtil::GetTickCount();		//循环开始的时间
 			pNetMgr->Dispatch();
+			HandleCommand();
 			OnUpdate();
 			if (t_loopstart - t_sectick >= 1000)
 			{
@@ -108,8 +193,8 @@ namespace XX004
 			if (t_loopend > t_loopstart)
 			{
 				UInt64 t_needsleep = FRAME_GAP - (t_loopend - t_loopstart);
-				std::chrono::milliseconds dura(t_needsleep > 0 ? t_needsleep : 1);
-				std::this_thread::sleep_for(dura);
+				chrono::milliseconds dura(t_needsleep > 0 ? t_needsleep : 1);
+				this_thread::sleep_for(dura);
 				//cout << "t_needsleep:" << t_needsleep << endl;
 			}
 		}
@@ -121,13 +206,13 @@ namespace XX004
 		float r = 0;
 		int step = 0;
 		bool ok = false;
-		std::chrono::milliseconds dura(50);
+		chrono::milliseconds dura(50);
 		do
 		{
 			ok = OnReleaseStep(++step, r);
 			MoveCursorBack(24);
 			cout << "Release step:" << step << " r:" << (int)(r * 100) << "%";
-			std::this_thread::sleep_for(dura);
+			this_thread::sleep_for(dura);
 		} while (!ok);
 		MoveCursorBack(24);
 		cout << endl << "Release complete" << endl;

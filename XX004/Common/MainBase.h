@@ -13,7 +13,6 @@
 
 #include "Macro.h"
 #include <string>
-#include <mutex>
 using namespace std;
 
 namespace XX004
@@ -67,10 +66,7 @@ namespace XX004
 		NetManagerBase* m_pNetManager;
 
 		//服务对象
-		ServerBase* m_pServer;
-
-		//命令锁
-		mutex m_CmdLock;
+		ServerBase* m_pServer;		
 	};
 }
 

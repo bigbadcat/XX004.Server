@@ -27,8 +27,6 @@ namespace XX004
 		//远端唯一标识。
 		typedef std::pair<int, Int64> RemoteKey;
 
-		std::ostream & operator<<(std::ostream &out, RemoteKey &key);
-
 		//网络连接对象
 		class NetConnection
 		{

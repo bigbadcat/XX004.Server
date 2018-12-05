@@ -17,6 +17,7 @@
 #include <string>
 #include "Net/NetServer.h"
 #include "Net/NetMessage.h"
+#include "Net/NetConnection.h"
 #include "Net/NetInternalConnection.h"
 #include "Core/semaphore.h"
 #include "Util/LockQueue.h"
@@ -84,6 +85,8 @@ namespace XX004
 
 	typedef std::pair<int, std::pair<std::string, int> > InternalInfo;		//内部连接信息 type\ip\port
 	typedef std::map<int, NetInternalConnection*> InternalConnectionMap;	//内部连接集合
+
+	std::ostream & operator<<(std::ostream &out, RemoteKey &key);
 		
 	//网络管理
 	class NetManagerBase : public INetProcesser

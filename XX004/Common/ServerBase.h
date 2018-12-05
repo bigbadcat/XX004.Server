@@ -11,10 +11,13 @@
 #ifndef __ServerBase_h__
 #define __ServerBase_h__
 
-#include "NetManagerBase.h"
-#include <thread>
+#include <iostream>
 #include <string>
-#include "Core\semaphore.h"
+#include <vector>
+#include "NetManagerBase.h"
+#include "Core/semaphore.h"
+#include "Util/LockQueue.h"
+using namespace std;
 
 namespace XX004
 {
@@ -26,6 +29,25 @@ namespace XX004
 		SS_RELEASE = 3,
 		SS_END = 4,
 	};
+
+	//命令信息
+	struct CommandInfo
+	{
+		string cmd;							//命令
+		vector<string> params;				//参数
+
+		//构造函数
+		CommandInfo() {}
+		CommandInfo(const string& line) { Init(line); }
+		
+		//初始化
+		bool Init(const string& line);
+
+		//判断命令是否有效
+		inline bool IsValid()const { return cmd.size() > 0; }
+	};
+
+	std::ostream & operator<<(std::ostream &out, const CommandInfo &info);
 
 	//服务模块的基类
 	class ServerBase
@@ -50,6 +72,9 @@ namespace XX004
 		//注册网络消息
 		virtual void RegisterNetMessage(NetManagerBase *pMgr) = 0;
 
+		//提交命令
+		void PostCommand(const std::string& cmd_line);
+
 		//每一帧的间隔毫秒
 		static const Int64 FRAME_GAP;
 
@@ -73,9 +98,15 @@ namespace XX004
 		//秒更新
 		virtual void OnUpdatePerSecond() = 0;
 
+		//收到命令
+		virtual void OnCommand(const std::string& cmd, const std::vector<std::string> &param);
+
 	private:
 		//线程过程
 		void ThreadProcess();
+
+		//命令处理
+		void HandleCommand();
 
 		//初始化
 		void Init();
@@ -94,6 +125,9 @@ namespace XX004
 
 		//启动信号
 		xxstd::semaphore m_InitSemaphore;
+
+		//命令队列
+		LockQueue<CommandInfo> m_Cmds;
 	};
 }
 

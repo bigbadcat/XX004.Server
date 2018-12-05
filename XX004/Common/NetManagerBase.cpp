@@ -31,6 +31,12 @@ namespace XX004
 		len = 0;
 	}
 
+	std::ostream & operator<<(std::ostream &out, RemoteKey &key)
+	{
+		out << "[" << key.first << "," << key.second << "]";
+		return out;
+	}
+
 	NetManagerBase::NetManagerBase()
 	{
 	}
