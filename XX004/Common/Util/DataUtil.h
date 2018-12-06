@@ -148,6 +148,9 @@ namespace XX004
 		//读取长度。
 		//ret:读取的值。
 		static string ReadString(Byte *src, int index, int *next, int n = 0);
+
+		//获取程序所在的目录
+		static const string& GetModuleFolderPath();
 	};
 }
 

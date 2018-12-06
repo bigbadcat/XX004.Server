@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 	int ret = 0;
 	{
 		XX004::MainData server;
-		ret = server.Run();
+		ret = server.Run(XX004::Net::RemoteType::RT_DATA);
 	}
 
 	system("pause");

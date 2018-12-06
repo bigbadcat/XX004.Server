@@ -33,6 +33,8 @@
     <ClInclude Include="Net\NetServer.h" />
     <ClInclude Include="ServerBase.h" />
     <ClInclude Include="MainBase.h" />
+    <ClInclude Include="StartSetting.h" />
+    <ClInclude Include="tinyxml2\tinyxml2.h" />
     <ClInclude Include="Util\ByteBuffer.h" />
     <ClInclude Include="Util\DataUtil.h" />
     <ClInclude Include="Util\LockQueue.h" />
@@ -52,6 +54,8 @@
     <ClCompile Include="Net\NetServer.cpp" />
     <ClCompile Include="ServerBase.cpp" />
     <ClCompile Include="MainBase.cpp" />
+    <ClCompile Include="StartSetting.cpp" />
+    <ClCompile Include="tinyxml2\tinyxml2.cpp" />
     <ClCompile Include="Util\ByteBuffer.cpp" />
     <ClCompile Include="Util\DataUtil.cpp" />
     <ClCompile Include="Util\StringUtil.cpp" />
@@ -108,7 +112,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>

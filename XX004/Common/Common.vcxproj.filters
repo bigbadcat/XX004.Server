@@ -10,6 +10,9 @@
     <Filter Include="Core">
       <UniqueIdentifier>{96b401c8-3914-41c8-b30e-626c2eeaa3ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="tinyxml2">
+      <UniqueIdentifier>{904ddff0-2926-45e5-aa24-51be7773caa3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Net\NetServer.h">
@@ -61,6 +64,10 @@
     <ClInclude Include="Util\StringUtil.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="StartSetting.h" />
+    <ClInclude Include="tinyxml2\tinyxml2.h">
+      <Filter>tinyxml2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Net\NetServer.cpp">
@@ -104,6 +111,10 @@
     </ClCompile>
     <ClCompile Include="Util\StringUtil.cpp">
       <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="StartSetting.cpp" />
+    <ClCompile Include="tinyxml2\tinyxml2.cpp">
+      <Filter>tinyxml2</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

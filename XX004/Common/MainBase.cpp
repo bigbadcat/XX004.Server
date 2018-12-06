@@ -37,7 +37,7 @@ namespace XX004
 		SAFE_DELETE(m_pServer);
 	}
 
-	int MainBase::Run()
+	int MainBase::Run(int type)
 	{
 		//初始化网络
 		WORD wVersionRequested;

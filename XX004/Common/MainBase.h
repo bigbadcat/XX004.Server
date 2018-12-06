@@ -12,6 +12,7 @@
 #define __MainBase_h__
 
 #include "Macro.h"
+#include "Net/NetDefine.h"
 #include <string>
 using namespace std;
 
@@ -28,7 +29,7 @@ namespace XX004
 		virtual ~MainBase();
 
 		//启动
-		int Run();
+		int Run(int type);
 
 		//获取网络管理
 		inline NetManagerBase* GetNetManager()const { return m_pNetManager; }
