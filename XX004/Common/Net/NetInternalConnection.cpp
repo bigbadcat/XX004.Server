@@ -13,6 +13,7 @@
 #include <iostream>
 #include <string>
 #include <assert.h>
+#include <WS2tcpip.h>
 using namespace std;
 
 namespace XX004
@@ -159,7 +160,7 @@ namespace XX004
 			}
 
 			SOCKADDR_IN addrSrv;
-			addrSrv.sin_addr.S_un.S_addr = inet_addr(m_IPAddress.c_str());
+			int pton = inet_pton(AF_INET, m_IPAddress.c_str(), &addrSrv.sin_addr.S_un.S_addr);
 			addrSrv.sin_family = AF_INET;
 			addrSrv.sin_port = htons((u_short)m_Port);
 
@@ -197,7 +198,7 @@ namespace XX004
 				//先判断是否有异常
 				if (FD_ISSET(m_Socket, &exceptfds) != 0)
 				{
-					cout << "InternalConnection connect failed." << endl;
+					cout << "InternalConnection connect failed. ip:" << m_IPAddress << " port:" << m_Port << endl;
 					SAFE_CLOSE_SOCKET(m_Socket);
 					Retry();
 				}
@@ -209,7 +210,7 @@ namespace XX004
 			}
 			else if (ret == SOCKET_ERROR)
 			{
-				cout << "InternalConnection connect failed. err:" << WSAGetLastError() << endl;
+				cout << "InternalConnection connect error:" << WSAGetLastError() << endl;
 				SAFE_CLOSE_SOCKET(m_Socket)
 				Retry();
 			}

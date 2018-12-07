@@ -24,14 +24,14 @@ namespace XX004
 			StartTickCount = GetTickCount();
 		}
 
-		Int64 nowtick = GetTickCount();
+		UInt64 nowtick = GetTickCount();
 		if (nowtick < StartTickCount)
 		{
 			StartSecond = GetCurrentSecond() * 1000;
 			StartTickCount = nowtick;
 		}
-		Int64 gap = nowtick - StartTickCount;
-		Int64 ret = StartSecond + gap;
+		UInt64 gap = nowtick - StartTickCount;
+		UInt64 ret = StartSecond + gap;
 		return ret;
 	}
 }
