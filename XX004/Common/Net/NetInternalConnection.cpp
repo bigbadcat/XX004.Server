@@ -9,7 +9,7 @@
 *******************************************************/
 
 #include "NetInternalConnection.h"
-#include "../Util/DataUtil.h"
+#include "../Util/TimeUtil.h"
 #include <iostream>
 #include <string>
 #include <assert.h>
@@ -138,6 +138,13 @@ namespace XX004
 			{
 				CheckConnect();
 			}
+			else if (m_State == ConnectionState::CS_RETRY_WAITTING)
+			{
+				if (TimeUtil::GetCurrentSecond() >= m_RetryTimestamp)
+				{
+					m_State = ConnectionState::CS_NOT_CONNECTED;
+				}
+			}
 		}
 
 		void NetInternalConnection::StartConnect()
@@ -190,9 +197,9 @@ namespace XX004
 				//先判断是否有异常
 				if (FD_ISSET(m_Socket, &exceptfds) != 0)
 				{
-					m_State = ConnectionState::CS_NOT_CONNECTED;
-					cout << "InternalConnection socket exception" << endl;
+					cout << "InternalConnection connect failed." << endl;
 					SAFE_CLOSE_SOCKET(m_Socket);
+					Retry();
 				}
 				//可以写入了则说明已经连接上
 				if (FD_ISSET(m_Socket, &writefds) != 0)
@@ -202,9 +209,9 @@ namespace XX004
 			}
 			else if (ret == SOCKET_ERROR)
 			{
-				m_State = ConnectionState::CS_NOT_CONNECTED;
-				cout << "select InternalConnection socket err:" << WSAGetLastError() << endl;
+				cout << "InternalConnection connect failed. err:" << WSAGetLastError() << endl;
 				SAFE_CLOSE_SOCKET(m_Socket)
+				Retry();
 			}
 		}
 
@@ -294,6 +301,12 @@ namespace XX004
 		int NetInternalConnection::OnSocketWrite()
 		{
 			return DoSend();			
+		}
+
+		void NetInternalConnection::Retry()
+		{
+			m_RetryTimestamp = TimeUtil::GetCurrentSecond() + RETRY_WAITTING_SECONDS;
+			m_State = ConnectionState::CS_RETRY_WAITTING;
 		}
 	}
 }

@@ -35,6 +35,9 @@ namespace XX004
 
 			//已连接
 			CS_CONNECTED = 2,
+
+			//重试等待
+			CS_RETRY_WAITTING = 3,
 		};
 
 		typedef std::pair<int, Int64> RemoteKey;
@@ -103,6 +106,9 @@ namespace XX004
 			//选择IO操作
 			void Select();
 
+			//重试等待时间
+			static const unsigned int RETRY_WAITTING_SECONDS = 5;
+
 		private:
 
 			//开始连接
@@ -120,6 +126,9 @@ namespace XX004
 			//Socket可以写入数据了
 			int OnSocketWrite();
 
+			//重试
+			void Retry();
+
 
 			//连接状态 0未连接 1连接中 2已连接
 			int m_State;
@@ -135,6 +144,8 @@ namespace XX004
 
 			//端口号。
 			int m_Port;
+
+			UInt64 m_RetryTimestamp;
 
 			//收发缓冲区
 			ByteBuffer m_SendBuffer;
