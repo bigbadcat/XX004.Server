@@ -22,11 +22,6 @@ int main(int argc, char *argv[])
 	//XX004::MySQLTest mysqltest;
 	//mysqltest.DoTest();
 
-	//XX004::NetTest nettest;
-	//nettest.Run();
-
-	//nettest.Stop();
-
 	int ret = 0;
 	{
 		XX004::MainData server;

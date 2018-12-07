@@ -11,6 +11,7 @@
 #include "MainBase.h"
 #include "NetManagerBase.h"
 #include "ServerBase.h"
+#include "StartSetting.h"
 #include <iostream>
 #include <assert.h>
 
@@ -22,7 +23,7 @@ namespace XX004
 
 	const string MainBase::COMMAND_QUIT = "/q";
 
-	MainBase::MainBase() : m_pNetManager(NULL), m_pServer(NULL)
+	MainBase::MainBase() : m_Type(0), m_pNetManager(NULL), m_pServer(NULL)
 	{
 		pCurMain = this;
 	}
@@ -52,6 +53,7 @@ namespace XX004
 		}
 
 		//模块创建		
+		m_Type = type;
 		m_pNetManager = OnCreateNetManager();
 		assert(m_pNetManager != NULL);
 		m_pServer = OnCreateServer();
@@ -59,7 +61,9 @@ namespace XX004
 		m_pServer->RegisterNetMessage(m_pNetManager);
 
 		//模块运行
-		m_pNetManager->Start();
+		StartSettingInfo* info = StartSetting::GetInstance()->GetSettingInfo(m_Type);
+		assert(info != NULL);
+		m_pNetManager->Start(info->GetPort());
 		m_pServer->Start(true);
 		CommandLoop();
 		cout << "Waitting server end ..." << endl;

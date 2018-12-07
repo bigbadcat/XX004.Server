@@ -23,7 +23,7 @@ namespace XX004
 
 	protected:
 		//创建内部连接信息
-		virtual void OnCreateInternalInfo(std::vector<InternalInfo> &infos);
+		virtual void OnCreateInternalInfo(std::vector<int> &infos);
 
 	private:
 

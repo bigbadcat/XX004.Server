@@ -144,15 +144,4 @@ namespace XX004
 		*next = index + len;
 		return ret;
 	}
-
-	const string& DataUtil::GetModuleFolderPath()
-	{
-		static string path;
-		if (path.size() <= 0)
-		{
-			//char szapipath[MAX_PATH];
-			//::GetModuleFileName()
-		}
-		return path;
-	}
 }

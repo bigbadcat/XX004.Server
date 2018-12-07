@@ -32,9 +32,9 @@ namespace XX004
 			SAFE_DELETE(m_pConnectionManager)
 		}
 
-		void NetServer::Start(const string &ipaddress, int port)
+		void NetServer::Start(int port)
 		{
-			cout << "NetServer::Start ipaddress:" << ipaddress << " port:" << port << endl;
+			cout << "NetServer::Start port:" << port << endl;
 			m_pListener->Start(port);
 			m_pConnectionManager->Init();
 		}

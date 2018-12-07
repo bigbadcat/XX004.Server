@@ -31,6 +31,9 @@ namespace XX004
 		//启动
 		int Run(int type);
 
+		//获取服务类型
+		inline int GetType()const { return m_Type; }
+
 		//获取网络管理
 		inline NetManagerBase* GetNetManager()const { return m_pNetManager; }
 
@@ -62,6 +65,8 @@ namespace XX004
 		//退出命令
 		static const string COMMAND_QUIT;
 
+		//服务器类型
+		int m_Type;
 
 		//网络管理
 		NetManagerBase* m_pNetManager;

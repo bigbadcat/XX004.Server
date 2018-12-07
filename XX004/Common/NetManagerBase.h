@@ -83,7 +83,6 @@ namespace XX004
 	typedef std::queue<NetDataItem*> NetDataItemQueue;
 	typedef LockQueue<NetDataItem> NetDataItemLockQueue;	
 
-	typedef std::pair<int, std::pair<std::string, int> > InternalInfo;		//内部连接信息 type\ip\port
 	typedef std::map<int, NetInternalConnection*> InternalConnectionMap;	//内部连接集合
 
 	std::ostream & operator<<(std::ostream &out, RemoteKey &key);
@@ -125,7 +124,7 @@ namespace XX004
 		void UnregisterAllCallBack();
 
 		//启动网络
-		void Start();
+		void Start(int port);
 
 		//停止网络
 		void Stop();
@@ -159,7 +158,7 @@ namespace XX004
 		virtual void OnAddRecvData(NetDataItem *item);
 
 		//创建内部连接信息
-		virtual void OnCreateInternalInfo(std::vector<InternalInfo> &infos);
+		virtual void OnCreateInternalInfo(std::vector<int> &infos);
 
 	private:
 
@@ -196,6 +195,9 @@ namespace XX004
 
 		//网络处理线程
 		thread m_Thread;
+
+		//端口
+		int m_Port;
 
 		//网络服务端模块
 		NetServer m_Server;

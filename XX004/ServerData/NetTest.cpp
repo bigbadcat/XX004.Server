@@ -41,7 +41,7 @@ namespace XX004
 		}
 
 		m_running = true;
-		m_Server.Start("127.0.0.1", 9000);
+		m_Server.Start(9000);
 		//m_listerner.Start("127.0.0.1", 9000);
 		//m_listen_thread = thread(ListenFun, this);
 	}

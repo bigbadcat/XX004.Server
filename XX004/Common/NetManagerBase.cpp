@@ -10,6 +10,7 @@
 
 #include "NetManagerBase.h"
 #include "Util/DataUtil.h"
+#include "StartSetting.h"
 #include <iostream>
 #include <assert.h>
 #include <string>
@@ -37,7 +38,7 @@ namespace XX004
 		return out;
 	}
 
-	NetManagerBase::NetManagerBase()
+	NetManagerBase::NetManagerBase() : m_Port(0)
 	{
 	}
 
@@ -112,11 +113,12 @@ namespace XX004
 		m_CallBack.clear();
 	}
 
-	void NetManagerBase::Start()
+	void NetManagerBase::Start(int port)
 	{
 		cout << "NetManagerBase::Start" << endl;
 		JoinThread(m_Thread);
 		m_IsRunning = true;
+		m_Port = port;
 		m_Thread = thread([](NetManagerBase *t){t->ThreadProcess(); }, this);
 		m_InitSemaphore.wait();
 	}
@@ -218,7 +220,7 @@ namespace XX004
 		m_RecvQueue.Push(item);
 	}
 
-	void NetManagerBase::OnCreateInternalInfo(std::vector<InternalInfo> &infos)
+	void NetManagerBase::OnCreateInternalInfo(std::vector<int> &infos)
 	{
 
 	}
@@ -275,16 +277,17 @@ namespace XX004
 	void NetManagerBase::ThreadProcess()
 	{
 		m_Server.SetProcesser(this);
-		m_Server.Start("127.0.0.1", 9000);
+		m_Server.Start(m_Port);
 		m_InitSemaphore.post();
 
 		//内部连接
-		vector<InternalInfo> infos;
+		vector<int> infos;
 		OnCreateInternalInfo(infos);
-		for (vector<InternalInfo>::iterator itr = infos.begin(); itr != infos.end(); ++itr)
+		for (vector<int>::iterator itr = infos.begin(); itr != infos.end(); ++itr)
 		{
+			StartSettingInfo *info = StartSetting::GetInstance()->GetSettingInfo(*itr);
 			NetInternalConnection *con = new NetInternalConnection();
-			con->Init(itr->first, itr->second.first, itr->second.second);
+			con->Init(info->GetType(), info->GetIPAddress(), info->GetPort());
 			m_InternalConnections.insert(InternalConnectionMap::value_type(con->GetRomoteType(), con));
 		}
 

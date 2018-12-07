@@ -20,8 +20,8 @@ namespace XX004
 	{
 	}
 
-	void NetManagerGate::OnCreateInternalInfo(std::vector<InternalInfo> &infos)
+	void NetManagerGate::OnCreateInternalInfo(std::vector<int> &infos)
 	{
-		infos.push_back(InternalInfo(RemoteType::RT_DATA, std::make_pair(string("127.0.0.1"), 9000)));
+		infos.push_back(RemoteType::RT_DATA);
 	}
 }

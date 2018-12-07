@@ -50,8 +50,8 @@ namespace XX004
 			NetServer();
 			~NetServer();
 
-			//启动网络模块。 ipaddress:IP地址。 port:端口号。
-			void Start(const string &ipaddress, int port);
+			//启动网络模块。port:监听的端口号。
+			void Start(int port);
 
 			//停止服务
 			void Stop();
