@@ -9,4 +9,6 @@ XX004/ServerGate/x64/
 XX004/ServerGate/ServerGate.vcxproj.user
 XX004/ServerData/x64/
 XX004/ServerData/ServerData.vcxproj.user
+XX004/ServerLogin/x64/
+XX004/ServerLogin/ServerData.vcxproj.user
 
