@@ -26,13 +26,13 @@ namespace XX004
 			NetMessage();
 			virtual ~NetMessage();
 
-			//解包头部。
+			//解包消息。
 			//src:要读取的字节数组。
 			//index:要读取的位置。
 			//ret:下一个读取位置。
 			virtual int Unpack(Byte *buffer, int index);
 
-			//打包头部。
+			//打包消息。
 			//src:要写入的字节数组。
 			//index:要写入的位置。
 			//ret:下一个写入位置。

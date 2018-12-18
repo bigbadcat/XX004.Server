@@ -13,6 +13,9 @@
     <Filter Include="tinyxml2">
       <UniqueIdentifier>{904ddff0-2926-45e5-aa24-51be7773caa3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Protocol">
+      <UniqueIdentifier>{b0b37a2b-d78b-409a-b44c-361e048c384a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Net\NetServer.h">
@@ -67,6 +70,9 @@
     <ClInclude Include="StartSetting.h" />
     <ClInclude Include="tinyxml2\tinyxml2.h">
       <Filter>tinyxml2</Filter>
+    </ClInclude>
+    <ClInclude Include="Protocol\NetMsgID.h">
+      <Filter>Protocol</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

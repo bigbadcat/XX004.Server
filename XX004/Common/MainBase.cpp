@@ -75,7 +75,7 @@ namespace XX004
 				//读取属性1
 				lua_pushnumber(L, 1);
 				lua_gettable(L, -2);
-				int id = lua_tonumber(L, -1);
+				int id = (int)lua_tonumber(L, -1);
 				lua_pop(L, 1);
 
 				//读取属性2
@@ -87,7 +87,7 @@ namespace XX004
 				//读取属性3
 				lua_pushnumber(L, 3);
 				lua_gettable(L, -2);
-				int level = lua_tonumber(L, -1);
+				int level = (int)lua_tonumber(L, -1);
 				lua_pop(L, 1);
 				
 				int key = (int)lua_tonumber(L, -2);

@@ -43,13 +43,55 @@ namespace XX004
 			RT_REGION = 7,
 		};
 
+#define SAFE_CLOSE_SOCKET(s) if (s!=SOCKET_ERROR){::closesocket(s); s=SOCKET_ERROR;}
+
 		//网络缓冲区大小
 		const int NET_BUFFER_SIZE = 8 * 1024;
 
 		//网络数据包最大尺寸 MTU可用大小为1480
 		const int NET_PACKAGE_MAX_SIZE = 1024;
 
-#define SAFE_CLOSE_SOCKET(s) if (s!=SOCKET_ERROR){::closesocket(s); s=SOCKET_ERROR;}
+		//系统内部起始消息号
+		const int NET_MSG_ID_SYSTEM_BEGIN = 0;
+
+		//系统内部结束消息号
+		const int NET_MSG_ID_SYSTEM_END = 999;
+
+		//网关起始消息号
+		const int NET_MSG_ID_GATE_BEGIN = 1000;
+
+		//网关结束消息号
+		const int NET_MSG_ID_GATE_END = 1999;
+
+		//登陆服起始消息号
+		const int NET_MSG_ID_LOGIN_BEGIN = 2000;
+
+		//登陆服结束消息号
+		const int NET_MSG_ID_LOGIN_END = 2999;
+
+		//世界服起始消息号
+		const int NET_MSG_ID_SCENE_BEGIN = 3000;
+
+		//世界服结束消息号
+		const int NET_MSG_ID_SCENE_END = 9999;
+
+		//场景服起始消息号
+		const int NET_MSG_ID_WORLD_BEGIN = 10000;
+
+		//场景服结束消息号
+		const int NET_MSG_ID_WORLD_END = 19999;
+
+		//数据库起始消息号
+		const int NET_MSG_ID_DATA_BEGIN = 20000;
+
+		//数据库结束消息号
+		const int NET_MSG_ID_DATA_END = 29999;
+
+		//客户端起始消息号
+		const int NET_MSG_ID_CLIENT_BEGIN = 30000;
+
+		//客户端结束消息号
+		const int NET_MSG_ID_CLIENT_END = 59999;
 	}
 }
 

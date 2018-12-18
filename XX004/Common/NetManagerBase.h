@@ -79,7 +79,9 @@ namespace XX004
 	//网络消息回调
 	typedef std::function<void(NetDataItem*)> NetMessageCallBack;
 	typedef std::map<Int32, NetMessageCallBack> MessageCallBackMap;
-	
+	typedef std::function<void(NetConnection*, int, Byte*, int)> NetMessageInternalCallBack;
+	typedef std::map<Int32, NetMessageInternalCallBack> NetMessageInternalCallBackMap;
+
 	typedef std::queue<NetDataItem*> NetDataItemQueue;
 	typedef LockQueue<NetDataItem> NetDataItemLockQueue;	
 
@@ -189,6 +191,9 @@ namespace XX004
 		//更新内部连接
 		void UpdateInternalConnection();
 
+		//身份标识处理
+		void OnMsgRemoteIdentify(NetConnection *connection, Int32 cmd, Byte *buffer, int len);
+
 
 		//是否运行
 		bool m_IsRunning;
@@ -213,6 +218,9 @@ namespace XX004
 
 		//消息集合
 		MessageCallBackMap m_CallBack;
+
+		//内部消息处理
+		NetMessageInternalCallBackMap m_InternalCallBack;
 
 		//要发送的数据队列
 		NetDataItemLockQueue m_SendQueue;

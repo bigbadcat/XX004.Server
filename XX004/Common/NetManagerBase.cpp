@@ -11,6 +11,8 @@
 #include "NetManagerBase.h"
 #include "Util/DataUtil.h"
 #include "StartSetting.h"
+#include "Protocol/NetMsgID.h"
+#include "MainBase.h"
 #include <iostream>
 #include <assert.h>
 #include <string>
@@ -18,6 +20,8 @@ using namespace std;
 
 namespace XX004
 {
+#define INTERNAL_CALL(id, fun) make_pair(id, [this](NetConnection *con, Int32 cmd, Byte *buffer, int len){this->fun(con, cmd, buffer, len); })
+
 	NetDataItem::NetDataItem()
 	{
 		Reset();
@@ -40,6 +44,7 @@ namespace XX004
 
 	NetManagerBase::NetManagerBase() : m_Port(0)
 	{
+		m_InternalCallBack.insert(INTERNAL_CALL(NetMsgID::REMOTE_IDENTIFY, OnMsgRemoteIdentify));
 	}
 
 	NetManagerBase::~NetManagerBase()
@@ -77,19 +82,26 @@ namespace XX004
 		cout << "NetManagerBase::OnRecvData ip:" << connection->GetIPAddress() << " port:" << connection->GetPort();
 		cout << " cmd:" << header.Command << " len:" << header.BodySize << endl;
 
-		//内置协议
-
 		//包头相关处理
-
-		//加入消息队列
-		NetDataItem *item = GetNetDataItem();
-		item->op = NetOperateType::NOT_DATA;
-		item->uid = connection->GetUniqueID();
-		item->key = connection->GetRemote();
-		item->cmd = header.Command;
-		item->len = header.BodySize;
-		::memcpy_s(item->data, NET_PACKAGE_MAX_SIZE, buffer, item->len);
-		OnAddRecvData(item);		
+		
+		NetMessageInternalCallBackMap::iterator itr = m_InternalCallBack.find(header.Command);
+		if (itr != m_InternalCallBack.end())
+		{
+			//内部处理
+			itr->second(connection, header.Command, buffer, header.BodySize);			
+		}
+		else
+		{
+			//加入消息队列
+			NetDataItem *item = GetNetDataItem();
+			item->op = NetOperateType::NOT_DATA;
+			item->uid = connection->GetUniqueID();
+			item->key = connection->GetRemote();
+			item->cmd = header.Command;
+			item->len = header.BodySize;
+			::memcpy_s(item->data, NET_PACKAGE_MAX_SIZE, buffer, item->len);
+			OnAddRecvData(item);
+		}	
 	}
 
 	void NetManagerBase::RegisterMessageCallBack(Int32 cmd, NetMessageCallBack call)
@@ -406,6 +418,16 @@ namespace XX004
 				item->op = oldstate == ConnectionState::CS_CONNECTED ? NetOperateType::NOT_DISCONNECT : NetOperateType::NOT_CONNECT;
 				item->key = con->GetRemote();
 				m_RecvQueue.Push(item);
+
+				if (state == ConnectionState::CS_CONNECTED)
+				{
+					//连上了发送身份识别
+					static Byte data[NET_PACKAGE_MAX_SIZE];
+					NetMessageInt req;					
+					req.Value = MainBase::GetCurMain()->GetType();
+					int len = req.Pack(data, 0);
+					con->Send(NetMsgID::REMOTE_IDENTIFY, data, len);
+				}
 			}
 
 			do
@@ -442,5 +464,13 @@ namespace XX004
 				}
 			} while (true);
 		}
+	}
+
+	void NetManagerBase::OnMsgRemoteIdentify(NetConnection *connection, Int32 cmd, Byte *buffer, int len)
+	{
+		NetMessageInt msg;
+		int index = msg.Unpack(buffer, 0);
+		connection->SetRomoteType(msg.Value);
+		cout << "OnMsgRemoteIdentify uid:" << connection->GetUniqueID() << " type:" << connection->GetRomoteType() << endl;
 	}
 }

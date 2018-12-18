@@ -1,7 +1,7 @@
 ﻿/*******************************************************
 * Copyright (c) 2018-2088, By XuXiang all rights reserved.
 *
-* FileName: NetManagerrGate.cpp
+* FileName: NetManagerGate.cpp
 * Summary: 网关网络管理。
 *
 * Author: XuXiang

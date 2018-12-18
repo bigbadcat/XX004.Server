@@ -31,6 +31,7 @@
     <ClInclude Include="Net\NetMessage.h" />
     <ClInclude Include="Net\NetPackageHeader.h" />
     <ClInclude Include="Net\NetServer.h" />
+    <ClInclude Include="Protocol\NetMsgID.h" />
     <ClInclude Include="ServerBase.h" />
     <ClInclude Include="MainBase.h" />
     <ClInclude Include="StartSetting.h" />
@@ -140,7 +141,7 @@
       <SubSystem>Windows</SubSystem>
     </Link>
     <Lib>
-      <AdditionalDependencies>lua5.3.4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lua5.3.4-Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
