@@ -12,14 +12,25 @@
 #define __ServerGate_h__
 
 #include "ServerBase.h"
+#include <map>
+#include <string>
 
 namespace XX004
 {
 	class ServerGate : public ServerBase
 	{
+		typedef std::map<Int64, std::string> UIDToUserNameMap;
+		typedef std::map<std::string, Int64> UserNameToUIDMap;
+
 	public:
 		ServerGate();
 		virtual ~ServerGate();
+
+		//设置关联 uid:连接id username:用户名称
+		void SetRelation(Int64 uid, const std::string& username);
+
+		//移除关联
+		void RemoveRelation(Int64 uid);
 
 	protected:
 		//注册网络消息
@@ -43,8 +54,14 @@ namespace XX004
 	private:
 		void OnConnect(NetDataItem *item);
 		void OnDisconnect(NetDataItem *item);
-		void F1(NetDataItem *item);
-		void F2(NetDataItem *item);
+
+		void OnLoginRequest(NetDataItem *item);
+
+		//连接uid到用户名的映射
+		UIDToUserNameMap m_UIDToUserName;
+
+		//用户名到连接uid的映射(与m_UIDToUserName保持一致)
+		UserNameToUIDMap m_UserNameToUID;
 	};
 }
 

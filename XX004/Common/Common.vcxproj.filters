@@ -74,6 +74,12 @@
     <ClInclude Include="Protocol\NetMsgID.h">
       <Filter>Protocol</Filter>
     </ClInclude>
+    <ClInclude Include="Protocol\NetMsgLogin.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
+    <ClInclude Include="Protocol\NetProtocol.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Net\NetServer.cpp">
@@ -121,6 +127,9 @@
     <ClCompile Include="StartSetting.cpp" />
     <ClCompile Include="tinyxml2\tinyxml2.cpp">
       <Filter>tinyxml2</Filter>
+    </ClCompile>
+    <ClCompile Include="Protocol\NetMsgLogin.cpp">
+      <Filter>Protocol</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

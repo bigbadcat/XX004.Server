@@ -78,12 +78,13 @@ namespace XX004
 
 	void NetManagerBase::OnRecvData(NetConnection *connection, const NetPackageHeader& header, Byte *buffer)
 	{
-		//解析网络消息并添加到队列中
-		cout << "NetManagerBase::OnRecvData ip:" << connection->GetIPAddress() << " port:" << connection->GetPort();
-		cout << " cmd:" << header.Command << " len:" << header.BodySize << endl;
+		////解析网络消息并添加到队列中
+		//cout << "NetManagerBase::OnRecvData ip:" << connection->GetIPAddress() << " port:" << connection->GetPort();
+		//cout << " cmd:" << header.Command << " len:" << header.BodySize << endl;
 
 		//包头相关处理
 		
+		//数据处理
 		NetMessageInternalCallBackMap::iterator itr = m_InternalCallBack.find(header.Command);
 		if (itr != m_InternalCallBack.end())
 		{
