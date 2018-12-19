@@ -144,6 +144,9 @@ namespace XX004
 		void Send(UInt64 uid, int command, Byte *buffer, int len);
 
 		//发送数据
+		void Send(UInt64 uid, int command, NetMessage *msg);
+
+		//发送数据
 		void Send(const RemoteKey& key, int command, Byte *buffer, int len);
 
 		//发送数据

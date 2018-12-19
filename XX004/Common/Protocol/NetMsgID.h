@@ -29,6 +29,7 @@ namespace XX004
 		//----------网关 begin 1000----------
 
 		static const Int32 CG_LOGIN_REQ = 1001;						//用户登陆请求(客户端->网关)		
+		static const Int32 LG_LOGIN_RES = 1002;						//用户登录回复(登陆服->网关)
 
 		//----------网关 end 1999----------
 
@@ -56,7 +57,7 @@ namespace XX004
 
 		//----------客户端 begin 30000----------
 
-		static const Int32 LC_LOGIN_RES = 30001;					//用户登录回复
+		static const Int32 GC_LOGIN_RES = 30001;					//用户登录回复
 
 		//----------客户端 end 59999----------
 

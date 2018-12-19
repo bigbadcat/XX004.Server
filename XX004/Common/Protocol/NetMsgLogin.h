@@ -31,16 +31,6 @@ namespace XX004
 			string UserName;						//用户名
 		};
 
-		//2001:用户登录(网关->登陆服)
-		class GLLoginRequest : public NetMessage
-		{
-		public:
-			virtual int Unpack(Byte *buffer, int index);
-			virtual int Pack(Byte *buffer, int index);
-
-			string UserName;						//用户名
-		};
-
 		//登陆的角色信息
 		class LoginRoleInfo : public NetMessage
 		{
@@ -51,6 +41,30 @@ namespace XX004
 			Int64 ID;								//编号
 			string Name;							//名称
 			Int32 Level;							//等级
+		};
+
+		//1002:用户登录回复(登陆服->网关)
+		class LGLoginResponse : public NetMessage
+		{
+		public:
+			virtual int Unpack(Byte *buffer, int index);
+			virtual int Pack(Byte *buffer, int index);
+
+			Int32 Result;							//登陆结果(0、成功 1、非法账号 2、被冻结)
+			string UserName;						//用户名
+			Int64 FreeTime;							//解冻时间
+			Int32 RoleCount;						//角色数量
+			vector<LoginRoleInfo> RoleList;			//角色列表
+		};
+
+		//2001:用户登录(网关->登陆服)
+		class GLLoginRequest : public NetMessage
+		{
+		public:
+			virtual int Unpack(Byte *buffer, int index);
+			virtual int Pack(Byte *buffer, int index);
+
+			string UserName;						//用户名
 		};
 
 		//2002:回复用户信息
@@ -88,7 +102,7 @@ namespace XX004
 		};
 
 		//30001:用户登录回复
-		class LCLoginResponse : public NetMessage
+		class GCLoginResponse : public NetMessage
 		{
 		public:
 			virtual int Pack(Byte *buffer, int index);

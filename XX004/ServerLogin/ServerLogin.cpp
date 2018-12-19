@@ -9,10 +9,9 @@
 *******************************************************/
 
 #include "ServerLogin.h"
-#include "NetManagerBase.h"
-#include "Util/TimeUtil.h"
-#include "Net/NetMessage.h"
-#include "MainBase.h"
+#include <NetManagerBase.h>
+#include <Protocol/NetProtocol.h>
+#include <MainBase.h>
 using namespace XX004::Net;
 
 namespace XX004
@@ -29,86 +28,63 @@ namespace XX004
 	{
 		pMgr->SetOnConnectCallBack([this](NetDataItem *item){this->OnConnect(item); });
 		pMgr->SetOnDisconnectCallBack([this](NetDataItem *item){this->OnDisconnect(item); });
-		pMgr->RegisterMessageCallBack(1000, [this](NetDataItem *item){this->F1(item); });
-		pMgr->RegisterMessageCallBack(1050, [this](NetDataItem *item){this->F2(item); });
+		pMgr->RegisterMessageCallBack(NetMsgID::GL_LOGIN_REQ, [this](NetDataItem *item){this->OnLoginRequest(item); });
 	}
 
 	bool ServerLogin::OnInitStep(int step, float &r)
 	{
-		//r = step / 80.0f;
-		//return step >= 80;
 		r = 1;
 		return true;
 	}
 
 	void ServerLogin::OnUpdate()
 	{
-		//cout << "ServerLogin::OnUpdate() " << TimeUtil::GetCurrentMillisecond() << endl;
 	}
 
 	void ServerLogin::OnUpdatePerSecond()
 	{
-		//cout << "ServerLogin::OnUpdatePerSecond()" << TimeUtil::GetCurrentMillisecond() << endl;
 	}
 
 	void ServerLogin::OnCommand(const std::string& cmd, const std::vector<std::string> &param)
 	{
-		if (cmd.compare("c1") == 0)
-		{
-			NetMessageIntString req;
-			req.Value1 = 0;
-			req.Value2 = "xxxxxxxx";
-			MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_DATA, 1), 1000, &req);
-		}
 	}
 
 	bool ServerLogin::OnReleaseStep(int step, float &r)
 	{
-		//r = step / 50.0f;
-		//return step >= 50;
 		r = 1;
 		return true;
 	}
 
 	void ServerLogin::OnConnect(NetDataItem *item)
 	{
-		cout << "ServerLogin::OnConnect uid:" << item->uid << " key:" << item->key << endl;
 	}
 
 	void ServerLogin::OnDisconnect(NetDataItem *item)
 	{
-		cout << "ServerLogin::OnDisconnect uid:" << item->uid << " key:" << item->key << endl;
 	}
 
-	void ServerLogin::F1(NetDataItem *item)
+	void ServerLogin::OnLoginRequest(NetDataItem *item)
 	{
-		NetMessageIntString req;
+		GLLoginRequest req;
 		req.Unpack(item->data, 0);
-		cout << "index:" << req.Value1 << " text:" << req.Value2 << endl;
+		cout << "ServerLogin::OnLoginRequest username:" << req.UserName << endl;
 
-		//准备回复数据		
-		NetMessageIntString res;
-		res.Value1 = 0;
-		res.Value2 = req.Value2 + "hhhhh";
-
-		Byte recvdata[1024];
-		int index = 0;
-		index = res.Pack(recvdata, index);
-
-		NetManagerBase *pNetMgr = MainBase::GetCurMain()->GetNetManager();
-		if (item->key.first == RemoteType::RT_UNKNOW)
+		//测试直接返回
+		LGLoginResponse res;
+		res.Result = 0;
+		res.UserName = req.UserName;
+		res.FreeTime = 0;
+		res.RoleCount = 2;
+		for (int i = 0; i < res.RoleCount; ++i)
 		{
-			pNetMgr->Update(item->uid, RemoteKey(RemoteType::RT_CLIENT, 1));
+			LoginRoleInfo info;
+			char szName[32];
+			::sprintf_s(szName, sizeof(szName), "RoleName%d", i + 1);
+			info.ID = 1000 + i + 1;
+			info.Name = szName;
+			info.Level = 1 + i * 3;
+			res.RoleList.push_back(info);
 		}
-		
-		pNetMgr->Send(RemoteKey(RemoteType::RT_CLIENT, 1), 1050, recvdata, index);
-		//pNetMgr->Close(RemoteKey(RemoteType::RT_CLIENT, 1));
-	}
-
-	void ServerLogin::F2(NetDataItem *item)
-	{
-		NetMessageIntString req;
-		req.Unpack(item->data, 0);
-		cout << "result:" << req.Value1 << " text:" << req.Value2 << endl;
+		MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_GATE, 0), NetMsgID::LG_LOGIN_RES, &res);
 	}
 }

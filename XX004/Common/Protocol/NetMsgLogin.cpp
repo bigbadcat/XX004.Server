@@ -26,22 +26,6 @@ namespace XX004
 
 		//----------------------------------------
 
-		int GLLoginRequest::Unpack(Byte *buffer, int index)
-		{
-			int i = index;
-			UserName = DataUtil::ReadString(buffer, i, &i);
-			return i;
-		}
-
-		int GLLoginRequest::Pack(Byte *buffer, int index)
-		{
-			int i = index;
-			i = DataUtil::WriteString(buffer, i, UserName);
-			return i;
-		}
-
-		//----------------------------------------
-
 		int LoginRoleInfo::Unpack(Byte *buffer, int index)
 		{
 			int i = index;
@@ -57,6 +41,54 @@ namespace XX004
 			i = DataUtil::WriteInt64(buffer, i, ID);
 			i = DataUtil::WriteString(buffer, i, Name);
 			i = DataUtil::WriteInt32(buffer, i, Level);
+			return i;
+		}
+
+		//----------------------------------------
+		int LGLoginResponse::Unpack(Byte *buffer, int index)
+		{
+			int i = index;
+			Result = DataUtil::ReadInt32(buffer, i, &i);
+			UserName = DataUtil::ReadString(buffer, i, &i);
+			FreeTime = DataUtil::ReadInt64(buffer, i, &i);
+			RoleCount = DataUtil::ReadInt32(buffer, i, &i);
+			RoleList.clear();
+			for (int j = 0; j < RoleCount; ++j)
+			{
+				LoginRoleInfo item;
+				i = item.Unpack(buffer, i);
+				RoleList.push_back(item);
+			}
+			return i;
+		}
+
+		int LGLoginResponse::Pack(Byte *buffer, int index)
+		{
+			int i = index;
+			i = DataUtil::WriteInt32(buffer, i, Result);
+			i = DataUtil::WriteString(buffer, i, UserName);
+			i = DataUtil::WriteInt64(buffer, i, FreeTime);
+			i = DataUtil::WriteInt32(buffer, i, RoleCount);
+			for (int j = 0; j < RoleCount; ++j)
+			{
+				i = RoleList[j].Pack(buffer, i);
+			}
+			return i;
+		}
+
+		//----------------------------------------
+
+		int GLLoginRequest::Unpack(Byte *buffer, int index)
+		{
+			int i = index;
+			UserName = DataUtil::ReadString(buffer, i, &i);
+			return i;
+		}
+
+		int GLLoginRequest::Pack(Byte *buffer, int index)
+		{
+			int i = index;
+			i = DataUtil::WriteString(buffer, i, UserName);
 			return i;
 		}
 
@@ -127,7 +159,7 @@ namespace XX004
 
 		//----------------------------------------
 
-		int LCLoginResponse::Pack(Byte *buffer, int index)
+		int GCLoginResponse::Pack(Byte *buffer, int index)
 		{
 			int i = index;
 			i = DataUtil::WriteInt32(buffer, i, Result);

@@ -97,7 +97,8 @@ namespace XX004
 			NetDataItem *item = GetNetDataItem();
 			item->op = NetOperateType::NOT_DATA;
 			item->uid = connection->GetUniqueID();
-			item->key = connection->GetRemote();
+			item->key.first = connection->GetRomoteType();
+			item->key.second = header.GUID;
 			item->cmd = header.Command;
 			item->len = header.BodySize;
 			::memcpy_s(item->data, NET_PACKAGE_MAX_SIZE, buffer, item->len);
@@ -189,6 +190,16 @@ namespace XX004
 		m_SendQueue.Push(item);
 	}
 
+	void NetManagerBase::Send(UInt64 uid, int command, NetMessage *msg)
+	{
+		NetDataItem *item = GetNetDataItem();
+		item->op = NetOperateType::NOT_DATA;
+		item->uid = uid;
+		item->cmd = command;
+		item->len = msg->Pack(item->data, 0);
+		m_SendQueue.Push(item);
+	}
+
 	void NetManagerBase::Send(const RemoteKey& key, int command, Byte *buffer, int len)
 	{
 		NetDataItem *item = GetNetDataItem();
@@ -202,7 +213,6 @@ namespace XX004
 
 	void NetManagerBase::Send(const RemoteKey& key, int command, NetMessage *msg)
 	{
-		//static Byte buffer[NET_PACKAGE_MAX_SIZE];
 		NetDataItem *item = GetNetDataItem();
 		item->op = NetOperateType::NOT_DATA;
 		item->key = key;
@@ -471,7 +481,7 @@ namespace XX004
 	{
 		NetMessageInt msg;
 		int index = msg.Unpack(buffer, 0);
-		connection->SetRomoteType(msg.Value);
+		m_Server.SetRemote(connection->GetUniqueID(), RemoteKey(msg.Value, 0));
 		cout << "OnMsgRemoteIdentify uid:" << connection->GetUniqueID() << " type:" << connection->GetRomoteType() << endl;
 	}
 }

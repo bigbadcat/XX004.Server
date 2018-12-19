@@ -32,6 +32,9 @@ namespace XX004
 		//移除关联
 		void RemoveRelation(Int64 uid);
 
+		//通过用户名获取链接标识。
+		Int64 GetUID(const string& username);
+
 	protected:
 		//注册网络消息
 		virtual void RegisterNetMessage(NetManagerBase *pMgr);
@@ -56,6 +59,8 @@ namespace XX004
 		void OnDisconnect(NetDataItem *item);
 
 		void OnLoginRequest(NetDataItem *item);
+		void OnLoginResponse(NetDataItem *item);
+
 
 		//连接uid到用户名的映射
 		UIDToUserNameMap m_UIDToUserName;

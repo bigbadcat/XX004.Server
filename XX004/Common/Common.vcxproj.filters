@@ -104,9 +104,6 @@
     <ClCompile Include="Core\semaphore.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Util\TimeUtil.cpp">
-      <Filter>Util</Filter>
-    </ClCompile>
     <ClCompile Include="Net\NetMessage.cpp">
       <Filter>Net</Filter>
     </ClCompile>
@@ -131,5 +128,6 @@
     <ClCompile Include="Protocol\NetMsgLogin.cpp">
       <Filter>Protocol</Filter>
     </ClCompile>
+    <ClCompile Include="Util\TimeUtil.cpp" />
   </ItemGroup>
 </Project>
