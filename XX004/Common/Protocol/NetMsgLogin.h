@@ -35,6 +35,7 @@ namespace XX004
 		class LoginRoleInfo : public NetMessage
 		{
 		public:
+			LoginRoleInfo();
 			virtual int Unpack(Byte *buffer, int index);
 			virtual int Pack(Byte *buffer, int index);
 
@@ -47,6 +48,7 @@ namespace XX004
 		class LGLoginResponse : public NetMessage
 		{
 		public:
+			LGLoginResponse();
 			virtual int Unpack(Byte *buffer, int index);
 			virtual int Pack(Byte *buffer, int index);
 
@@ -71,6 +73,7 @@ namespace XX004
 		class DLUserInfoResponse : public NetMessage
 		{
 		public:
+			DLUserInfoResponse();
 			virtual int Unpack(Byte *buffer, int index);
 			virtual int Pack(Byte *buffer, int index);
 
@@ -94,6 +97,7 @@ namespace XX004
 		class LDUserSaveRequest : public NetMessage
 		{
 		public:
+			LDUserSaveRequest();
 			virtual int Unpack(Byte *buffer, int index);
 			virtual int Pack(Byte *buffer, int index);
 
@@ -105,6 +109,7 @@ namespace XX004
 		class GCLoginResponse : public NetMessage
 		{
 		public:
+			GCLoginResponse();
 			virtual int Pack(Byte *buffer, int index);
 
 			Int32 Result;							//登陆结果(0、成功 1、非法账号 2、被冻结)
@@ -117,3 +122,4 @@ namespace XX004
 }
 
 #endif	//__NetMsgLogin_h__
+
