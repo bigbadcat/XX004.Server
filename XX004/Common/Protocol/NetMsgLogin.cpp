@@ -23,7 +23,7 @@ namespace XX004
 
 		//----------------------------------------
 
-		LoginRoleInfo::LoginRoleInfo() : ID(0), Level(0)
+		LoginRoleInfo::LoginRoleInfo() : ID(0), Prof(0), CreateTime(0), Level(0)
 		{
 		}
 
@@ -31,6 +31,8 @@ namespace XX004
 		{
 			int i = index;
 			ID = DataUtil::ReadInt64(buffer, i, &i);
+			Prof = DataUtil::ReadInt32(buffer, i, &i);
+			CreateTime = DataUtil::ReadInt64(buffer, i, &i);
 			Name = DataUtil::ReadString(buffer, i, &i);
 			Level = DataUtil::ReadInt32(buffer, i, &i);
 			return i;
@@ -40,6 +42,8 @@ namespace XX004
 		{
 			int i = index;
 			i = DataUtil::WriteInt64(buffer, i, ID);
+			i = DataUtil::WriteInt32(buffer, i, Prof);
+			i = DataUtil::WriteInt64(buffer, i, CreateTime);
 			i = DataUtil::WriteString(buffer, i, Name);
 			i = DataUtil::WriteInt32(buffer, i, Level);
 			return i;
@@ -79,6 +83,67 @@ namespace XX004
 			{
 				i = RoleList[j].Pack(buffer, i);
 			}
+			return i;
+		}
+
+		//----------------------------------------
+
+		int LGCreateRoleResponse::Unpack(Byte *buffer, int index)
+		{
+			int i = index;
+			UserName = DataUtil::ReadString(buffer, i, &i);
+			i = Role.Unpack(buffer, i);
+			return i;
+		}
+
+		int LGCreateRoleResponse::Pack(Byte *buffer, int index)
+		{
+			int i = index;
+			i = DataUtil::WriteString(buffer, i, UserName);
+			i = Role.Pack(buffer, i);
+			return i;
+		}
+
+		//----------------------------------------
+
+		CGEnterGameRequest::CGEnterGameRequest() : RoleID(0)
+		{
+		}
+
+		int CGEnterGameRequest::Unpack(Byte *buffer, int index)
+		{
+			int i = index;
+			RoleID = DataUtil::ReadInt64(buffer, i, &i);
+			return i;
+		}
+
+		//----------------------------------------
+
+		WGEnterGameSuccess::WGEnterGameSuccess() : RoleID(0)
+		{
+		}
+
+		int WGEnterGameSuccess::Unpack(Byte *buffer, int index)
+		{
+			int i = index;
+			UserName = DataUtil::ReadString(buffer, i, &i);
+			RoleID = DataUtil::ReadInt64(buffer, i, &i);
+			return i;
+		}
+
+		int WGEnterGameSuccess::Pack(Byte *buffer, int index)
+		{
+			int i = index;
+			i = DataUtil::WriteString(buffer, i, UserName);
+			i = DataUtil::WriteInt64(buffer, i, RoleID);
+			return i;
+		}
+
+		//----------------------------------------
+
+		int CGQuitGameRequest::Unpack(Byte *buffer, int index)
+		{
+			int i = index;
 			return i;
 		}
 
@@ -135,6 +200,105 @@ namespace XX004
 
 		//----------------------------------------
 
+		CLCreateRoleRequest::CLCreateRoleRequest() : Prof(0)
+		{
+		}
+
+		int CLCreateRoleRequest::Unpack(Byte *buffer, int index)
+		{
+			int i = index;
+			UserName = DataUtil::ReadString(buffer, i, &i);
+			RoleName = DataUtil::ReadString(buffer, i, &i);
+			Prof = DataUtil::ReadInt32(buffer, i, &i);
+			return i;
+		}
+
+		//----------------------------------------
+
+		GLEnterGameRequest::GLEnterGameRequest() : RoleID(0)
+		{
+		}
+
+		int GLEnterGameRequest::Unpack(Byte *buffer, int index)
+		{
+			int i = index;
+			UserName = DataUtil::ReadString(buffer, i, &i);
+			RoleID = DataUtil::ReadInt64(buffer, i, &i);
+			return i;
+		}
+
+		int GLEnterGameRequest::Pack(Byte *buffer, int index)
+		{
+			int i = index;
+			i = DataUtil::WriteString(buffer, i, UserName);
+			i = DataUtil::WriteInt64(buffer, i, RoleID);
+			return i;
+		}
+
+		//----------------------------------------
+
+		LWRoleOnline::LWRoleOnline() : RoleID(0)
+		{
+		}
+
+		int LWRoleOnline::Unpack(Byte *buffer, int index)
+		{
+			int i = index;
+			UserName = DataUtil::ReadString(buffer, i, &i);
+			RoleID = DataUtil::ReadInt64(buffer, i, &i);
+			return i;
+		}
+
+		int LWRoleOnline::Pack(Byte *buffer, int index)
+		{
+			int i = index;
+			i = DataUtil::WriteString(buffer, i, UserName);
+			i = DataUtil::WriteInt64(buffer, i, RoleID);
+			return i;
+		}
+
+		//----------------------------------------
+
+		GWRoleOutline::GWRoleOutline() : RoleID(0)
+		{
+		}
+
+		int GWRoleOutline::Unpack(Byte *buffer, int index)
+		{
+			int i = index;
+			RoleID = DataUtil::ReadInt64(buffer, i, &i);
+			return i;
+		}
+
+		int GWRoleOutline::Pack(Byte *buffer, int index)
+		{
+			int i = index;
+			i = DataUtil::WriteInt64(buffer, i, RoleID);
+			return i;
+		}
+
+		//----------------------------------------
+
+		GWRoleQuit::GWRoleQuit() : RoleID(0)
+		{
+		}
+
+		int GWRoleQuit::Unpack(Byte *buffer, int index)
+		{
+			int i = index;
+			RoleID = DataUtil::ReadInt64(buffer, i, &i);
+			return i;
+		}
+
+		int GWRoleQuit::Pack(Byte *buffer, int index)
+		{
+			int i = index;
+			i = DataUtil::WriteInt64(buffer, i, RoleID);
+			return i;
+		}
+
+		//----------------------------------------
+
 		int LDUserInfoRequest::Unpack(Byte *buffer, int index)
 		{
 			int i = index;
@@ -160,6 +324,7 @@ namespace XX004
 			int i = index;
 			UserName = DataUtil::ReadString(buffer, i, &i);
 			CreateTime = DataUtil::ReadInt64(buffer, i, &i);
+			i = Role.Unpack(buffer, i);
 			return i;
 		}
 
@@ -168,6 +333,7 @@ namespace XX004
 			int i = index;
 			i = DataUtil::WriteString(buffer, i, UserName);
 			i = DataUtil::WriteInt64(buffer, i, CreateTime);
+			i = Role.Pack(buffer, i);
 			return i;
 		}
 
@@ -188,6 +354,46 @@ namespace XX004
 			{
 				i = RoleList[j].Pack(buffer, i);
 			}
+			return i;
+		}
+
+		//----------------------------------------
+
+		int GCCreateRoleResponse::Pack(Byte *buffer, int index)
+		{
+			int i = index;
+			i = Role.Pack(buffer, i);
+			return i;
+		}
+
+		//----------------------------------------
+
+		LCEnterGameFailed::LCEnterGameFailed() : Result(0), FreeTime(0)
+		{
+		}
+
+		int LCEnterGameFailed::Pack(Byte *buffer, int index)
+		{
+			int i = index;
+			i = DataUtil::WriteInt32(buffer, i, Result);
+			i = DataUtil::WriteInt64(buffer, i, FreeTime);
+			return i;
+		}
+
+		//----------------------------------------
+
+		int GCEnterGameSuccess::Pack(Byte *buffer, int index)
+		{
+			int i = index;
+			i = DataUtil::WriteString(buffer, i, Token);
+			return i;
+		}
+
+		//----------------------------------------
+
+		int GCQuitGameResponse::Pack(Byte *buffer, int index)
+		{
+			int i = index;
 			return i;
 		}
 	}
