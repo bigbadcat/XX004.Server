@@ -35,37 +35,103 @@ namespace XX004
 
 	bool ServerData::OnInitStep(int step, float &r)
 	{
-		//r = step / 80.0f;
-		//return step >= 80;
+		m_MySQL.Init();
+
+		//char sql[128];
+		//{
+		//	sprintf_s(sql, "call sp_select_role(%I64d);", 214748364734);
+		//	auto ret = m_MySQL.Query(sql);
+		//	while (ret->GetRecord())
+		//	{
+		//		__int64 id = ret->GetInt64("id");
+		//		const char *name = ret->GetString("name");
+		//		int level = ret->GetInt("level");
+		//		int exp = ret->GetInt("exp");
+		//		int money = ret->GetInt("money");
+		//		__int64 create_time = ret->GetInt64("create_time");
+		//		cout << "id:" << id << " name:" << name << " level:" << level << " exp:" << exp << " money:" << money << " create_time:" << create_time << endl;
+		//	}
+		//}
+
+		//{
+		//	sprintf_s(sql, "call sp_select_role_skill(%I64d);", 214748364734);
+		//	auto ret = m_MySQL.Query(sql);
+		//	while (ret->GetRecord())
+		//	{
+		//		__int64 id = ret->GetInt64("role_id");
+		//		int skill = ret->GetInt("skill_id");
+		//		int level = ret->GetInt("level");
+		//		cout << "role:" << id << " skill:" << skill << " level:" << level << endl;
+		//	}
+		//}
+
+		//bool ok = true;
+		//m_MySQL.StartTransaction();
+		//do
+		//{
+		//	{
+		//		//保存玩家数据
+		//		__int64 id = 214748364734;
+		//		string name = "kkk";
+		//		int level = 10;
+		//		int exp = 300;
+		//		int money = 1000;
+		//		__int64 create_time = 14214748364734;
+		//		sprintf_s(sql, "call sp_insert_update_role(%I64d,'%s',%d,%d,%d,%I64d);", id, name.c_str(), level, exp, money, create_time);
+		//		if (!m_MySQL.Execute(sql))
+		//		{
+		//			ok = false;
+		//			break;
+		//		}
+		//	}
+
+		//	{
+		//		//保存技能数据
+		//		__int64 id = 214748364734;
+		//		int skill = 2001;
+		//		int level = 15;
+		//		__int64 create_time = 14214748364734;
+		//		sprintf_s(sql, "call sp_insert_update_skill(%I64d,%d,%d);", id, skill, level);
+		//		if (!m_MySQL.Execute(sql))
+		//		{
+		//			ok = false;
+		//			break;
+		//		}
+		//	}
+		//} while (false);
+		//m_MySQL.EndTransaction(ok);
+
 		r = 1;
 		return true;
 	}
 
 	void ServerData::OnUpdate()
 	{
-		//cout << "ServerData::OnUpdate() " << TimeUtil::GetCurrentMillisecond() << endl;
 	}
 
 	void ServerData::OnUpdatePerSecond()
 	{
-		//cout << "ServerData::OnUpdatePerSecond()" << TimeUtil::GetCurrentMillisecond() << endl;
 	}
 
 	void ServerData::OnCommand(const std::string& cmd, const std::vector<std::string> &param)
 	{
-		//if (cmd.compare("c1") == 0)
-		//{
-		//	NetMessageIntString req;
-		//	req.Value1 = 0;
-		//	req.Value2 = "xxxxxxxx";
-		//	MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_DATA, 1), 1000, &req);
-		//}
+		if (cmd.compare("getuser") == 0)
+		{
+			if (param.size() > 0)
+			{
+				cout << "getuser " << param[0] << endl;
+			}
+			else
+			{
+				cout << "getuser need param" << endl;
+			}
+		}
 	}
 
 	bool ServerData::OnReleaseStep(int step, float &r)
 	{
-		//r = step / 50.0f;
-		//return step >= 50;
+		m_MySQL.Release();
+
 		r = 1;
 		return true;
 	}

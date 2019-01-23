@@ -12,6 +12,7 @@
 #define __ServerData_h__
 
 #include "ServerBase.h"
+#include "MySQL/MySQLWrap.h"
 
 namespace XX004
 {
@@ -20,6 +21,9 @@ namespace XX004
 	public:
 		ServerData();
 		virtual ~ServerData();
+
+		//获取MySQL
+		MySQLWrap* GetMySQL() { return &m_MySQL; }
 
 	protected:
 		//注册网络消息
@@ -45,6 +49,8 @@ namespace XX004
 		void OnDisconnect(NetDataItem *item);
 		void F1(NetDataItem *item);
 		void F2(NetDataItem *item);
+
+		MySQLWrap m_MySQL;
 	};
 }
 
