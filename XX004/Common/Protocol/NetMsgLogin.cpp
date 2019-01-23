@@ -141,11 +141,7 @@ namespace XX004
 
 		//----------------------------------------
 
-		int CGQuitGameRequest::Unpack(Byte *buffer, int index)
-		{
-			int i = index;
-			return i;
-		}
+		//Empty class - CGQuitGameRequest
 
 		//----------------------------------------
 
@@ -391,11 +387,7 @@ namespace XX004
 
 		//----------------------------------------
 
-		int GCQuitGameResponse::Pack(Byte *buffer, int index)
-		{
-			int i = index;
-			return i;
-		}
+		//Empty class - GCQuitGameResponse
 	}
 }
 
