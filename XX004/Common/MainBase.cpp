@@ -14,7 +14,6 @@
 #include "StartSetting.h"
 #include <iostream>
 #include <assert.h>
-#include <lua.hpp>
 
 namespace XX004
 {
@@ -52,56 +51,6 @@ namespace XX004
 			cout << "WSAStartup err:" << err << endl;
 			return 1;
 		}
-
-		//测试Lua
-		lua_State *L = luaL_newstate();
-		luaL_openlibs(L);
-		err = luaL_dofile(L, "LuaTest.lua.txt");
-		if (err != LUA_OK)
-		{
-			const char *msg = lua_tostring(L, -1);
-			if (msg != NULL)
-			{
-				cout << "Lua error!\n" << lua_tostring(L, -1) << endl;
-			}			
-		}
-
-		//读取表格
-		if (lua_istable(L, -1))
-		{
-			lua_pushnil(L);
-			while (lua_next(L, -2))			//堆栈状态 -1:value(table) -2:key -3:table
-			{
-				//读取属性1
-				lua_pushnumber(L, 1);
-				lua_gettable(L, -2);
-				int id = (int)lua_tonumber(L, -1);
-				lua_pop(L, 1);
-
-				//读取属性2
-				lua_pushnumber(L, 2);
-				lua_gettable(L, -2);
-				string name = string(lua_tostring(L, -1));
-				lua_pop(L, 1);
-
-				//读取属性3
-				lua_pushnumber(L, 3);
-				lua_gettable(L, -2);
-				int level = (int)lua_tonumber(L, -1);
-				lua_pop(L, 1);
-				
-				int key = (int)lua_tonumber(L, -2);
-				cout << "key:" << key << " value:{id:" << id << ", name:" << name << ", level:" << level << "}" << endl;
-				lua_pop(L, 1);		//把值弹出去
-			}
-		}
-		else
-		{
-			cout << "Lua file is not return a table." << endl;
-		}
-
-		lua_close(L);
-		L = NULL;
 
 		//模块创建		
 		m_Type = type;

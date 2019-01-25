@@ -17,6 +17,7 @@
 #include "NetManagerBase.h"
 #include "Core/semaphore.h"
 #include "Util/LockQueue.h"
+#include "Config/ModuleConfig.h"
 using namespace std;
 
 namespace XX004
@@ -80,6 +81,9 @@ namespace XX004
 
 	protected:
 
+		//初始化配置列表
+		virtual void OnAddConfig(vector<ModuleConfig*> &cfgs);
+
 		//初始化过程
 		//step:初始化分步计数
 		//r:初始化进度0-1
@@ -128,6 +132,9 @@ namespace XX004
 
 		//命令队列
 		LockQueue<CommandInfo> m_Cmds;
+
+		//配置列表
+		vector<ModuleConfig*> m_Configs;
 	};
 }
 

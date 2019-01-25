@@ -16,6 +16,12 @@
     <Filter Include="Protocol">
       <UniqueIdentifier>{b0b37a2b-d78b-409a-b44c-361e048c384a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{1ddf4008-92bb-4b3e-bac8-c2815a7bcd19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Config\LuaWrap">
+      <UniqueIdentifier>{30bbd82f-38eb-4404-bf8c-b7e4c90578d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Net\NetServer.h">
@@ -80,6 +86,18 @@
     <ClInclude Include="Protocol\NetProtocol.h">
       <Filter>Protocol</Filter>
     </ClInclude>
+    <ClInclude Include="Config\ModuleConfig.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="Config\LoginModuleConfig.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="Config\LuaWrap\CharacterWrap.h">
+      <Filter>Config\LuaWrap</Filter>
+    </ClInclude>
+    <ClInclude Include="Config\LuaWrap.h">
+      <Filter>Config</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Net\NetServer.cpp">
@@ -129,5 +147,17 @@
       <Filter>Protocol</Filter>
     </ClCompile>
     <ClCompile Include="Util\TimeUtil.cpp" />
+    <ClCompile Include="Config\ModuleConfig.cpp">
+      <Filter>Config</Filter>
+    </ClCompile>
+    <ClCompile Include="Config\LoginModuleConfig.cpp">
+      <Filter>Config</Filter>
+    </ClCompile>
+    <ClCompile Include="Config\LuaWrap\CharacterWrap.cpp">
+      <Filter>Config\LuaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="Config\LuaWrap.cpp">
+      <Filter>Config</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

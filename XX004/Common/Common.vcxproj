@@ -19,6 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Config\LoginModuleConfig.h" />
+    <ClInclude Include="Config\LuaWrap.h" />
+    <ClInclude Include="Config\LuaWrap\CharacterWrap.h" />
+    <ClInclude Include="Config\ModuleConfig.h" />
     <ClInclude Include="Core\semaphore.h" />
     <ClInclude Include="Macro.h" />
     <ClInclude Include="NetManagerBase.h" />
@@ -45,6 +49,10 @@
     <ClInclude Include="Util\TimeUtil.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Config\LoginModuleConfig.cpp" />
+    <ClCompile Include="Config\LuaWrap.cpp" />
+    <ClCompile Include="Config\LuaWrap\CharacterWrap.cpp" />
+    <ClCompile Include="Config\ModuleConfig.cpp" />
     <ClCompile Include="Core\semaphore.cpp" />
     <ClCompile Include="NetManagerBase.cpp" />
     <ClCompile Include="Net\NetConnection.cpp" />

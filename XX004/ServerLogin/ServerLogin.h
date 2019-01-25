@@ -25,6 +25,9 @@ namespace XX004
 		//注册网络消息
 		virtual void RegisterNetMessage(NetManagerBase *pMgr);
 
+		//初始化配置列表
+		virtual void OnAddConfig(vector<ModuleConfig*> &cfgs);
+
 		//启动服务
 		virtual bool OnInitStep(int step, float &r);
 

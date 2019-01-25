@@ -116,6 +116,10 @@ namespace XX004
 		}
 	}
 
+	void ServerBase::OnAddConfig(vector<ModuleConfig*> &cfgs)
+	{
+	}
+
 	void ServerBase::OnCommand(const string& cmd, const vector<string> &param)
 	{
 
@@ -124,6 +128,7 @@ namespace XX004
 	void ServerBase::ThreadProcess()
 	{
 		//服务器完整周期 初始->更新->销毁
+		this_thread::sleep_for(chrono::milliseconds(100));		//先稍等一下，让网络线程的输出做完，否则会显示混乱，逻辑不会出错
 		m_State = ServerState::SS_INIT;
 		Init();
 		m_InitSemaphore.post();
@@ -160,12 +165,30 @@ namespace XX004
 		float r = 0;
 		int step = 0;
 		bool ok = false;
+		int config_index = 0;
+		m_Configs.clear();
+		OnAddConfig(m_Configs);
 		chrono::milliseconds dura(50);
 		do
 		{
-			ok = OnInitStep(++step, r);
-			MoveCursorBack(24);
-			cout << "Init step:" << step << " r:" << (int)(r * 100) << "%";
+			if (config_index < m_Configs.size())
+			{
+				m_Configs[config_index++]->Init();
+				cout << "Init config:" << config_index << "/" << m_Configs.size();
+				if (config_index >= m_Configs.size())
+				{
+					cout << endl;
+				}
+			}
+			else
+			{
+				//先初始化配置
+				ok = OnInitStep(++step, r);
+				MoveCursorBack(24);
+				cout << "Init step:" << step << " r:" << (int)(r * 100) << "%";
+			}
+			
+
 			this_thread::sleep_for(dura);
 		} while (!ok);
 		MoveCursorBack(24);
@@ -216,5 +239,11 @@ namespace XX004
 		} while (!ok);
 		MoveCursorBack(24);
 		cout << endl << "Release complete" << endl;
+
+		//销毁配置
+		for (vector<ModuleConfig*>::iterator itr = m_Configs.begin(); itr != m_Configs.end(); ++itr)
+		{
+			(*itr)->Release();
+		}
 	}
 }
