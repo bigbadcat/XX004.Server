@@ -1,4 +1,4 @@
-﻿/*******************************************************
+/*******************************************************
 * Copyright (c) 2018-2088, By XuXiang all rights reserved.
 *
 * FileName: CharacterWrap.h
@@ -21,11 +21,11 @@ namespace XX004
 		CharacterWrap();
 		virtual void Init(lua_State *L);
 
-		int id;						//编号
-		int type;					//类型	
-		int hp;						//生命
-		int att;					//攻击
-		int def;					//防御
+		int id;								//编号
+		int type;							//类型
+		int hp;								//生命
+		int att;							//攻击
+		int def;							//防御
 	};
 }
 

@@ -118,6 +118,7 @@ namespace XX004
 			virtual int Pack(Byte *buffer, int index);
 
 			string UserName;						//用户名
+			Int64 CreateTime;						//创建时间(0表示用户不存在)
 			Int64 FreeTime;							//解冻时间
 			Int32 RoleCount;						//角色数量
 			vector<LoginRoleInfo> RoleList;			//角色列表

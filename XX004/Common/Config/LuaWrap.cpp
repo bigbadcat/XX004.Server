@@ -96,14 +96,83 @@ namespace XX004
 		return ret;
 	}
 
+	void LuaWrap::ReadBoolArray(lua_State *L, char *name, vector<bool> &v)
+	{
+		v.clear();
+		lua_pushstring(L, name);
+		lua_gettable(L, -2);
+
+		lua_pushnil(L);
+		while (lua_next(L, -2))		//堆栈状态 -1:value -2:key -3:array(table)
+		{
+			bool value = lua_toboolean(L, -1) != 0;
+			v.push_back(value);
+			lua_pop(L, 1);
+		}
+		lua_pop(L, 1);
+	}
+
 	int LuaWrap::ReadInt(lua_State *L, char *name)
 	{
 		return (int)ReadDouble(L, name);
 	}
 
+	void LuaWrap::ReadIntArray(lua_State *L, char *name, vector<int> &v)
+	{
+		v.clear();
+		lua_pushstring(L, name);
+		lua_gettable(L, -2);
+
+		lua_pushnil(L);
+		while (lua_next(L, -2))		//堆栈状态 -1:value -2:key -3:array(table)
+		{
+			int value = (int)lua_tonumber(L, -1);
+			v.push_back(value);
+			lua_pop(L, 1);
+		}
+		lua_pop(L, 1);
+	}
+
+	__int64 LuaWrap::ReadLong(lua_State *L, char *name)
+	{
+		return (__int64)ReadDouble(L, name);
+	}
+
+	void LuaWrap::ReadLongArray(lua_State *L, char *name, vector<__int64> &v)
+	{
+		v.clear();
+		lua_pushstring(L, name);
+		lua_gettable(L, -2);
+
+		lua_pushnil(L);
+		while (lua_next(L, -2))		//堆栈状态 -1:value -2:key -3:array(table)
+		{
+			__int64 value = (__int64)lua_tonumber(L, -1);
+			v.push_back(value);
+			lua_pop(L, 1);
+		}
+		lua_pop(L, 1);
+	}
+
 	float LuaWrap::ReadFloat(lua_State *L, char *name)
 	{
 		return (float)ReadDouble(L, name);
+	}
+
+	void LuaWrap::ReadFloatArray(lua_State *L, char *name, vector<float> &v)
+	{
+		v.clear();
+		lua_pushstring(L, name);
+		lua_gettable(L, -2);
+
+		lua_pushnil(L);
+		while (lua_next(L, -2))		//堆栈状态 -1:value -2:key -3:array(table)
+		{
+			float value = (float)lua_tonumber(L, -1);
+			v.push_back(value);
+			lua_pop(L, 1);
+		}
+		lua_pop(L, 1);
 	}
 
 	double LuaWrap::ReadDouble(lua_State *L, char *name)
@@ -113,6 +182,22 @@ namespace XX004
 		double ret = lua_tonumber(L, -1);
 		lua_pop(L, 1);
 		return ret;
+	}
+
+	void LuaWrap::ReadDoubleArray(lua_State *L, char *name, vector<double> &v)
+	{
+		v.clear();
+		lua_pushstring(L, name);
+		lua_gettable(L, -2);
+
+		lua_pushnil(L);
+		while (lua_next(L, -2))		//堆栈状态 -1:value -2:key -3:array(table)
+		{
+			double value = (double)lua_tonumber(L, -1);
+			v.push_back(value);
+			lua_pop(L, 1);
+		}
+		lua_pop(L, 1);
 	}
 
 	string LuaWrap::ReadString(lua_State *L, char *name)
@@ -129,5 +214,21 @@ namespace XX004
 		const char *ret = lua_tostring(L, -1);
 		lua_pop(L, 1);
 		str.assign(ret);
+	}
+
+	void LuaWrap::ReadStringArray(lua_State *L, char *name, vector<string> &v)
+	{
+		v.clear();
+		lua_pushstring(L, name);
+		lua_gettable(L, -2);
+
+		lua_pushnil(L);
+		while (lua_next(L, -2))		//堆栈状态 -1:value -2:key -3:array(table)
+		{
+			const char *value = lua_tostring(L, -1);
+			v.push_back(string(value));
+			lua_pop(L, 1);
+		}
+		lua_pop(L, 1);
 	}
 }

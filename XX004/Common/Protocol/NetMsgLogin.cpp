@@ -161,7 +161,7 @@ namespace XX004
 
 		//----------------------------------------
 
-		DLUserInfoResponse::DLUserInfoResponse() : FreeTime(0), RoleCount(0)
+		DLUserInfoResponse::DLUserInfoResponse() : CreateTime(0), FreeTime(0), RoleCount(0)
 		{
 		}
 
@@ -169,6 +169,7 @@ namespace XX004
 		{
 			int i = index;
 			UserName = DataUtil::ReadString(buffer, i, &i);
+			CreateTime = DataUtil::ReadInt64(buffer, i, &i);
 			FreeTime = DataUtil::ReadInt64(buffer, i, &i);
 			RoleCount = DataUtil::ReadInt32(buffer, i, &i);
 			RoleList.clear();
@@ -185,6 +186,7 @@ namespace XX004
 		{
 			int i = index;
 			i = DataUtil::WriteString(buffer, i, UserName);
+			i = DataUtil::WriteInt64(buffer, i, CreateTime);
 			i = DataUtil::WriteInt64(buffer, i, FreeTime);
 			i = DataUtil::WriteInt32(buffer, i, RoleCount);
 			for (int j = 0; j < RoleCount; ++j)

@@ -12,6 +12,7 @@
 #define __LuaWrap_h__
 
 #include <string>
+#include <vector>
 using namespace std;
 
 struct lua_State;
@@ -50,11 +51,23 @@ namespace XX004
 	protected:
 
 		static bool ReadBool(lua_State *L, char *name);
+		static void ReadBoolArray(lua_State *L, char *name, vector<bool> &v);
+
 		static int ReadInt(lua_State *L, char *name);
+		static void ReadIntArray(lua_State *L, char *name, vector<int> &v);
+
+		static __int64 ReadLong(lua_State *L, char *name);
+		static void ReadLongArray(lua_State *L, char *name, vector<__int64> &v);
+
 		static float ReadFloat(lua_State *L, char *name);
+		static void ReadFloatArray(lua_State *L, char *name, vector<float> &v);
+
 		static double ReadDouble(lua_State *L, char *name);
+		static void ReadDoubleArray(lua_State *L, char *name, vector<double> &v);
+
 		static string ReadString(lua_State *L, char *name);
 		static void ReadString(lua_State *L, char *name, string &str);
+		static void ReadStringArray(lua_State *L, char *name, vector<string> &v);
 
 	private:
 		static lua_State *LuaState;
