@@ -13,6 +13,7 @@
 #include <Protocol/NetProtocol.h>
 #include <MainBase.h>
 #include <Config/LoginModuleConfig.h>
+#include <Util/TimeUtil.h>
 using namespace XX004::Net;
 
 namespace XX004
@@ -29,7 +30,8 @@ namespace XX004
 	{
 		pMgr->SetOnConnectCallBack([this](NetDataItem *item){this->OnConnect(item); });
 		pMgr->SetOnDisconnectCallBack([this](NetDataItem *item){this->OnDisconnect(item); });
-		pMgr->RegisterMessageCallBack(NetMsgID::GL_LOGIN_REQ, [this](NetDataItem *item){this->OnLoginRequest(item); });
+		NET_REGISTER(pMgr, NetMsgID::GL_LOGIN_REQ, OnLoginRequest);
+		NET_REGISTER(pMgr, NetMsgID::DL_USER_INFO_RES, OnUserInfoResponse);
 	}
 
 	void ServerLogin::OnAddConfig(vector<ModuleConfig*> &cfgs)
@@ -53,21 +55,23 @@ namespace XX004
 
 	void ServerLogin::OnCommand(const std::string& cmd, const std::vector<std::string> &param)
 	{
-		if (cmd.compare("cfg") == 0)
+		if (cmd.compare("userinfo") == 0)
 		{
-			LoginModuleConfig *cfg = ModuleConfig::GetInstance<LoginModuleConfig>();
 			if (param.size() > 0)
 			{
-				int id = ::atoi(param[0].c_str());
-				CharacterConfig *char_cfg = cfg->GetCharacter(id);
-				if (char_cfg != NULL)
-				{
-					::printf("id:%d hp:%d\n", id, char_cfg->hp);
-				}
-				else
-				{
-					::printf("id:%d is not exist.\n", id);
-				}
+				LDUserInfoRequest req;
+				req.UserName = param[0];
+				MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_DATA, 0), NetMsgID::LD_USER_INFO_REQ, &req);
+			}			
+		}
+		else if (cmd.compare("usersave") == 0)
+		{
+			if (param.size() > 0)
+			{
+				LDUserSaveRequest req;
+				req.UserName = param[0];
+				req.CreateTime = TimeUtil::GetCurrentSecond();
+				MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_DATA, 0), NetMsgID::LD_USER_SAVE_REQ, &req);
 			}
 		}
 	}
@@ -109,5 +113,35 @@ namespace XX004
 			res.RoleList.push_back(info);
 		}
 		MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_GATE, 0), NetMsgID::LG_LOGIN_RES, &res);
+	}
+
+	void ServerLogin::OnUserInfoResponse(NetDataItem *item)
+	{
+		DLUserInfoResponse res;
+		res.Unpack(item->data, 0);
+
+		//账号不存在则自动创建
+		if (res.CreateTime == 0)
+		{
+			LDUserSaveRequest req;
+			req.UserName = res.UserName;
+			req.CreateTime = TimeUtil::GetCurrentSecond();
+			MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_DATA, 0), NetMsgID::LD_USER_SAVE_REQ, &req);
+
+			//重新请求
+			LDUserInfoRequest req2;
+			req2.UserName = res.UserName;
+			MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_DATA, 0), NetMsgID::LD_USER_INFO_REQ, &req2);
+		}
+		else
+		{
+			//将结果回复给玩家
+			cout << "user:" << res.UserName << " CreateTime:" << res.CreateTime << " FreeTime:" << res.FreeTime << " RoleNum:" << res.RoleCount << endl;
+			for (int i = 0; i < res.RoleCount; ++i)
+			{
+				LoginRoleInfo &role = res.RoleList[i];
+				cout << "  id:" << role.ID << " name:" << role.Name << " Prof:" << role.Prof << " CreateTime:" << role.CreateTime << endl;
+			}
+		}
 	}
 }

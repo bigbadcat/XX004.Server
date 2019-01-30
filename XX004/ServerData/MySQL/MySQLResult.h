@@ -59,6 +59,9 @@ namespace XX004
 		const char* GetString(int index);
 		inline const char* GetString(const char *name) { return GetString(GetIndex(name)); }
 
+		//清除结果
+		void Clear();
+
 	private:
 
 		//字段名称列表

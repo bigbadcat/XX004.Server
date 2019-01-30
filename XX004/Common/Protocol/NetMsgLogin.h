@@ -202,7 +202,7 @@ namespace XX004
 
 			string UserName;						//用户名
 			Int64 CreateTime;						//创建时间
-			LoginRoleInfo Role;						//角色(ID为0表示不需要保存角色信息)
+			Int64 FreeTime;							//解冻时间
 		};
 
 		//30001:用户登录回复

@@ -11,8 +11,8 @@
 #include "ServerData.h"
 #include "NetManagerBase.h"
 #include "Util/TimeUtil.h"
-#include "Net/NetMessage.h"
 #include "MainBase.h"
+#include <Protocol/NetProtocol.h>
 using namespace XX004::Net;
 
 namespace XX004
@@ -29,8 +29,8 @@ namespace XX004
 	{
 		pMgr->SetOnConnectCallBack([this](NetDataItem *item){this->OnConnect(item); });
 		pMgr->SetOnDisconnectCallBack([this](NetDataItem *item){this->OnDisconnect(item); });
-		pMgr->RegisterMessageCallBack(1000, [this](NetDataItem *item){this->F1(item); });
-		pMgr->RegisterMessageCallBack(1050, [this](NetDataItem *item){this->F2(item); });
+		NET_REGISTER(pMgr, NetMsgID::LD_USER_INFO_REQ, OnUserInfoRequest);
+		NET_REGISTER(pMgr, NetMsgID::LD_USER_SAVE_REQ, OnUserSaveRequest);
 	}
 
 	bool ServerData::OnInitStep(int step, float &r)
@@ -115,17 +115,6 @@ namespace XX004
 
 	void ServerData::OnCommand(const std::string& cmd, const std::vector<std::string> &param)
 	{
-		if (cmd.compare("getuser") == 0)
-		{
-			if (param.size() > 0)
-			{
-				cout << "getuser " << param[0] << endl;
-			}
-			else
-			{
-				cout << "getuser need param" << endl;
-			}
-		}
 	}
 
 	bool ServerData::OnReleaseStep(int step, float &r)
@@ -146,35 +135,48 @@ namespace XX004
 		cout << "ServerData::OnDisconnect uid:" << item->uid << " key:" << item->key << endl;
 	}
 
-	void ServerData::F1(NetDataItem *item)
+	void ServerData::OnUserInfoRequest(NetDataItem *item)
 	{
-		NetMessageIntString req;
+		LDUserInfoRequest req;
 		req.Unpack(item->data, 0);
-		cout << "index:" << req.Value1 << " text:" << req.Value2 << endl;
 
-		//准备回复数据		
-		NetMessageIntString res;
-		res.Value1 = 0;
-		res.Value2 = req.Value2 + "hhhhh";
-
-		Byte recvdata[1024];
-		int index = 0;
-		index = res.Pack(recvdata, index);
-
-		NetManagerBase *pNetMgr = MainBase::GetCurMain()->GetNetManager();
-		if (item->key.first == RemoteType::RT_UNKNOW)
+		//查询玩家数据
+		DLUserInfoResponse res;
+		res.UserName = req.UserName;
+		char sql[64];
+		sprintf_s(sql, "call sp_select_user('%s');", req.UserName.c_str());
+		auto ret = m_MySQL.Query(sql);
+		if (ret->GetRecord())
 		{
-			pNetMgr->Update(item->uid, RemoteKey(RemoteType::RT_CLIENT, 1));
+			res.CreateTime = ret->GetInt64("create_time");
+			res.FreeTime = ret->GetInt64("free_time");
+			ret->Clear();		//再次查询时，ret将处于非法状态，先Clear保证状态正确
+
+			//查询角色
+			sprintf_s(sql, "call sp_select_user_role('%s',%d);", req.UserName.c_str(), GetServerID());
+			ret = m_MySQL.Query(sql);
+			while (ret->GetRecord())
+			{
+				LoginRoleInfo role;
+				role.ID = ret->GetInt64("id");
+				role.Prof = ret->GetInt("prof");
+				role.CreateTime = ret->GetInt64("create_time");
+				role.Name = ret->GetString("name");
+				role.Level = ret->GetInt("level");
+				res.RoleList.push_back(role);
+			}
+			res.RoleCount = (Int32)res.RoleList.size();
 		}
-		
-		pNetMgr->Send(RemoteKey(RemoteType::RT_CLIENT, 1), 1050, recvdata, index);
-		//pNetMgr->Close(RemoteKey(RemoteType::RT_CLIENT, 1));
+		MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_LOGIN, 1), NetMsgID::DL_USER_INFO_RES, &res);
 	}
 
-	void ServerData::F2(NetDataItem *item)
+	void ServerData::OnUserSaveRequest(NetDataItem *item)
 	{
-		NetMessageIntString req;
+		LDUserSaveRequest req;
 		req.Unpack(item->data, 0);
-		cout << "result:" << req.Value1 << " text:" << req.Value2 << endl;
+
+		char sql[128];
+		sprintf_s(sql, "call sp_insert_update_user('%s',%I64d,%I64d);", req.UserName.c_str(), req.CreateTime, req.FreeTime);
+		m_MySQL.Execute(sql);
 	}
 }

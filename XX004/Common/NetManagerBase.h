@@ -88,7 +88,9 @@ namespace XX004
 	typedef std::map<int, NetInternalConnection*> InternalConnectionMap;	//内部连接集合
 
 	std::ostream & operator<<(std::ostream &out, RemoteKey &key);
-		
+	
+#define NET_REGISTER(mgr, id, fun) mgr->RegisterMessageCallBack(id, [this](NetDataItem *item){this->fun(item); })
+
 	//网络管理
 	class NetManagerBase : public INetProcesser
 	{

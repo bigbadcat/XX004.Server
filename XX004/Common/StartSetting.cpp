@@ -47,7 +47,7 @@ namespace XX004
 				{
 					return string(text_node->Value());
 				}
-			}			
+			}	
 		}
 		return string();
 	}
@@ -70,9 +70,8 @@ namespace XX004
 		return citr == m_Infos.cend() ? NULL : citr->second;
 	}
 
-	StartSetting::StartSetting()
+	StartSetting::StartSetting() : m_ID(0)
 	{
-
 	}
 
 	StartSetting::~StartSetting()
@@ -89,10 +88,10 @@ namespace XX004
 		tinyxml2::XMLDocument doc;
 		tinyxml2::XMLError error = doc.LoadFile("StartSetting.xml");
 		assert(error == tinyxml2::XMLError::XML_SUCCESS);
-		tinyxml2::XMLElement *root = doc.FirstChildElement("StartSetting");	
+		tinyxml2::XMLElement *root = doc.FirstChildElement("StartSetting");
+		m_ID = root->IntAttribute("id", 0);
 		for (tinyxml2::XMLElement *itr = root->FirstChildElement(); itr != NULL; itr = itr->NextSiblingElement())
 		{
-			//cout << "type:" << itr->FirstChildElement("type")->FirstChild()->ToText()->Value() << endl;
 			StartSettingInfo *info = new StartSettingInfo();
 			info->Init(itr);
 			m_Infos.insert(SettingInfoMap::value_type(info->GetType(), info));

@@ -48,6 +48,7 @@ namespace XX004
 		void OnDisconnect(NetDataItem *item);
 
 		void OnLoginRequest(NetDataItem *item);
+		void OnUserInfoResponse(NetDataItem *item);
 	};
 }
 

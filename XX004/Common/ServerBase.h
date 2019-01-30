@@ -62,7 +62,7 @@ namespace XX004
 
 		//启动服务
 		//wait_init_finish 是否等待初始化完成才返回
-		void Start(bool wait_init_finish);
+		void Start(int id, bool wait_init_finish);
 
 		//停止服务
 		void Stop();
@@ -75,6 +75,9 @@ namespace XX004
 
 		//提交命令
 		void PostCommand(const std::string& cmd_line);
+
+		//获取服务器编号
+		int GetServerID()const { return m_ID; }
 
 		//每一帧的间隔毫秒
 		static const Int64 FRAME_GAP;
@@ -135,6 +138,9 @@ namespace XX004
 
 		//配置列表
 		vector<ModuleConfig*> m_Configs;
+
+		//服务器编号
+		int m_ID;
 	};
 }
 

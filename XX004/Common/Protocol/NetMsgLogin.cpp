@@ -313,7 +313,7 @@ namespace XX004
 
 		//----------------------------------------
 
-		LDUserSaveRequest::LDUserSaveRequest() : CreateTime(0)
+		LDUserSaveRequest::LDUserSaveRequest() : CreateTime(0), FreeTime(0)
 		{
 		}
 
@@ -322,7 +322,7 @@ namespace XX004
 			int i = index;
 			UserName = DataUtil::ReadString(buffer, i, &i);
 			CreateTime = DataUtil::ReadInt64(buffer, i, &i);
-			i = Role.Unpack(buffer, i);
+			FreeTime = DataUtil::ReadInt64(buffer, i, &i);
 			return i;
 		}
 
@@ -331,7 +331,7 @@ namespace XX004
 			int i = index;
 			i = DataUtil::WriteString(buffer, i, UserName);
 			i = DataUtil::WriteInt64(buffer, i, CreateTime);
-			i = Role.Pack(buffer, i);
+			i = DataUtil::WriteInt64(buffer, i, FreeTime);
 			return i;
 		}
 

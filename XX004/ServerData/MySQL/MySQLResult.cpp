@@ -19,12 +19,7 @@ namespace XX004
 
 	MySQLResult::~MySQLResult()
 	{		
-		if (m_Result != NULL)
-		{
-			mysql_free_result(m_Result);
-			m_Result = NULL;
-		}
-		m_CurRecord = NULL;
+		Clear();
 	}
 
 	void MySQLResult::Init(MYSQL_RES *res)
@@ -48,6 +43,10 @@ namespace XX004
 
 	bool MySQLResult::GetRecord()
 	{
+		if (m_Result == NULL)
+		{
+			return false;
+		}
 		m_CurRecord = mysql_fetch_row(m_Result);
 		return m_CurRecord != NULL;
 	}
@@ -61,26 +60,37 @@ namespace XX004
 	int MySQLResult::GetInt(int index)
 	{
 		char *value_str = m_CurRecord[index];
-		int i = ::atoi(value_str);
+		int i = value_str == NULL ? 0 : ::atoi(value_str);
 		return i;
 	}
 
 	__int64 MySQLResult::GetInt64(int index)
 	{
 		char *value_str = m_CurRecord[index];
-		__int64 i = ::_atoi64(value_str);
+		__int64 i = value_str == NULL ? 0 : ::_atoi64(value_str);
 		return i;
 	}
 
 	float MySQLResult::GetFloat(int index)
 	{
 		char *value_str = m_CurRecord[index];
-		float f = ::atof(value_str);
+		float f = value_str == NULL ? 0 : (float)::atof(value_str);
 		return f;
 	}
 
 	const char* MySQLResult::GetString(int index)
 	{
-		return m_CurRecord[index];
+		char *value_str = m_CurRecord[index];
+		return value_str == NULL ? "" : value_str;
+	}
+
+	void MySQLResult::Clear()
+	{
+		m_CurRecord = NULL;
+		if (m_Result != NULL)
+		{
+			mysql_free_result(m_Result);
+			m_Result = NULL;
+		}
 	}
 }

@@ -61,10 +61,11 @@ namespace XX004
 		m_pServer->RegisterNetMessage(m_pNetManager);
 
 		//模块运行
+		int id = StartSetting::GetInstance()->GetID();
 		StartSettingInfo* info = StartSetting::GetInstance()->GetSettingInfo(m_Type);
 		assert(info != NULL);
 		m_pNetManager->Start(info->GetPort());
-		m_pServer->Start(true);
+		m_pServer->Start(id, true);
 		CommandLoop();
 		cout << "Waitting server end ..." << endl;
 		m_pServer->Stop();		//Server停止还需要依赖网络，如逻辑服停止后需要把服务器状态数据提交给数据服
@@ -74,8 +75,9 @@ namespace XX004
 		m_pNetManager->Join();
 
 		//模块销毁
-		SAFE_DELETE(m_pNetManager);
+		m_pNetManager->UnregisterAllCallBack();		//先清掉注册再删除Server
 		SAFE_DELETE(m_pServer);
+		SAFE_DELETE(m_pNetManager);		
 		::WSACleanup();
 
 		return 0;
