@@ -255,5 +255,5 @@ namespace XX004
 	}
 }
 
-#endif	//__NetMsgLogin_h__
+#endif
 

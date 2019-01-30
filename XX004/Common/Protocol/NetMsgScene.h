@@ -37,5 +37,5 @@ namespace XX004
 	}
 }
 
-#endif	//__NetMsgScene_h__
+#endif
 

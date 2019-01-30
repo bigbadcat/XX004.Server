@@ -14,4 +14,4 @@
 #include "NetMsgID.h"
 #include "NetMsgLogin.h"
 
-#endif	//__NetProtocol_h__
+#endif

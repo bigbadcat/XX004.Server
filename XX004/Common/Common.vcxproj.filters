@@ -98,6 +98,9 @@
     <ClInclude Include="Config\LuaWrap.h">
       <Filter>Config</Filter>
     </ClInclude>
+    <ClInclude Include="Protocol\NetMsgScene.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Net\NetServer.cpp">
@@ -158,6 +161,9 @@
     </ClCompile>
     <ClCompile Include="Config\LuaWrap.cpp">
       <Filter>Config</Filter>
+    </ClCompile>
+    <ClCompile Include="Protocol\NetMsgScene.cpp">
+      <Filter>Protocol</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

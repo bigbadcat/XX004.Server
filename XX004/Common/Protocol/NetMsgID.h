@@ -82,4 +82,4 @@ namespace XX004
 	};
 }
 
-#endif	//__NetMsgID_h__
+#endif

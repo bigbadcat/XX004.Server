@@ -47,6 +47,7 @@ namespace XX004
 	private:
 		void OnConnect(NetDataItem *item);
 		void OnDisconnect(NetDataItem *item);
+
 		void OnUserInfoRequest(NetDataItem *item);
 		void OnUserSaveRequest(NetDataItem *item);
 

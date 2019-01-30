@@ -55,25 +55,6 @@ namespace XX004
 
 	void ServerLogin::OnCommand(const std::string& cmd, const std::vector<std::string> &param)
 	{
-		if (cmd.compare("userinfo") == 0)
-		{
-			if (param.size() > 0)
-			{
-				LDUserInfoRequest req;
-				req.UserName = param[0];
-				MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_DATA, 0), NetMsgID::LD_USER_INFO_REQ, &req);
-			}			
-		}
-		else if (cmd.compare("usersave") == 0)
-		{
-			if (param.size() > 0)
-			{
-				LDUserSaveRequest req;
-				req.UserName = param[0];
-				req.CreateTime = TimeUtil::GetCurrentSecond();
-				MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_DATA, 0), NetMsgID::LD_USER_SAVE_REQ, &req);
-			}
-		}
 	}
 
 	bool ServerLogin::OnReleaseStep(int step, float &r)
@@ -94,25 +75,13 @@ namespace XX004
 	{
 		GLLoginRequest req;
 		req.Unpack(item->data, 0);
-		cout << "ServerLogin::OnLoginRequest username:" << req.UserName << endl;
+		
+		//若是非法用户名直接返回
 
-		//测试直接返回
-		LGLoginResponse res;
-		res.Result = 0;
-		res.UserName = req.UserName;
-		res.FreeTime = 0;
-		res.RoleCount = 2;
-		for (int i = 0; i < res.RoleCount; ++i)
-		{
-			LoginRoleInfo info;
-			char szName[32];
-			::sprintf_s(szName, sizeof(szName), "RoleName%d", i + 1);
-			info.ID = 1000 + i + 1;
-			info.Name = szName;
-			info.Level = 1 + i * 3;
-			res.RoleList.push_back(info);
-		}
-		MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_GATE, 0), NetMsgID::LG_LOGIN_RES, &res);
+		//数据库查询
+		LDUserInfoRequest req2;
+		req2.UserName = req.UserName;
+		MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_DATA, 0), NetMsgID::LD_USER_INFO_REQ, &req);
 	}
 
 	void ServerLogin::OnUserInfoResponse(NetDataItem *item)
@@ -123,12 +92,13 @@ namespace XX004
 		//账号不存在则自动创建
 		if (res.CreateTime == 0)
 		{
+			//提交保存
 			LDUserSaveRequest req;
 			req.UserName = res.UserName;
 			req.CreateTime = TimeUtil::GetCurrentSecond();
 			MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_DATA, 0), NetMsgID::LD_USER_SAVE_REQ, &req);
 
-			//重新请求
+			//重新请求，走正确时序流程
 			LDUserInfoRequest req2;
 			req2.UserName = res.UserName;
 			MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_DATA, 0), NetMsgID::LD_USER_INFO_REQ, &req2);
@@ -136,12 +106,13 @@ namespace XX004
 		else
 		{
 			//将结果回复给玩家
-			cout << "user:" << res.UserName << " CreateTime:" << res.CreateTime << " FreeTime:" << res.FreeTime << " RoleNum:" << res.RoleCount << endl;
-			for (int i = 0; i < res.RoleCount; ++i)
-			{
-				LoginRoleInfo &role = res.RoleList[i];
-				cout << "  id:" << role.ID << " name:" << role.Name << " Prof:" << role.Prof << " CreateTime:" << role.CreateTime << endl;
-			}
+			LGLoginResponse res2;
+			res2.Result = res.FreeTime == 0 ? 0 : 2;
+			res2.UserName = res.UserName;
+			res2.FreeTime = res.FreeTime;
+			res2.RoleCount = res.RoleCount;
+			res2.RoleList.assign(res.RoleList.begin(), res.RoleList.end());
+			MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_GATE, 0), NetMsgID::LG_LOGIN_RES, &res2);
 		}
 	}
 }

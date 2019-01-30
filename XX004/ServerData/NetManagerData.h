@@ -30,4 +30,4 @@ namespace XX004
 	};
 }
 
-#endif	//__NetManagerData_h__
+#endif

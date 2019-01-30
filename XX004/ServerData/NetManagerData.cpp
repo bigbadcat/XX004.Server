@@ -22,6 +22,5 @@ namespace XX004
 
 	void NetManagerData::OnCreateInternalInfo(std::vector<int> &infos)
 	{
-		//infos.push_back(RemoteType::RT_DATA);
 	}
 }

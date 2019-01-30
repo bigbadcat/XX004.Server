@@ -37,6 +37,7 @@
     <ClInclude Include="Net\NetServer.h" />
     <ClInclude Include="Protocol\NetMsgID.h" />
     <ClInclude Include="Protocol\NetMsgLogin.h" />
+    <ClInclude Include="Protocol\NetMsgScene.h" />
     <ClInclude Include="Protocol\NetProtocol.h" />
     <ClInclude Include="ServerBase.h" />
     <ClInclude Include="MainBase.h" />
@@ -64,6 +65,7 @@
     <ClCompile Include="Net\NetPackageHeader.cpp" />
     <ClCompile Include="Net\NetServer.cpp" />
     <ClCompile Include="Protocol\NetMsgLogin.cpp" />
+    <ClCompile Include="Protocol\NetMsgScene.cpp" />
     <ClCompile Include="ServerBase.cpp" />
     <ClCompile Include="MainBase.cpp" />
     <ClCompile Include="StartSetting.cpp" />
