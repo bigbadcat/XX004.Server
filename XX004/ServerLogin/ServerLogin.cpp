@@ -14,6 +14,7 @@
 #include <MainBase.h>
 #include <Config/LoginModuleConfig.h>
 #include <Util/TimeUtil.h>
+#include <regex>
 using namespace XX004::Net;
 
 namespace XX004
@@ -77,11 +78,33 @@ namespace XX004
 		req.Unpack(item->data, 0);
 		
 		//若是非法用户名直接返回
+		bool ok = true;
+		if (req.UserName.length() < 4 || req.UserName.length() > 16)
+		{
+			ok = false;
+		}
+		if (ok)
+		{
+			//正则匹配格式
+			regex reg("^[a-zA-Z0-9_]*$");
+			ok = regex_match(req.UserName, reg);
+		}
 
-		//数据库查询
-		LDUserInfoRequest req2;
-		req2.UserName = req.UserName;
-		MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_DATA, 0), NetMsgID::LD_USER_INFO_REQ, &req);
+		//用户名合法则请求用户信息，否则返回用户名非法
+		if (ok)
+		{
+			//数据库查询
+			LDUserInfoRequest req2;
+			req2.UserName = req.UserName;
+			MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_DATA, 0), NetMsgID::LD_USER_INFO_REQ, &req);
+		}
+		else
+		{
+			LGLoginResponse res2;
+			res2.Result = 1;
+			res2.UserName = req.UserName;
+			MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_GATE, 0), NetMsgID::LG_LOGIN_RES, &res2);
+		}		
 	}
 
 	void ServerLogin::OnUserInfoResponse(NetDataItem *item)
@@ -95,7 +118,7 @@ namespace XX004
 			//提交保存
 			LDUserSaveRequest req;
 			req.UserName = res.UserName;
-			req.CreateTime = TimeUtil::GetCurrentSecond();
+			req.CreateTime = (Int64)TimeUtil::GetCurrentSecond();
 			MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_DATA, 0), NetMsgID::LD_USER_SAVE_REQ, &req);
 
 			//重新请求，走正确时序流程
@@ -106,8 +129,9 @@ namespace XX004
 		else
 		{
 			//将结果回复给玩家
+			Int64 now = (Int64)TimeUtil::GetCurrentSecond();
 			LGLoginResponse res2;
-			res2.Result = res.FreeTime == 0 ? 0 : 2;
+			res2.Result = res.FreeTime <= now ? 0 : 2;
 			res2.UserName = res.UserName;
 			res2.FreeTime = res.FreeTime;
 			res2.RoleCount = res.RoleCount;
