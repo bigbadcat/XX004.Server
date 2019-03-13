@@ -12,6 +12,7 @@
 #define __ServerLogin_h__
 
 #include "ServerBase.h"
+#include "UserInfo.h"
 
 namespace XX004
 {
@@ -49,7 +50,10 @@ namespace XX004
 
 		void OnLoginRequest(NetDataItem *item);
 		void OnUserInfoResponse(NetDataItem *item);
+
+		//登陆的角色
+		UserInfoMap m_UserInfos;
 	};
 }
 
-#endif	//__ServerLogin_h__
+#endif

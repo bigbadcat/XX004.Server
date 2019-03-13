@@ -33,4 +33,4 @@ namespace XX004
 	};
 }
 
-#endif	//__MainLogin_h__
+#endif

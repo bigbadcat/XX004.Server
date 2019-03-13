@@ -154,11 +154,13 @@
     <ClCompile Include="MainLogin.cpp" />
     <ClCompile Include="NetManagerLogin.cpp" />
     <ClCompile Include="ServerLogin.cpp" />
+    <ClCompile Include="UserInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainLogin.h" />
     <ClInclude Include="NetManagerLogin.h" />
     <ClInclude Include="ServerLogin.h" />
+    <ClInclude Include="UserInfo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

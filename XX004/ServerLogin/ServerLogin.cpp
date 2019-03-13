@@ -128,6 +128,9 @@ namespace XX004
 		}
 		else
 		{
+			//保存玩家信息
+			//m_UserInfos
+
 			//将结果回复给玩家
 			Int64 now = (Int64)TimeUtil::GetCurrentSecond();
 			LGLoginResponse res2;
