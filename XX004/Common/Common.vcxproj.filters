@@ -101,6 +101,12 @@
     <ClInclude Include="Protocol\NetMsgScene.h">
       <Filter>Protocol</Filter>
     </ClInclude>
+    <ClInclude Include="Config\ConfigDefine.h">
+      <Filter>Config</Filter>
+    </ClInclude>
+    <ClInclude Include="Config\LuaWrap\ProfWrap.h">
+      <Filter>Config\LuaWrap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Net\NetServer.cpp">
@@ -164,6 +170,12 @@
     </ClCompile>
     <ClCompile Include="Protocol\NetMsgScene.cpp">
       <Filter>Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="Config\ConfigDefine.cpp">
+      <Filter>Config</Filter>
+    </ClCompile>
+    <ClCompile Include="Config\LuaWrap\ProfWrap.cpp">
+      <Filter>Config\LuaWrap</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

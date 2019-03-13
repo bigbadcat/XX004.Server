@@ -12,13 +12,10 @@
 #define __LoginModuleConfig_h__
 
 #include "ModuleConfig.h"
-#include "LuaWrap/CharacterWrap.h"
+#include "ConfigDefine.h"
 
 namespace XX004
 {
-	class CharacterConfig : public CharacterWrap {};
-	typedef map<int, CharacterConfig*> CharacterConfigMap;
-
 	class LoginModuleConfig : public ModuleConfig
 	{
 	public:
