@@ -93,10 +93,28 @@ namespace XX004
 		//用户名合法则请求用户信息，否则返回用户名非法
 		if (ok)
 		{
-			//数据库查询
-			LDUserInfoRequest req2;
-			req2.UserName = req.UserName;
-			MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_DATA, 0), NetMsgID::LD_USER_INFO_REQ, &req);
+			UserInfoMap::iterator itr = m_UserInfos.find(req.UserName);
+			if (itr == m_UserInfos.end())
+			{
+				//数据库查询
+				LDUserInfoRequest req2;
+				req2.UserName = req.UserName;
+				MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_DATA, 0), NetMsgID::LD_USER_INFO_REQ, &req);
+			}
+			else
+			{
+				//将结果回复给玩家
+				UserInfo* info = itr->second;
+				Int64 now = (Int64)TimeUtil::GetCurrentSecond();
+				LGLoginResponse res2;
+				res2.Result = info->GetFreeTime() <= now ? 0 : 2;
+				res2.UserName = info->GetName();
+				res2.FreeTime = info->GetFreeTime();
+				const vector<LoginRoleInfo>& roles = info->GetRoleInfos();
+				res2.RoleCount = (Int32)roles.size();
+				res2.RoleList.assign(roles.begin(), roles.end());
+				MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_GATE, 0), NetMsgID::LG_LOGIN_RES, &res2);
+			}
 		}
 		else
 		{
@@ -129,7 +147,16 @@ namespace XX004
 		else
 		{
 			//保存玩家信息
-			//m_UserInfos
+			UserInfoMap::iterator itr = m_UserInfos.find(res.UserName);
+			UserInfo *info = itr == m_UserInfos.end() ? NULL : itr->second;
+			if (info == NULL)
+			{
+				//添加玩家
+				info = new UserInfo(res.UserName);
+				m_UserInfos.insert(make_pair(res.UserName, info));
+			}
+			info->SetFreeTime(res.FreeTime);
+			info->GetRoleInfos().assign(res.RoleList.begin(), res.RoleList.end());
 
 			//将结果回复给玩家
 			Int64 now = (Int64)TimeUtil::GetCurrentSecond();

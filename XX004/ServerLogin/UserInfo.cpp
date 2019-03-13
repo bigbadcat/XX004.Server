@@ -12,11 +12,7 @@
 
 namespace XX004
 {
-	UserRoleInfo::UserRoleInfo() : m_ID(0)
-	{
-	}
-
-	Int64 UserRoleInfo::GetNewID()
+	Int64 UserInfo::GetNewID()
 	{
 		return 0;
 	}
