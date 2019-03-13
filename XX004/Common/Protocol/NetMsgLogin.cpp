@@ -88,9 +88,14 @@ namespace XX004
 
 		//----------------------------------------
 
+		LGCreateRoleResponse::LGCreateRoleResponse() : Result(0)
+		{
+		}
+
 		int LGCreateRoleResponse::Unpack(Byte *buffer, int index)
 		{
 			int i = index;
+			Result = DataUtil::ReadInt32(buffer, i, &i);
 			UserName = DataUtil::ReadString(buffer, i, &i);
 			i = Role.Unpack(buffer, i);
 			return i;
@@ -99,6 +104,7 @@ namespace XX004
 		int LGCreateRoleResponse::Pack(Byte *buffer, int index)
 		{
 			int i = index;
+			i = DataUtil::WriteInt32(buffer, i, Result);
 			i = DataUtil::WriteString(buffer, i, UserName);
 			i = Role.Pack(buffer, i);
 			return i;
@@ -357,9 +363,14 @@ namespace XX004
 
 		//----------------------------------------
 
+		GCCreateRoleResponse::GCCreateRoleResponse() : Result(0)
+		{
+		}
+
 		int GCCreateRoleResponse::Pack(Byte *buffer, int index)
 		{
 			int i = index;
+			i = DataUtil::WriteInt32(buffer, i, Result);
 			i = Role.Pack(buffer, i);
 			return i;
 		}

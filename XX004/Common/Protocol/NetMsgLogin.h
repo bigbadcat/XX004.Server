@@ -65,9 +65,11 @@ namespace XX004
 		class LGCreateRoleResponse : public NetMessage
 		{
 		public:
+			LGCreateRoleResponse();
 			virtual int Unpack(Byte *buffer, int index);
 			virtual int Pack(Byte *buffer, int index);
 
+			Int32 Result;							//创建结果(0、成功 1、非法名称 2、非法职业 3、角色已满)
 			string UserName;						//用户名
 			LoginRoleInfo Role;						//角色
 		};
@@ -223,8 +225,10 @@ namespace XX004
 		class GCCreateRoleResponse : public NetMessage
 		{
 		public:
+			GCCreateRoleResponse();
 			virtual int Pack(Byte *buffer, int index);
 
+			Int32 Result;							//创建结果(0、成功 1、非法名称 2、非法职业 3、角色已满)
 			LoginRoleInfo Role;						//角色
 		};
 
