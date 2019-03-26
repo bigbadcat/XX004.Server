@@ -10,19 +10,20 @@ Target Server Type    : MYSQL
 Target Server Version : 50556
 File Encoding         : 65001
 
-Date: 2019-01-30 17:43:43
+Date: 2019-03-26 17:48:47
 */
 
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- Table structure for `tb_role`
+-- Table structure for tb_role
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_role`;
 CREATE TABLE `tb_role` (
   `id` bigint(20) NOT NULL DEFAULT '0',
   `user` varchar(64) DEFAULT NULL,
   `server` int(11) DEFAULT NULL,
+  `stamp` int(11) DEFAULT NULL,
   `prof` int(11) DEFAULT NULL,
   `name` varchar(64) DEFAULT '',
   `level` int(11) DEFAULT '0',
@@ -33,15 +34,7 @@ CREATE TABLE `tb_role` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of tb_role
--- ----------------------------
-INSERT INTO `tb_role` VALUES ('1', 'abc', '1', '1', 'hhh', '1', '0', '0', null);
-INSERT INTO `tb_role` VALUES ('2', 'abc', '2', '1', 'kkk', '10', '300', '4050', null);
-INSERT INTO `tb_role` VALUES ('3', 'abc', '1', '1', 'ddd', '1', '0', '0', '0');
-INSERT INTO `tb_role` VALUES ('214748364734', 'dgc', '1', '0', 'kkk', '10', '300', '1000', '14214748364734');
-
--- ----------------------------
--- Table structure for `tb_skill`
+-- Table structure for tb_skill
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_skill`;
 CREATE TABLE `tb_skill` (
@@ -52,13 +45,7 @@ CREATE TABLE `tb_skill` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of tb_skill
--- ----------------------------
-INSERT INTO `tb_skill` VALUES ('1', '1', '2');
-INSERT INTO `tb_skill` VALUES ('214748364734', '2001', '15');
-
--- ----------------------------
--- Table structure for `tb_user`
+-- Table structure for tb_user
 -- ----------------------------
 DROP TABLE IF EXISTS `tb_user`;
 CREATE TABLE `tb_user` (
@@ -69,33 +56,21 @@ CREATE TABLE `tb_user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of tb_user
--- ----------------------------
-INSERT INTO `tb_user` VALUES ('abc', '142522', '0');
-INSERT INTO `tb_user` VALUES ('abcd', '12', '0');
-INSERT INTO `tb_user` VALUES ('abcdef', '14252', '0');
-INSERT INTO `tb_user` VALUES ('abcsadfs', '1548838875', '0');
-INSERT INTO `tb_user` VALUES ('dgc', '1548838875', '0');
-INSERT INTO `tb_user` VALUES ('sdgh', '3543', '678');
-INSERT INTO `tb_user` VALUES ('xx123', '1548838890', '0');
-INSERT INTO `tb_user` VALUES ('xx124', '1548841170', '0');
-
--- ----------------------------
--- Procedure structure for `sp_insert_update_role`
+-- Procedure structure for sp_insert_update_role
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `sp_insert_update_role`;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_insert_update_role`(IN `in_id` bigint,IN `in_name` varchar(64),IN `in_level` int,IN `in_exp` int,IN `in_money` int,IN `in_create_time` bigint)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_insert_update_role`(IN `in_id` bigint,IN `in_name` varchar(64),IN `in_user` varchar(64),IN `in_server` int,IN `in_stamp` int,IN `in_level` int,IN `in_prof` int,IN `in_exp` int,IN `in_money` int,IN `in_create_time` bigint)
 BEGIN 
-	INSERT INTO tb_role(id, name, level, exp, money, create_time)
-	VALUES(in_id, in_name, in_level, in_exp, in_money, in_create_time)
-	ON DUPLICATE KEY UPDATE id=in_id, name=in_name, level=in_level, exp=in_exp, money=in_money, create_time=in_create_time;
+	INSERT INTO tb_role(id, name, user, server, stamp, prof, level, exp, money, create_time)
+	VALUES(in_id, in_name, in_user, in_server, in_stamp, in_prof, in_level, in_exp, in_money, in_create_time)
+	ON DUPLICATE KEY UPDATE id=in_id, name=in_name, user=in_user, server=in_server, stamp=in_stamp, prof=in_prof, level=in_level, exp=in_exp, money=in_money, create_time=in_create_time;
 END
 ;;
 DELIMITER ;
 
 -- ----------------------------
--- Procedure structure for `sp_insert_update_skill`
+-- Procedure structure for sp_insert_update_skill
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `sp_insert_update_skill`;
 DELIMITER ;;
@@ -109,7 +84,7 @@ END
 DELIMITER ;
 
 -- ----------------------------
--- Procedure structure for `sp_insert_update_user`
+-- Procedure structure for sp_insert_update_user
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `sp_insert_update_user`;
 DELIMITER ;;
@@ -123,7 +98,7 @@ END
 DELIMITER ;
 
 -- ----------------------------
--- Procedure structure for `sp_select_role`
+-- Procedure structure for sp_select_role
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `sp_select_role`;
 DELIMITER ;;
@@ -135,7 +110,19 @@ END
 DELIMITER ;
 
 -- ----------------------------
--- Procedure structure for `sp_select_role_skill`
+-- Procedure structure for sp_select_role_by_name
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_select_role_by_name`;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_select_role_by_name`(IN `in_name` varchar(64))
+BEGIN
+	SELECT * FROM tb_role WHERE name = in_name;
+END
+;;
+DELIMITER ;
+
+-- ----------------------------
+-- Procedure structure for sp_select_role_skill
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `sp_select_role_skill`;
 DELIMITER ;;
@@ -147,7 +134,19 @@ END
 DELIMITER ;
 
 -- ----------------------------
--- Procedure structure for `sp_select_user`
+-- Procedure structure for sp_select_role_stamp
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_select_role_stamp`;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_select_role_stamp`(IN `in_server` int)
+BEGIN
+	SELECT MAX(stamp) AS stamp FROM tb_role WHERE server = in_server;
+END
+;;
+DELIMITER ;
+
+-- ----------------------------
+-- Procedure structure for sp_select_user
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `sp_select_user`;
 DELIMITER ;;
@@ -159,7 +158,7 @@ END
 DELIMITER ;
 
 -- ----------------------------
--- Procedure structure for `sp_select_user_role`
+-- Procedure structure for sp_select_user_role
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `sp_select_user_role`;
 DELIMITER ;;
