@@ -22,6 +22,12 @@ namespace XX004
 		ServerLogin();
 		virtual ~ServerLogin();
 
+		//最大角色数量
+		static const int MAX_ROLE_NUMBER;
+
+		//检测名称是否合法
+		static bool CheckName(const std::string& name);
+
 	protected:
 		//注册网络消息
 		virtual void RegisterNetMessage(NetManagerBase *pMgr);
@@ -50,6 +56,9 @@ namespace XX004
 
 		void OnLoginRequest(NetDataItem *item);
 		void OnUserInfoResponse(NetDataItem *item);
+		void OnCreateRoleRequest(NetDataItem *item);
+		void OnRoleStampResponse(NetDataItem *item);
+		void OnRoleAddResponse(NetDataItem *item);
 
 		//登陆的角色
 		UserInfoMap m_UserInfos;

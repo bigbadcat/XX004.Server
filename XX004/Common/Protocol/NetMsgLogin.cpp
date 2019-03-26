@@ -241,6 +241,50 @@ namespace XX004
 
 		//----------------------------------------
 
+		DLRoleStampResponse::DLRoleStampResponse() : Stamp(0)
+		{
+		}
+
+		int DLRoleStampResponse::Unpack(Byte *buffer, int index)
+		{
+			int i = index;
+			Stamp = DataUtil::ReadInt32(buffer, i, &i);
+			return i;
+		}
+
+		int DLRoleStampResponse::Pack(Byte *buffer, int index)
+		{
+			int i = index;
+			i = DataUtil::WriteInt32(buffer, i, Stamp);
+			return i;
+		}
+
+		//----------------------------------------
+
+		DLRoleAddResponse::DLRoleAddResponse() : Result(0)
+		{
+		}
+
+		int DLRoleAddResponse::Unpack(Byte *buffer, int index)
+		{
+			int i = index;
+			UserName = DataUtil::ReadString(buffer, i, &i);
+			Result = DataUtil::ReadInt32(buffer, i, &i);
+			i = Role.Unpack(buffer, i);
+			return i;
+		}
+
+		int DLRoleAddResponse::Pack(Byte *buffer, int index)
+		{
+			int i = index;
+			i = DataUtil::WriteString(buffer, i, UserName);
+			i = DataUtil::WriteInt32(buffer, i, Result);
+			i = Role.Pack(buffer, i);
+			return i;
+		}
+
+		//----------------------------------------
+
 		LWRoleOnline::LWRoleOnline() : RoleID(0)
 		{
 		}
@@ -338,6 +382,52 @@ namespace XX004
 			i = DataUtil::WriteString(buffer, i, UserName);
 			i = DataUtil::WriteInt64(buffer, i, CreateTime);
 			i = DataUtil::WriteInt64(buffer, i, FreeTime);
+			return i;
+		}
+
+		//----------------------------------------
+
+		LDRoleStampRequest::LDRoleStampRequest() : Group(0), ID(0)
+		{
+		}
+
+		int LDRoleStampRequest::Unpack(Byte *buffer, int index)
+		{
+			int i = index;
+			Group = DataUtil::ReadInt32(buffer, i, &i);
+			ID = DataUtil::ReadInt32(buffer, i, &i);
+			return i;
+		}
+
+		int LDRoleStampRequest::Pack(Byte *buffer, int index)
+		{
+			int i = index;
+			i = DataUtil::WriteInt32(buffer, i, Group);
+			i = DataUtil::WriteInt32(buffer, i, ID);
+			return i;
+		}
+
+		//----------------------------------------
+
+		LDRoleAddRequest::LDRoleAddRequest() : Stamp(0)
+		{
+		}
+
+		int LDRoleAddRequest::Unpack(Byte *buffer, int index)
+		{
+			int i = index;
+			UserName = DataUtil::ReadString(buffer, i, &i);
+			i = Role.Unpack(buffer, i);
+			Stamp = DataUtil::ReadInt32(buffer, i, &i);
+			return i;
+		}
+
+		int LDRoleAddRequest::Pack(Byte *buffer, int index)
+		{
+			int i = index;
+			i = DataUtil::WriteString(buffer, i, UserName);
+			i = Role.Pack(buffer, i);
+			i = DataUtil::WriteInt32(buffer, i, Stamp);
 			return i;
 		}
 

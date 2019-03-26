@@ -58,6 +58,9 @@ namespace XX004
 		//获取配置
 		static StartSetting* GetInstance();
 
+		//获取服务器分组
+		inline int GetGroup()const { return m_Group; }
+
 		//获取服务器id
 		inline int GetID()const { return m_ID; }
 
@@ -71,6 +74,10 @@ namespace XX004
 		//初始化
 		void Init();
 
+		//服务器组
+		int m_Group;
+
+		//服务器编号
 		int m_ID;
 
 		SettingInfoMap m_Infos;

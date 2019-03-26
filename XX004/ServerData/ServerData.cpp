@@ -31,6 +31,8 @@ namespace XX004
 		pMgr->SetOnDisconnectCallBack([this](NetDataItem *item){this->OnDisconnect(item); });
 		NET_REGISTER(pMgr, NetMsgID::LD_USER_INFO_REQ, OnUserInfoRequest);
 		NET_REGISTER(pMgr, NetMsgID::LD_USER_SAVE_REQ, OnUserSaveRequest);
+		NET_REGISTER(pMgr, NetMsgID::LD_ROLE_STAMP_REQ, OnRoleStampRequest);
+		NET_REGISTER(pMgr, NetMsgID::LD_ROLE_ADD_REQ, OnRoleAddRequest);
 	}
 
 	bool ServerData::OnInitStep(int step, float &r)
@@ -153,7 +155,7 @@ namespace XX004
 			ret->Clear();		//再次查询时，ret将处于非法状态，先Clear保证状态正确
 
 			//查询角色
-			sprintf_s(sql, "call sp_select_user_role('%s',%d);", req.UserName.c_str(), GetServerID());
+			sprintf_s(sql, "call sp_select_user_role('%s',%d);", req.UserName.c_str(), GetServerKey());
 			ret = m_MySQL.Query(sql);
 			while (ret->GetRecord())
 			{
@@ -178,5 +180,55 @@ namespace XX004
 		char sql[128];
 		sprintf_s(sql, "call sp_insert_update_user('%s',%I64d,%I64d);", req.UserName.c_str(), req.CreateTime, req.FreeTime);
 		m_MySQL.Execute(sql);
+	}
+
+	void ServerData::OnRoleStampRequest(NetDataItem *item)
+	{
+		LDRoleStampRequest req;
+		req.Unpack(item->data, 0);
+
+		DLRoleStampResponse res;
+		int key = req.Group * 10000 + req.ID;
+		char sql[64];
+		sprintf_s(sql, "call sp_select_role_stamp(%d);", key);
+		auto ret = m_MySQL.Query(sql);
+		if (ret->GetRecord())
+		{
+			res.Stamp = ret->GetInt("stamp");
+		}
+		MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_LOGIN, 0), NetMsgID::DL_ROLE_STAMP_RES, &res);
+	}
+
+	void ServerData::OnRoleAddRequest(NetDataItem *item)
+	{
+		LDRoleAddRequest req;
+		req.Unpack(item->data, 0);
+
+		DLRoleAddResponse res;
+		res.UserName = req.UserName;
+		res.Role = req.Role;
+
+		char sql[128];
+		sprintf_s(sql, "call sp_select_role_by_name('%s');", req.Role.Name.c_str());
+		auto ret = m_MySQL.Query(sql);
+		if (ret->GetRecord())
+		{
+			Int64 roleid = ret->GetInt64("id");
+			if (roleid != 0)
+			{
+				res.Result = 1;
+			}
+		}
+		MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_LOGIN, 0), NetMsgID::DL_ROLE_ADD_RES, &res);
+
+		//可以创建，保存角色
+		if (res.Result == 0)
+		{
+			LoginRoleInfo &role = req.Role;
+			int sid = GetServerKey();
+			sprintf_s(sql, "call sp_insert_update_role(%I64d,'%s','%s',%d,%d,%d,%d,%d,%d,%I64d);", 
+				role.ID, role.Name.c_str(), req.UserName.c_str(), sid, req.Stamp, role.Prof, role.Level, 0, 0, role.CreateTime);
+			m_MySQL.Execute(sql);
+		}
 	}
 }

@@ -51,6 +51,11 @@ namespace XX004
 		//sp:分隔符
 		//ret:拆分结果
 		static inline vector<int> SplitToInt(const std::string &s, const std::string& sp) { vector<int> v; return SplitToInt(s, sp, v); }
+
+		//获取字符串宽度，汉字算两个字符
+		//str:字符串。
+		//ret:字符串宽度。
+		static int GetStringWidth(const string& str);
 	};
 }
 

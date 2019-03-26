@@ -60,6 +60,7 @@ namespace XX004
 
 		void OnLoginRequest(NetDataItem *item);
 		void OnLoginResponse(NetDataItem *item);
+		void OnCreateRoleResponse(NetDataItem *item);
 
 
 		//连接uid到用户名的映射

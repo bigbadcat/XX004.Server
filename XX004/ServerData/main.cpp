@@ -10,18 +10,12 @@
 
 #include <iostream>
 #include <string>
-//#include "MySQLTest.h"
-//#include "NetTest.h"
 #include "MainData.h"
 #include <vld.h>
 using namespace std;
 
 int main(int argc, char *argv[])
 {
-	//cout << "Hello SvrData!" << endl;
-	//XX004::MySQLTest mysqltest;
-	//mysqltest.DoTest();
-
 	int ret = 0;
 	{
 		XX004::MainData server;

@@ -37,14 +37,16 @@ namespace XX004
 
 		//----------网关 end 1999----------
 
-		//----------登陆服 begin 2000----------
+		static const Int32 LOGIN_BEGIN = 2000;						//----------登陆服 begin 2000----------
 
 		static const Int32 GL_LOGIN_REQ = 2001;						//用户登录(网关->登陆服)	
 		static const Int32 DL_USER_INFO_RES = 2002;					//回复用户信息
 		static const Int32 CL_CREATE_ROLE_REQ = 2003;				//创建角色请求
 		static const Int32 GL_ENTER_GAME_REQ = 2004;				//进入游戏请求(网关->登陆服)
+		static const Int32 DL_ROLE_STAMP_RES = 2005;				//回复登陆服角色创建序号
+		static const Int32 DL_ROLE_ADD_RES = 2006;					//回复登陆服角色添加
 
-		//----------登陆服 end 2999----------
+		static const Int32 LOGIN_END = 2999;						//----------登陆服 end 2999----------
 
 		//----------场景服 begin 3000----------
 
@@ -62,6 +64,8 @@ namespace XX004
 
 		static const Int32 LD_USER_INFO_REQ = 20001;				//请求用户信息		
 		static const Int32 LD_USER_SAVE_REQ = 20002;				//请求保存用户信息
+		static const Int32 LD_ROLE_STAMP_REQ = 20003;				//请求服务器场景序号
+		static const Int32 LD_ROLE_ADD_REQ = 20004;					//请求添加角色信息
 
 		//----------数据库 end 29999----------
 

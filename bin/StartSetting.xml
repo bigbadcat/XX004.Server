@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<StartSetting id="1">
+<StartSetting group="1" id="1">
 	<Setting>
 		<type>2</type>
 		<name>Gate</name>

@@ -62,7 +62,7 @@ namespace XX004
 
 	const Int64 ServerBase::FRAME_GAP = 100;
 
-	ServerBase::ServerBase() : m_State(ServerState::SS_CREATE), m_ID(0)
+	ServerBase::ServerBase() : m_State(ServerState::SS_CREATE), m_Group(0), m_ID(0)
 	{
 	}
 
@@ -72,12 +72,13 @@ namespace XX004
 		assert(m_State == ServerState::SS_CREATE || m_State == ServerState::SS_END);
 	}
 
-	void ServerBase::Start(int id, bool wait_init_finish)
+	void ServerBase::Start(int group, int id, bool wait_init_finish)
 	{
 		if (m_State != ServerState::SS_CREATE)
 		{
 			return;
 		}
+		m_Group = group;
 		m_ID = id;
 		m_Thread = thread([](ServerBase *t){t->ThreadProcess(); }, this);
 

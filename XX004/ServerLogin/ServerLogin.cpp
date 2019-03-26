@@ -14,6 +14,7 @@
 #include <MainBase.h>
 #include <Config/LoginModuleConfig.h>
 #include <Util/TimeUtil.h>
+#include <Util/StringUtil.h>
 #include <regex>
 using namespace XX004::Net;
 
@@ -25,6 +26,54 @@ namespace XX004
 
 	ServerLogin::~ServerLogin()
 	{
+		SAFE_DELETE_MAP(m_UserInfos);
+	}
+
+	//检测名称字符串
+	bool CheckNameChar(char c)
+	{
+		if (c >= '0' && c <= '9')
+		{
+			return true;
+		}
+		if (c >= 'A' && c <= 'Z')
+		{
+			return true;
+		}
+		if (c >= 'a' && c <= 'z')
+		{
+			return true;
+		}
+		return c == '_';
+	}
+
+	const int ServerLogin::MAX_ROLE_NUMBER = 5;
+
+	bool ServerLogin::CheckName(const std::string& name)
+	{
+		int index = 0;
+		while (index < name.length())
+		{
+			char c = name[index];
+			if (c & 0x80)
+			{
+				index += 3;		//汉字UTF-8占三个字节(遇到占两个字节的字符编码会不正确)
+			}
+			else
+			{
+				//非汉字只能是数字、字母和下划线
+				if (CheckNameChar(c))
+				{
+					++index;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
 	void ServerLogin::RegisterNetMessage(NetManagerBase *pMgr)
@@ -33,6 +82,9 @@ namespace XX004
 		pMgr->SetOnDisconnectCallBack([this](NetDataItem *item){this->OnDisconnect(item); });
 		NET_REGISTER(pMgr, NetMsgID::GL_LOGIN_REQ, OnLoginRequest);
 		NET_REGISTER(pMgr, NetMsgID::DL_USER_INFO_RES, OnUserInfoResponse);
+		NET_REGISTER(pMgr, NetMsgID::CL_CREATE_ROLE_REQ, OnCreateRoleRequest);
+		NET_REGISTER(pMgr, NetMsgID::DL_ROLE_STAMP_RES, OnRoleStampResponse);
+		NET_REGISTER(pMgr, NetMsgID::DL_ROLE_ADD_RES, OnRoleAddResponse);
 	}
 
 	void ServerLogin::OnAddConfig(vector<ModuleConfig*> &cfgs)
@@ -66,6 +118,13 @@ namespace XX004
 
 	void ServerLogin::OnConnect(NetDataItem *item)
 	{
+		if (item->key.first == RemoteType::RT_DATA)
+		{
+			LDRoleStampRequest req;
+			req.Group = this->GetServerGroup();
+			req.ID = this->GetServerID();
+			MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_DATA, 0), NetMsgID::LD_ROLE_STAMP_REQ, &req);
+		}
 	}
 
 	void ServerLogin::OnDisconnect(NetDataItem *item)
@@ -168,5 +227,106 @@ namespace XX004
 			res2.RoleList.assign(res.RoleList.begin(), res.RoleList.end());
 			MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_GATE, 0), NetMsgID::LG_LOGIN_RES, &res2);
 		}
+	}
+
+	void ServerLogin::OnCreateRoleRequest(NetDataItem *item)
+	{
+		CLCreateRoleRequest req;
+		req.Unpack(item->data, 0);
+
+		LGCreateRoleResponse res;
+		res.UserName = req.UserName;
+
+		//判断名称是否合法
+		int width = StringUtil::GetStringWidth(req.RoleName);
+		if (width < 4 || width > 12 || !CheckName(req.RoleName))
+		{
+			res.Result = 1;
+			MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_GATE, 0), NetMsgID::LG_CREATE_ROLE_RES, &res);
+			return;
+		}
+
+		//判断职业是否存在
+		ProfConfig *cfg = ModuleConfig::GetInstance<LoginModuleConfig>()->GetProf(req.Prof);
+		if (cfg == NULL)
+		{
+			res.Result = 2;
+			MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_GATE, 0), NetMsgID::LG_CREATE_ROLE_RES, &res);
+			return;
+		}
+
+		//判断玩家是否登陆(客户端没叛变是不会有这个问题)
+		UserInfoMap::iterator itr = m_UserInfos.find(res.UserName);
+		UserInfo *info = itr == m_UserInfos.end() ? NULL : itr->second;
+		if (info == NULL)
+		{
+			res.Result = 4;
+			MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_GATE, 0), NetMsgID::LG_CREATE_ROLE_RES, &res);
+			return;
+		}
+
+		//判断玩家角色是否满了
+		if ((int)info->GetRoleInfos().size() >= MAX_ROLE_NUMBER)
+		{
+			res.Result = 3;
+			MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_GATE, 0), NetMsgID::LG_CREATE_ROLE_RES, &res);
+			return;
+		}
+
+		//判断服务器创建状态或者是否正在创建
+		Int64 roleid = UserInfo::GetNewID();
+		if (roleid == 0)
+		{
+			res.Result = 5;
+			MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_GATE, 0), NetMsgID::LG_CREATE_ROLE_RES, &res);
+			return;
+		}
+
+		//创建角色
+		LoginRoleInfo role;
+		role.ID = roleid;
+		role.Prof = req.Prof;
+		role.CreateTime = (Int64)TimeUtil::GetCurrentSecond();
+		role.Name = req.RoleName;
+		role.Level = 1;
+		res.Role = role;
+
+		//通知数据库保存
+		LDRoleAddRequest req2;
+		req2.UserName = req.UserName;
+		req2.Role = role;
+		req2.Stamp = roleid % UserInfo::ROLE_ID_STAMP_BIT;
+		MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_DATA, 0), NetMsgID::LD_ROLE_ADD_REQ, &req2);
+	}
+
+	void ServerLogin::OnRoleStampResponse(NetDataItem *item)
+	{
+		DLRoleStampResponse res;
+		res.Unpack(item->data, 0);
+		UserInfo::NextRoleStamp = res.Stamp + 1;
+		cout << "ServerLogin::OnRoleStampResponse stamp:" << res.Stamp << endl;
+	}
+
+	void ServerLogin::OnRoleAddResponse(NetDataItem *item)
+	{
+		DLRoleAddResponse res;
+		res.Unpack(item->data, 0);
+
+		LGCreateRoleResponse res2;
+		res2.UserName = res.UserName;		
+		res2.Result = res.Result == 0 ? 0 : 6;
+		if (res2.Result == 0)
+		{
+			res2.Role = res.Role;
+
+			//记录创建的角色
+			UserInfoMap::iterator itr = m_UserInfos.find(res.UserName);
+			UserInfo *info = itr == m_UserInfos.end() ? NULL : itr->second;
+			if (info != NULL)
+			{
+				info->AddRoleInfo(res2.Role);
+			}
+		}
+		MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_GATE, 0), NetMsgID::LG_CREATE_ROLE_RES, &res2);
 	}
 }

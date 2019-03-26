@@ -61,8 +61,10 @@ namespace XX004
 		inline ServerState GetState()const { return m_State; }
 
 		//启动服务
-		//wait_init_finish 是否等待初始化完成才返回
-		void Start(int id, bool wait_init_finish);
+		//group:服务器组
+		//id:服务器编号
+		//wait_init_finish:是否等待初始化完成才返回
+		void Start(int group, int id, bool wait_init_finish);
 
 		//停止服务
 		void Stop();
@@ -76,8 +78,14 @@ namespace XX004
 		//提交命令
 		void PostCommand(const std::string& cmd_line);
 
+		//获取服务器组
+		int GetServerGroup()const { return m_Group; }
+
 		//获取服务器编号
 		int GetServerID()const { return m_ID; }
+
+		//获取服务器标识
+		int GetServerKey()const { return m_Group * 10000 + m_ID; }
 
 		//每一帧的间隔毫秒
 		static const Int64 FRAME_GAP;
@@ -138,6 +146,9 @@ namespace XX004
 
 		//配置列表
 		vector<ModuleConfig*> m_Configs;
+
+		//服务器组
+		int m_Group;
 
 		//服务器编号
 		int m_ID;

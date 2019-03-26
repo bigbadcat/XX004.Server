@@ -28,6 +28,7 @@ namespace XX004
 
 #define SAFE_DELETE(p) if (p!=NULL){delete(p); p=NULL;}
 #define SAFE_DELETE_ARRAY(p) if (p!=NULL){delete[](p); p=NULL;}
+#define SAFE_DELETE_MAP(p) for (auto itr = p.begin(); itr != p.end(); ++itr){ SAFE_DELETE(itr->second); } p.clear();
 
 	//等待线程结束
 	inline void JoinThread(std::thread &t)

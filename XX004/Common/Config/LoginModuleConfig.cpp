@@ -27,14 +27,12 @@ namespace XX004
 	{
 		lua_State *L = LuaWrap::GetLuaState();
 		ModuleConfig::LoadConfig<CharacterConfig>(m_Characters, L, "t_character");
+		ModuleConfig::LoadConfig<ProfConfig>(m_Profs, L, "t_prof");
 	}
 
 	void LoginModuleConfig::Release()
 	{
-		for (CharacterConfigMap::iterator itr = m_Characters.begin(); itr != m_Characters.end(); ++itr)
-		{
-			SAFE_DELETE(itr->second);
-		}
-		m_Characters.clear();
+		SAFE_DELETE_MAP(m_Characters);
+		SAFE_DELETE_MAP(m_Profs);
 	}
 }

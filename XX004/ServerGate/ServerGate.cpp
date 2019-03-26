@@ -79,8 +79,9 @@ namespace XX004
 	{
 		pMgr->SetOnConnectCallBack([this](NetDataItem *item){this->OnConnect(item); });
 		pMgr->SetOnDisconnectCallBack([this](NetDataItem *item){this->OnDisconnect(item); });
-		pMgr->RegisterMessageCallBack(NetMsgID::CG_LOGIN_REQ, [this](NetDataItem *item){this->OnLoginRequest(item); });
-		pMgr->RegisterMessageCallBack(NetMsgID::LG_LOGIN_RES, [this](NetDataItem *item){this->OnLoginResponse(item); });
+		NET_REGISTER(pMgr, NetMsgID::CG_LOGIN_REQ, OnLoginRequest);
+		NET_REGISTER(pMgr, NetMsgID::LG_LOGIN_RES, OnLoginResponse);
+		NET_REGISTER(pMgr, NetMsgID::LG_CREATE_ROLE_RES, OnCreateRoleResponse);
 	}
 
 	bool ServerGate::OnInitStep(int step, float &r)
@@ -144,5 +145,17 @@ namespace XX004
 		lres.RoleCount = res.RoleCount;
 		lres.RoleList.assign(res.RoleList.begin(), res.RoleList.end());
 		MainBase::GetCurMain()->GetNetManager()->Send(uid, NetMsgID::GC_LOGIN_RES, &lres);
+	}
+
+	void ServerGate::OnCreateRoleResponse(NetDataItem *item)
+	{
+		LGCreateRoleResponse res;
+		res.Unpack(item->data, 0);
+
+		Int64 uid = GetUID(res.UserName);
+		GCCreateRoleResponse res2;
+		res2.Result = res.Result;
+		res2.Role = res.Role;
+		MainBase::GetCurMain()->GetNetManager()->Send(uid, NetMsgID::GC_CREATE_ROLE_RES, &res2);
 	}
 }

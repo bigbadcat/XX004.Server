@@ -26,8 +26,10 @@ namespace XX004
 		virtual void Release();
 
 		const CharacterConfigMap& GetAllCharacter()const { return m_Characters; }
+		CharacterConfig* GetCharacter(int id)const { auto itr = m_Characters.find(id); return itr == m_Characters.end() ? NULL : itr->second; }
 
-		CharacterConfig* GetCharacter(int id)const { CharacterConfigMap::const_iterator itr = m_Characters.find(id); return itr == m_Characters.end() ? NULL : itr->second; }
+		const ProfConfigMap& GetAllProf()const { return m_Profs; }
+		ProfConfig* GetProf(int id)const { auto itr = m_Profs.find(id); return itr == m_Profs.end() ? NULL : itr->second; }
 
 	protected:
 
@@ -35,6 +37,9 @@ namespace XX004
 
 		//角色配置
 		CharacterConfigMap m_Characters;
+
+		//职业配置
+		ProfConfigMap m_Profs;
 	};
 }
 

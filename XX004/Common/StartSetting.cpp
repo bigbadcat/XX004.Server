@@ -70,7 +70,7 @@ namespace XX004
 		return citr == m_Infos.cend() ? NULL : citr->second;
 	}
 
-	StartSetting::StartSetting() : m_ID(0)
+	StartSetting::StartSetting() : m_Group(0), m_ID(0)
 	{
 	}
 
@@ -89,6 +89,7 @@ namespace XX004
 		tinyxml2::XMLError error = doc.LoadFile("StartSetting.xml");
 		assert(error == tinyxml2::XMLError::XML_SUCCESS);
 		tinyxml2::XMLElement *root = doc.FirstChildElement("StartSetting");
+		m_Group = root->IntAttribute("group", 0);
 		m_ID = root->IntAttribute("id", 0);
 		for (tinyxml2::XMLElement *itr = root->FirstChildElement(); itr != NULL; itr = itr->NextSiblingElement())
 		{

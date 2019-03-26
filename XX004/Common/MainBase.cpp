@@ -61,11 +61,12 @@ namespace XX004
 		m_pServer->RegisterNetMessage(m_pNetManager);
 
 		//模块运行
+		int group = StartSetting::GetInstance()->GetGroup();
 		int id = StartSetting::GetInstance()->GetID();
 		StartSettingInfo* info = StartSetting::GetInstance()->GetSettingInfo(m_Type);
 		assert(info != NULL);
 		m_pNetManager->Start(info->GetPort());
-		m_pServer->Start(id, true);
+		m_pServer->Start(group, id, true);
 		CommandLoop();
 		cout << "Waitting server end ..." << endl;
 		m_pServer->Stop();		//Server停止还需要依赖网络，如逻辑服停止后需要把服务器状态数据提交给数据服

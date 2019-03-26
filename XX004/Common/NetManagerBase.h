@@ -161,19 +161,20 @@ namespace XX004
 		void Close(const RemoteKey& key);
 
 	protected:
+
 		//添加接收到的数据
 		virtual void OnAddRecvData(NetDataItem *item);
 
 		//创建内部连接信息
 		virtual void OnCreateInternalInfo(std::vector<int> &infos);
 
-	private:
-
 		//创建一个数据项
 		NetDataItem* GetNetDataItem();
 
 		//回收数据对象
 		void CacheNetDataItem(NetDataItem *item);
+
+	private:
 
 		//分发消息
 		void OnDispatch(NetDataItem *item);

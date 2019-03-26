@@ -26,6 +26,15 @@ namespace XX004
 	public:
 		UserInfo(const string& name);
 
+		//角色ID序号占位
+		static const int ROLE_ID_STAMP_BIT = 100000000;
+
+		//角色ID服务器占位
+		static const int ROLE_ID_SERVER_BIT = 10000;
+
+		//下一个角色创建标记
+		static Int64 NextRoleStamp;
+
 		//获取新的角色ID
 		static Int64 GetNewID();
 
@@ -43,6 +52,7 @@ namespace XX004
 		void AddRoleInfo(const LoginRoleInfo& info) { m_RoleInfos.push_back(info); }
 
 	private:
+
 		//角色名称
 		string m_Name;
 

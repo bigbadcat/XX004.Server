@@ -150,6 +150,30 @@ namespace XX004
 			Int64 RoleID;							//角色编号
 		};
 
+		//2005:回复登陆服角色创建序号
+		class DLRoleStampResponse : public NetMessage
+		{
+		public:
+			DLRoleStampResponse();
+			virtual int Unpack(Byte *buffer, int index);
+			virtual int Pack(Byte *buffer, int index);
+
+			Int32 Stamp;							//角色创建序号
+		};
+
+		//2006:回复登陆服角色添加
+		class DLRoleAddResponse : public NetMessage
+		{
+		public:
+			DLRoleAddResponse();
+			virtual int Unpack(Byte *buffer, int index);
+			virtual int Pack(Byte *buffer, int index);
+
+			string UserName;						//用户名
+			Int32 Result;							//添加结果(0、成功 1、名称重复)
+			LoginRoleInfo Role;						//角色
+		};
+
 		//10001:角色上线
 		class LWRoleOnline : public NetMessage
 		{
@@ -207,6 +231,31 @@ namespace XX004
 			Int64 FreeTime;							//解冻时间
 		};
 
+		//20003:请求服务器角色创建序号
+		class LDRoleStampRequest : public NetMessage
+		{
+		public:
+			LDRoleStampRequest();
+			virtual int Unpack(Byte *buffer, int index);
+			virtual int Pack(Byte *buffer, int index);
+
+			Int32 Group;							//服务器组
+			Int32 ID;								//服务器编号
+		};
+
+		//20004:请求保存角色信息
+		class LDRoleAddRequest : public NetMessage
+		{
+		public:
+			LDRoleAddRequest();
+			virtual int Unpack(Byte *buffer, int index);
+			virtual int Pack(Byte *buffer, int index);
+
+			string UserName;						//用户名
+			LoginRoleInfo Role;						//角色
+			Int32 Stamp;							//角色创建序号
+		};
+
 		//30001:用户登录回复
 		class GCLoginResponse : public NetMessage
 		{
@@ -228,7 +277,7 @@ namespace XX004
 			GCCreateRoleResponse();
 			virtual int Pack(Byte *buffer, int index);
 
-			Int32 Result;							//创建结果(0、成功 1、非法名称 2、非法职业 3、角色已满)
+			Int32 Result;							//创建结果(0、成功 1、非法名称 2、非法职业 3、角色已满 4、未登录 5、无法创建 6、名称已存在)
 			LoginRoleInfo Role;						//角色
 		};
 
