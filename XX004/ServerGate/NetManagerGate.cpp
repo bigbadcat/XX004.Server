@@ -48,5 +48,6 @@ namespace XX004
 	void NetManagerGate::OnCreateInternalInfo(std::vector<int> &infos)
 	{
 		infos.push_back(RemoteType::RT_LOGIN);
+		infos.push_back(RemoteType::RT_WORLD);
 	}
 }

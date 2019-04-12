@@ -2,25 +2,21 @@
 * Copyright (c) 2018-2088, By XuXiang all rights reserved.
 *
 * FileName: main.cpp
-* Summary: 网关程序入口。
+* Summary: 世界服程序入口。
 *
 * Author: XuXiang
-* Date: 2018-12-18 19:56
+* Date: 2019-04-12 16:33
 *******************************************************/
 
-#include "MainLogin.h"
-#include <iostream>
 #include <vld.h>
-using namespace std;
-using namespace XX004;
-
+#include "MainWorld.h"
 
 int main(int argc, char *argv[])
 {
 	int ret = 0;
 	{
-		XX004::MainLogin server;
-		ret = server.Run(XX004::Net::RemoteType::RT_LOGIN);
+		XX004::MainWorld server;
+		ret = server.Run(XX004::Net::RemoteType::RT_WORLD);
 	}
 
  	system("pause");

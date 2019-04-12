@@ -23,5 +23,6 @@ namespace XX004
 	void NetManagerLogin::OnCreateInternalInfo(std::vector<int> &infos)
 	{
 		infos.push_back(RemoteType::RT_DATA);
+		infos.push_back(RemoteType::RT_WORLD);
 	}
 }
