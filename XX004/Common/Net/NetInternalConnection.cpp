@@ -47,11 +47,12 @@ namespace XX004
 			m_RecvBuffer.Clear();
 		}
 
-		bool NetInternalConnection::Send(Int32 cmd, Byte *buffer, int len)
+		bool NetInternalConnection::Send(Int64 guid, Int32 cmd, Byte *buffer, int len)
 		{
 			NetPackageHeader sendhead;
 			sendhead.SetSign();
 			sendhead.Command = cmd;
+			sendhead.GUID = guid;
 			sendhead.BodySize = len;
 
 			static Byte sendbuff[1024];

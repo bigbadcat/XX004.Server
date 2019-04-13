@@ -20,6 +20,9 @@ namespace XX004
 	NetManagerGate::NetManagerGate()
 	{
 		m_GateRouteConfig.push_back(GateRouteConfig(NetMsgID::LOGIN_BEGIN, NetMsgID::LOGIN_END, RemoteType::RT_LOGIN));
+		m_GateRouteConfig.push_back(GateRouteConfig(NetMsgID::SCENE_BEGIN, NetMsgID::SCENE_END, RemoteType::RT_SCENE));
+		m_GateRouteConfig.push_back(GateRouteConfig(NetMsgID::WORLD_BEGIN, NetMsgID::WORLD_END, RemoteType::RT_WORLD));
+		m_GateRouteConfig.push_back(GateRouteConfig(NetMsgID::CLIENT_BEGIN, NetMsgID::CLIENT_END, RemoteType::RT_CLIENT));
 	}
 
 	NetManagerGate::~NetManagerGate()

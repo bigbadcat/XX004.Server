@@ -35,6 +35,9 @@ namespace XX004
 		//通过用户名获取链接标识。
 		Int64 GetUID(const string& username);
 
+		//通过链接标识获取用户名
+		string GetUserName(Int64 uid);
+
 	protected:
 		//注册网络消息
 		virtual void RegisterNetMessage(NetManagerBase *pMgr);
@@ -59,6 +62,7 @@ namespace XX004
 		void OnDisconnect(NetDataItem *item);
 
 		void OnLoginRequest(NetDataItem *item);
+		void OnEnterGameRequest(NetDataItem *item);
 		void OnLoginResponse(NetDataItem *item);
 		void OnCreateRoleResponse(NetDataItem *item);
 

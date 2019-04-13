@@ -59,6 +59,7 @@ namespace XX004
 		void OnCreateRoleRequest(NetDataItem *item);
 		void OnRoleStampResponse(NetDataItem *item);
 		void OnRoleAddResponse(NetDataItem *item);
+		void OnEnterGameRequest(NetDataItem *item);
 
 		//登陆的角色
 		UserInfoMap m_UserInfos;

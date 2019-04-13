@@ -85,6 +85,7 @@ namespace XX004
 		NET_REGISTER(pMgr, NetMsgID::CL_CREATE_ROLE_REQ, OnCreateRoleRequest);
 		NET_REGISTER(pMgr, NetMsgID::DL_ROLE_STAMP_RES, OnRoleStampResponse);
 		NET_REGISTER(pMgr, NetMsgID::DL_ROLE_ADD_RES, OnRoleAddResponse);
+		NET_REGISTER(pMgr, NetMsgID::GL_ENTER_GAME_REQ, OnEnterGameRequest);
 	}
 
 	void ServerLogin::OnAddConfig(vector<ModuleConfig*> &cfgs)
@@ -328,5 +329,29 @@ namespace XX004
 			}
 		}
 		MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_GATE, 0), NetMsgID::LG_CREATE_ROLE_RES, &res2);
+	}
+
+	void ServerLogin::OnEnterGameRequest(NetDataItem *item)
+	{
+		GLEnterGameRequest req;
+		req.Unpack(item->data, 0);
+
+		//判断玩家是否登陆(客户端没叛变是不会有这个问题)
+		UserInfoMap::iterator itr = m_UserInfos.find(req.UserName);
+		UserInfo *info = itr == m_UserInfos.end() ? NULL : itr->second;
+		if (info == NULL)
+		{
+			LCEnterGameFailed res;
+			res.Result = 1;
+			MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_GATE, req.RoleID), NetMsgID::LC_ENTER_GAME_FAILED, &res);
+			return;
+		}
+
+		//判断角色是否存在
+
+		//判断角色是否被冻结
+
+		//可以成功进入游戏
+		cout << "EnterGame username:" << req.UserName << " roleid:" << req.RoleID << endl;
 	}
 }

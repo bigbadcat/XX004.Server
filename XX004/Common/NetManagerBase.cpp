@@ -384,7 +384,7 @@ namespace XX004
 				NetInternalConnection *internal_con = itr->second;
 				if (internal_con->GetState() == ConnectionState::CS_CONNECTED)
 				{
-					bool cansend = internal_con->Send(item->cmd, item->data, item->len);
+					bool cansend = internal_con->Send(item->key.second, item->cmd, item->data, item->len);
 					if (!cansend)
 					{
 						//实际上应该先缓存起来，等连接上了再发送
@@ -404,7 +404,7 @@ namespace XX004
 		NetConnection *pcon = item->uid != 0 ? m_Server.GetConnection(item->uid) : m_Server.GetConnection(item->key);
 		if (pcon != NULL)
 		{
-			bool cansend = pcon->Send(item->cmd, item->data, item->len);
+			bool cansend = pcon->Send(item->key.second, item->cmd, item->data, item->len);
 			if (!cansend)
 			{
 				//同一网络周期内发送数据量过大或者该连接速度太低把数据缓冲区挤爆了，要断掉连接
@@ -437,7 +437,7 @@ namespace XX004
 					NetMessageInt req;					
 					req.Value = MainBase::GetCurMain()->GetType();
 					int len = req.Pack(data, 0);
-					con->Send(NetMsgID::REMOTE_IDENTIFY, data, len);
+					con->Send(0, NetMsgID::REMOTE_IDENTIFY, data, len);
 				}
 			}
 

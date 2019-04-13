@@ -70,11 +70,12 @@ namespace XX004
 			m_RoleID = m_RemoteType == RemoteType::RT_CLIENT ? key.second : 0;
 		}
 
-		bool NetConnection::Send(Int32 cmd, Byte *buffer, int len)
+		bool NetConnection::Send(Int64 guid, Int32 cmd, Byte *buffer, int len)
 		{
 			NetPackageHeader sendhead;
 			sendhead.SetSign();
 			sendhead.Command = cmd;
+			sendhead.GUID = guid;
 			sendhead.BodySize = len;
 
 			static Byte sendbuff[1024];

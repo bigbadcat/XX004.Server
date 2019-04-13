@@ -84,11 +84,11 @@ namespace XX004
 			Int64 RoleID;							//角色编号
 		};
 
-		//1005:进入游戏成功(世界端->网关)
-		class WGEnterGameSuccess : public NetMessage
+		//1005:进入游戏成功(登陆服->网关)
+		class LGEnterGameSuccess : public NetMessage
 		{
 		public:
-			WGEnterGameSuccess();
+			LGEnterGameSuccess();
 			virtual int Unpack(Byte *buffer, int index);
 			virtual int Pack(Byte *buffer, int index);
 

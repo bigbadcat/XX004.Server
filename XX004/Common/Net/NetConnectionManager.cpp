@@ -133,11 +133,15 @@ namespace XX004
 		void NetConnectionManager::SetRemote(UInt64 uid, const RemoteKey &key)
 		{
 			NetConnection *con = GetConnection(uid);
-			assert(con->GetRomoteType() == RemoteType::RT_UNKNOW && con->GetRoleID() == 0);			//必须是小白连接
+			assert(con->GetRomoteType() == RemoteType::RT_UNKNOW || con->GetRomoteType() == key.first);			//必须是小白连接或同类型
 			assert(key.first != RemoteType::RT_UNKNOW);		//参数合法
 			con->SetRemote(key);
 			if (key.first == RemoteType::RT_CLIENT)
 			{
+				if (con->GetRomoteType() == RemoteType::RT_CLIENT)
+				{
+					m_ClientConnections.erase(con->GetRoleID());
+				}
 				m_ClientConnections[key.second] = con;
 			}
 			else

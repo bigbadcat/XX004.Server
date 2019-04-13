@@ -75,11 +75,18 @@ namespace XX004
 		return itr == m_UserNameToUID.end() ? 0 : itr->second;
 	}
 
+	string ServerGate::GetUserName(Int64 uid)
+	{
+		UIDToUserNameMap::iterator itr = m_UIDToUserName.find(uid);
+		return itr == m_UIDToUserName.end() ? string("") : itr->second;
+	}
+
 	void ServerGate::RegisterNetMessage(NetManagerBase *pMgr)
 	{
 		pMgr->SetOnConnectCallBack([this](NetDataItem *item){this->OnConnect(item); });
 		pMgr->SetOnDisconnectCallBack([this](NetDataItem *item){this->OnDisconnect(item); });
 		NET_REGISTER(pMgr, NetMsgID::CG_LOGIN_REQ, OnLoginRequest);
+		NET_REGISTER(pMgr, NetMsgID::CG_ENTER_GAME_REQ, OnEnterGameRequest);
 		NET_REGISTER(pMgr, NetMsgID::LG_LOGIN_RES, OnLoginResponse);
 		NET_REGISTER(pMgr, NetMsgID::LG_CREATE_ROLE_RES, OnCreateRoleResponse);
 	}
@@ -128,6 +135,20 @@ namespace XX004
 		GLLoginRequest lreq;
 		lreq.UserName = req.UserName;
 		MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_LOGIN, 0), NetMsgID::GL_LOGIN_REQ, &lreq);
+	}
+
+	void ServerGate::OnEnterGameRequest(NetDataItem *item)
+	{
+		CGEnterGameRequest req;
+		req.Unpack(item->data, 0);
+
+		NetManagerBase *pNet = MainBase::GetCurMain()->GetNetManager();
+		pNet->Update(item->uid, RemoteKey(RemoteType::RT_CLIENT, req.RoleID));			//将连接与RoleID关联
+
+		GLEnterGameRequest req2;
+		req2.UserName = GetUserName(item->uid);
+		req2.RoleID = req.RoleID;
+		pNet->Send(RemoteKey(RemoteType::RT_LOGIN, 0), NetMsgID::GL_ENTER_GAME_REQ, &req2);
 	}
 
 	void ServerGate::OnLoginResponse(NetDataItem *item)

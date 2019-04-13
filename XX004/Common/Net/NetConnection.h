@@ -77,7 +77,7 @@ namespace XX004
 			inline const int GetPort()const { return m_Port; }
 
 			//发送数据
-			bool Send(Int32 cmd, Byte *buffer, int len);
+			bool Send(Int64 guid, Int32 cmd, Byte *buffer, int len);
 
 			//添加发送的数据
 			bool AddSendData(Byte *buffer, int len);
