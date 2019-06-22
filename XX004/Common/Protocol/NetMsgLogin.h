@@ -84,11 +84,11 @@ namespace XX004
 			Int64 RoleID;							//角色编号
 		};
 
-		//1005:进入游戏成功(登陆服->网关)
-		class LGEnterGameSuccess : public NetMessage
+		//1005:进入游戏成功(世界服->网关)
+		class WGEnterGameSuccess : public NetMessage
 		{
 		public:
-			LGEnterGameSuccess();
+			WGEnterGameSuccess();
 			virtual int Unpack(Byte *buffer, int index);
 			virtual int Pack(Byte *buffer, int index);
 
@@ -288,7 +288,7 @@ namespace XX004
 			LCEnterGameFailed();
 			virtual int Pack(Byte *buffer, int index);
 
-			Int32 Result;							//结果(0、未知 1、角色不存在 2、被冻结)
+			Int32 Result;							//结果(0、未知 1、角色不存在 2、被冻结 3、未登录)
 			Int64 FreeTime;							//解冻时间
 		};
 

@@ -48,8 +48,12 @@ namespace XX004
 
 		//获取角色列表
 		vector<LoginRoleInfo>& GetRoleInfos() { return m_RoleInfos; }
+
 		//添加角色信息
 		void AddRoleInfo(const LoginRoleInfo& info) { m_RoleInfos.push_back(info); }
+
+		//获取角色信息(不建议外部缓存返回结果)
+		LoginRoleInfo* GetRoleInfo(Int64 id);
 
 	private:
 

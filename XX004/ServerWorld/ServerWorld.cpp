@@ -28,7 +28,9 @@ namespace XX004
 	{
 		pMgr->SetOnConnectCallBack([this](NetDataItem *item){this->OnConnect(item); });
 		pMgr->SetOnDisconnectCallBack([this](NetDataItem *item){this->OnDisconnect(item); });
-		//NET_REGISTER(pMgr, NetMsgID::GL_LOGIN_REQ, OnLoginRequest);
+		NET_REGISTER(pMgr, NetMsgID::LW_ROLE_ONLINE, OnRoleOnlineNotify);
+		NET_REGISTER(pMgr, NetMsgID::GW_ROLE_OUTLINE, OnRoleOutlineNotify);
+		NET_REGISTER(pMgr, NetMsgID::GW_ROLE_QUIT, OnRoleQuitNotify);
 	}
 
 	void ServerWorld::OnAddConfig(vector<ModuleConfig*> &cfgs)
@@ -61,9 +63,40 @@ namespace XX004
 
 	void ServerWorld::OnConnect(NetDataItem *item)
 	{
+		if (item->key.first == RemoteType::RT_DATA)
+		{
+			cout << "Request WorldServer Data" << endl;
+		}
 	}
 
 	void ServerWorld::OnDisconnect(NetDataItem *item)
 	{
+	}
+
+	void ServerWorld::OnRoleOnlineNotify(NetDataItem *item)
+	{
+		LWRoleOnline notify;
+		notify.Unpack(item->data, 0);
+
+		//向数据库请求玩家的所有数据
+
+		//通知进入游戏成功(应该放到获取数据完毕后)
+		cout << "RoleOnline username:" << notify.UserName << " roleid:" << notify.RoleID << endl;
+		WGEnterGameSuccess res;
+		res.UserName = notify.UserName;
+		res.RoleID = notify.RoleID;
+		MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_GATE, res.RoleID), NetMsgID::WG_ENTER_GAME_SUCCESS, &res);
+
+		//进入最后场景(应该放到获取数据完毕后)
+	}
+
+	void ServerWorld::OnRoleOutlineNotify(NetDataItem *item)
+	{
+
+	}
+
+	void ServerWorld::OnRoleQuitNotify(NetDataItem *item)
+	{
+
 	}
 }

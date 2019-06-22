@@ -65,6 +65,7 @@ namespace XX004
 		void OnEnterGameRequest(NetDataItem *item);
 		void OnLoginResponse(NetDataItem *item);
 		void OnCreateRoleResponse(NetDataItem *item);
+		void OnEnterGameSuccessResponse(NetDataItem *item);
 
 
 		//连接uid到用户名的映射

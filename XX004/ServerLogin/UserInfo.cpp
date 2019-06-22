@@ -41,4 +41,18 @@ namespace XX004
 	{
 
 	}
+
+	LoginRoleInfo* UserInfo::GetRoleInfo(Int64 id)
+	{
+		LoginRoleInfo *info = NULL;
+		for (vector<LoginRoleInfo>::iterator itr = m_RoleInfos.begin(); itr != m_RoleInfos.end(); ++itr)
+		{
+			if (itr->ID == id)
+			{
+				info = &(*itr);
+				break;
+			}
+		}
+		return info;
+	}
 }

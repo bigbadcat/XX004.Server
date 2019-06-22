@@ -47,7 +47,9 @@ namespace XX004
 		void OnConnect(NetDataItem *item);
 		void OnDisconnect(NetDataItem *item);
 
-		//void OnLoginRequest(NetDataItem *item);
+		void OnRoleOnlineNotify(NetDataItem *item);
+		void OnRoleOutlineNotify(NetDataItem *item);
+		void OnRoleQuitNotify(NetDataItem *item);
 	};
 }
 

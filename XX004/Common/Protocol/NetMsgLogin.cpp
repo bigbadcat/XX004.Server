@@ -125,11 +125,11 @@ namespace XX004
 
 		//----------------------------------------
 
-		LGEnterGameSuccess::LGEnterGameSuccess() : RoleID(0)
+		WGEnterGameSuccess::WGEnterGameSuccess() : RoleID(0)
 		{
 		}
 
-		int LGEnterGameSuccess::Unpack(Byte *buffer, int index)
+		int WGEnterGameSuccess::Unpack(Byte *buffer, int index)
 		{
 			int i = index;
 			UserName = DataUtil::ReadString(buffer, i, &i);
@@ -137,7 +137,7 @@ namespace XX004
 			return i;
 		}
 
-		int LGEnterGameSuccess::Pack(Byte *buffer, int index)
+		int WGEnterGameSuccess::Pack(Byte *buffer, int index)
 		{
 			int i = index;
 			i = DataUtil::WriteString(buffer, i, UserName);

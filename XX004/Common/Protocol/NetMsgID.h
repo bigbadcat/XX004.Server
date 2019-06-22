@@ -32,7 +32,7 @@ namespace XX004
 		static const Int32 LG_LOGIN_RES = 1002;						//用户登录回复(登陆服->网关)
 		static const Int32 LG_CREATE_ROLE_RES = 1003;				//创建角色回复(登陆服->网关)
 		static const Int32 CG_ENTER_GAME_REQ = 1004;				//进入游戏请求(客户端->网关)
-		static const Int32 LG_ENTER_GAME_SUCCESS = 1005;			//进入游戏成功(世界服->网关)
+		static const Int32 WG_ENTER_GAME_SUCCESS = 1005;			//进入游戏成功(世界服->网关)
 		static const Int32 CG_QUIT_GAME_REQ = 1006;					//退出游戏请求(客户端->网关)
 
 		//----------网关 end 1999----------

@@ -13,6 +13,7 @@
 #include <Protocol/NetProtocol.h>
 #include <MainBase.h>
 #include <assert.h>
+#include <Util/TimeUtil.h>
 using namespace XX004::Net;
 
 namespace XX004
@@ -87,8 +88,9 @@ namespace XX004
 		pMgr->SetOnDisconnectCallBack([this](NetDataItem *item){this->OnDisconnect(item); });
 		NET_REGISTER(pMgr, NetMsgID::CG_LOGIN_REQ, OnLoginRequest);
 		NET_REGISTER(pMgr, NetMsgID::CG_ENTER_GAME_REQ, OnEnterGameRequest);
-		NET_REGISTER(pMgr, NetMsgID::LG_LOGIN_RES, OnLoginResponse);
+		NET_REGISTER(pMgr, NetMsgID::LG_LOGIN_RES, OnLoginResponse); 
 		NET_REGISTER(pMgr, NetMsgID::LG_CREATE_ROLE_RES, OnCreateRoleResponse);
+		NET_REGISTER(pMgr, NetMsgID::WG_ENTER_GAME_SUCCESS, OnEnterGameSuccessResponse);
 	}
 
 	bool ServerGate::OnInitStep(int step, float &r)
@@ -178,5 +180,18 @@ namespace XX004
 		res2.Result = res.Result;
 		res2.Role = res.Role;
 		MainBase::GetCurMain()->GetNetManager()->Send(uid, NetMsgID::GC_CREATE_ROLE_RES, &res2);
+	}
+
+	void ServerGate::OnEnterGameSuccessResponse(NetDataItem *item)
+	{
+		WGEnterGameSuccess res;
+		res.Unpack(item->data, 0);
+
+		Int64 uid = GetUID(res.UserName);
+		GCEnterGameSuccess res2;
+		char token[128];
+		::sprintf_s(token, sizeof(token), "%s&%I64d&%I64d", res.UserName.c_str(), res.RoleID, TimeUtil::GetCurrentSecond());
+		res2.Token = token;
+		MainBase::GetCurMain()->GetNetManager()->Send(uid, NetMsgID::GC_ENTER_GAME_SUCCESS, &res2);
 	}
 }

@@ -342,16 +342,28 @@ namespace XX004
 		if (info == NULL)
 		{
 			LCEnterGameFailed res;
-			res.Result = 1;
+			res.Result = 3;
 			MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_GATE, req.RoleID), NetMsgID::LC_ENTER_GAME_FAILED, &res);
 			return;
 		}
 
 		//判断角色是否存在
+		LoginRoleInfo *roleinfo = info->GetRoleInfo(req.RoleID);
+		if (roleinfo == NULL)
+		{
+			LCEnterGameFailed res;
+			res.Result = 1;
+			MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_GATE, req.RoleID), NetMsgID::LC_ENTER_GAME_FAILED, &res);
+			return;
+		}
 
 		//判断角色是否被冻结
 
 		//可以成功进入游戏
 		cout << "EnterGame username:" << req.UserName << " roleid:" << req.RoleID << endl;
+		LWRoleOnline res2;
+		res2.UserName = req.UserName;
+		res2.RoleID = req.RoleID;
+		MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_WORLD, res2.RoleID), NetMsgID::LW_ROLE_ONLINE, &res2);
 	}
 }
