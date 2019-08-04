@@ -31,7 +31,7 @@ namespace XX004
 			virtual ~PlayerManager();
 
 			//添加玩家
-			void AddPlayer(DWRoleBaseInfoResponse *res);
+			PlayerData* AddPlayer(DWRoleBaseInfoResponse *res);
 
 			//获取玩家，不要缓存返回值，下次使用重新获取
 			PlayerData* GetPlayer(Int64 id)const;

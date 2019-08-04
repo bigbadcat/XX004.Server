@@ -33,6 +33,7 @@ namespace XX004
 		NET_REGISTER(pMgr, NetMsgID::LD_USER_SAVE_REQ, OnUserSaveRequest);
 		NET_REGISTER(pMgr, NetMsgID::LD_ROLE_STAMP_REQ, OnRoleStampRequest);
 		NET_REGISTER(pMgr, NetMsgID::LD_ROLE_ADD_REQ, OnRoleAddRequest);
+		NET_REGISTER(pMgr, NetMsgID::WD_ROLE_BASE_INFO_REQ, OnRoleBaseInfoRequest);
 	}
 
 	bool ServerData::OnInitStep(int step, float &r)
@@ -230,5 +231,32 @@ namespace XX004
 				role.ID, role.Name.c_str(), req.UserName.c_str(), sid, req.Stamp, role.Prof, role.Level, 0, 0, role.CreateTime);
 			m_MySQL.Execute(sql);
 		}
+	}
+
+	void ServerData::OnRoleBaseInfoRequest(NetDataItem *item)
+	{
+		WDRoleBaseInfoRequest req;
+		req.Unpack(item->data, 0);
+
+		DWRoleBaseInfoResponse res;
+		res.UserName = req.UserName;
+		res.ID = req.ID;
+
+		char sql[128];
+		sprintf_s(sql, "call sp_select_role(%I64d);", req.ID);
+		auto ret = m_MySQL.Query(sql);
+		if (ret->GetRecord())
+		{
+			res.Prof = ret->GetInt("prof");
+			res.CreateTime = ret->GetInt64("create_time");
+			res.Name = ret->GetString("name");
+			res.Level = ret->GetInt("level");
+			res.Exp = ret->GetInt64("exp");
+			res.Map = ret->GetInt("map");
+			res.PositionX = ret->GetInt("pos_x");
+			res.PositionY = ret->GetInt("pos_y");
+			res.Direction = ret->GetInt("pos_dir");
+		}
+		MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_WORLD, 0), NetMsgID::DW_ROLE_BASE_INFO_REQ, &res);
 	}
 }

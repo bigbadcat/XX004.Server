@@ -52,6 +52,7 @@ namespace XX004
 		void OnUserSaveRequest(NetDataItem *item);
 		void OnRoleStampRequest(NetDataItem *item);
 		void OnRoleAddRequest(NetDataItem *item);
+		void OnRoleBaseInfoRequest(NetDataItem *item);
 
 		MySQLWrap m_MySQL;
 	};

@@ -12,6 +12,8 @@
 #define __ServerWorld_h__
 
 #include "ServerBase.h"
+#include "Player/PlayerManager.h"
+using namespace XX004::Player;
 
 namespace XX004
 {
@@ -20,6 +22,9 @@ namespace XX004
 	public:
 		ServerWorld();
 		virtual ~ServerWorld();
+
+		//获取玩家数据管理
+		PlayerManager* GetPlayerManager() { return &m_PlayerManager; }
 
 	protected:
 		//注册网络消息
@@ -48,8 +53,12 @@ namespace XX004
 		void OnDisconnect(NetDataItem *item);
 
 		void OnRoleOnlineNotify(NetDataItem *item);
+		void OnRoleBaseInfoResponse(NetDataItem *item);
 		void OnRoleOutlineNotify(NetDataItem *item);
-		void OnRoleQuitNotify(NetDataItem *item);
+		void OnRoleQuitNotify(NetDataItem *item);	
+
+		//玩家数据管理
+		PlayerManager m_PlayerManager;
 	};
 }
 

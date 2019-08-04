@@ -57,6 +57,7 @@ namespace XX004
 		static const Int32 LW_ROLE_ONLINE = 10001;					//角色上线
 		static const Int32 GW_ROLE_OUTLINE = 10002;					//角色离线
 		static const Int32 GW_ROLE_QUIT = 10003;					//角色退出
+		static const Int32 DW_ROLE_BASE_INFO_REQ = 10004;			//回复角色基本信息
 
 		static const Int32 WORLD_END = 19999;						//----------世界服 end 19999----------
 
@@ -66,6 +67,7 @@ namespace XX004
 		static const Int32 LD_USER_SAVE_REQ = 20002;				//请求保存用户信息
 		static const Int32 LD_ROLE_STAMP_REQ = 20003;				//请求服务器场景序号
 		static const Int32 LD_ROLE_ADD_REQ = 20004;					//请求添加角色信息
+		static const Int32 WD_ROLE_BASE_INFO_REQ = 20005;			//请求角色基本信息
 
 		//----------数据库 end 29999----------
 

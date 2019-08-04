@@ -25,7 +25,7 @@ namespace XX004
 			SAFE_DELETE_MAP(m_PlayerDatas);
 		}
 
-		void PlayerManager::AddPlayer(DWRoleBaseInfoResponse *res)
+		PlayerData* PlayerManager::AddPlayer(DWRoleBaseInfoResponse *res)
 		{
 			PlayerMap::iterator itr = m_PlayerDatas.find(res->ID);
 			if (itr != m_PlayerDatas.end())
@@ -37,6 +37,7 @@ namespace XX004
 			PlayerData *player = new PlayerData();
 			player->Init(res);
 			m_PlayerDatas.insert(PlayerMap::value_type(player->GetID(), player));
+			return player;
 		}
 
 		PlayerData* PlayerManager::GetPlayer(Int64 id)const

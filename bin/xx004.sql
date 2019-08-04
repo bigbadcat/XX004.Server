@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50556
 File Encoding         : 65001
 
-Date: 2019-03-26 17:48:47
+Date: 2019-08-04 12:36:49
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -27,9 +27,13 @@ CREATE TABLE `tb_role` (
   `prof` int(11) DEFAULT NULL,
   `name` varchar(64) DEFAULT '',
   `level` int(11) DEFAULT '0',
-  `exp` int(11) DEFAULT '0',
+  `exp` bigint(20) DEFAULT '0',
   `money` int(11) DEFAULT '0',
   `create_time` bigint(20) DEFAULT '0',
+  `map` int(11) DEFAULT NULL,
+  `pos_x` int(11) DEFAULT NULL,
+  `pos_y` int(11) DEFAULT NULL,
+  `pos_dir` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -9,6 +9,7 @@
 *******************************************************/
 
 #include "ServerWorld.h"
+#include "Player/PlayerData.h"
 #include <NetManagerBase.h>
 #include <Protocol/NetProtocol.h>
 #include <MainBase.h>
@@ -29,6 +30,7 @@ namespace XX004
 		pMgr->SetOnConnectCallBack([this](NetDataItem *item){this->OnConnect(item); });
 		pMgr->SetOnDisconnectCallBack([this](NetDataItem *item){this->OnDisconnect(item); });
 		NET_REGISTER(pMgr, NetMsgID::LW_ROLE_ONLINE, OnRoleOnlineNotify);
+		NET_REGISTER(pMgr, NetMsgID::DW_ROLE_BASE_INFO_REQ, OnRoleBaseInfoResponse);
 		NET_REGISTER(pMgr, NetMsgID::GW_ROLE_OUTLINE, OnRoleOutlineNotify);
 		NET_REGISTER(pMgr, NetMsgID::GW_ROLE_QUIT, OnRoleQuitNotify);
 	}
@@ -79,15 +81,27 @@ namespace XX004
 		notify.Unpack(item->data, 0);
 
 		//向数据库请求玩家的所有数据
+		WDRoleBaseInfoRequest req;
+		req.UserName = notify.UserName;
+		req.ID = notify.RoleID;
+		MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_DATA, 0), NetMsgID::WD_ROLE_BASE_INFO_REQ, &req);
+	}
 
-		//通知进入游戏成功(应该放到获取数据完毕后)
-		cout << "RoleOnline username:" << notify.UserName << " roleid:" << notify.RoleID << endl;
-		WGEnterGameSuccess res;
-		res.UserName = notify.UserName;
-		res.RoleID = notify.RoleID;
-		MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_GATE, res.RoleID), NetMsgID::WG_ENTER_GAME_SUCCESS, &res);
+	void ServerWorld::OnRoleBaseInfoResponse(NetDataItem *item)
+	{
+		DWRoleBaseInfoResponse res;
+		res.Unpack(item->data, 0);
+		cout << "OnRoleBaseInfoResponse roleid:" << res.ID << endl;
+		
 
-		//进入最后场景(应该放到获取数据完毕后)
+		//通知进入游戏成功		
+		PlayerData *player = m_PlayerManager.AddPlayer(&res);
+		WGEnterGameSuccess res2;
+		res2.UserName = res.UserName;
+		res2.RoleID = res.ID;
+		player->Send(NetMsgID::WG_ENTER_GAME_SUCCESS, &res2);		
+
+		//进入最后场景
 	}
 
 	void ServerWorld::OnRoleOutlineNotify(NetDataItem *item)

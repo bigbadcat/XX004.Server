@@ -30,6 +30,9 @@ namespace XX004
 			//初始化玩家
 			void Init(DWRoleBaseInfoResponse *res);
 
+			//获取用户名
+			const string& GetUserName()const { return m_UserName; }
+
 			//获取编号
 			Int64 GetID()const { return m_ID; }
 
@@ -46,7 +49,7 @@ namespace XX004
 			int GetLevel()const { return m_Level; }
 
 			//获取经验
-			int GetExp()const { return m_Exp; }
+			Int64 GetExp()const { return m_Exp; }
 
 			//获取所在地图
 			int GetMap()const { return m_Map; }
@@ -60,7 +63,13 @@ namespace XX004
 			//获取朝向
 			int GetDirection()const { return m_Direction; }
 
+			//发送数据给玩家客户端
+			void Send(int command, NetMessage *msg);
+
 		private:
+
+			//名称
+			string m_UserName;
 
 			//编号
 			Int64 m_ID;
@@ -78,7 +87,7 @@ namespace XX004
 			int m_Level;
 
 			//经验
-			int m_Exp;
+			Int64 m_Exp;
 
 			//所在地图
 			int m_Map;

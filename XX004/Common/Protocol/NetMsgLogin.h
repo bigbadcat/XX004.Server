@@ -208,6 +208,27 @@ namespace XX004
 			Int64 RoleID;							//角色编号
 		};
 
+		//10004:角色基本信息
+		class DWRoleBaseInfoResponse : public NetMessage
+		{
+		public:
+			DWRoleBaseInfoResponse();
+			virtual int Unpack(Byte *buffer, int index);
+			virtual int Pack(Byte *buffer, int index);
+
+			string UserName;						//用户名
+			Int64 ID;								//编号
+			Int32 Prof;								//职业
+			Int64 CreateTime;						//创建时间
+			string Name;							//名称
+			Int32 Level;							//等级
+			Int64 Exp;								//经验
+			Int32 Map;								//地图
+			Int32 PositionX;						//X位置
+			Int32 PositionY;						//Y位置
+			Int32 Direction;						//朝向
+		};
+
 		//20001:请求用户信息
 		class LDUserInfoRequest : public NetMessage
 		{
@@ -254,6 +275,18 @@ namespace XX004
 			string UserName;						//用户名
 			LoginRoleInfo Role;						//角色
 			Int32 Stamp;							//角色创建序号
+		};
+
+		//20005:请求角色基本信息
+		class WDRoleBaseInfoRequest : public NetMessage
+		{
+		public:
+			WDRoleBaseInfoRequest();
+			virtual int Unpack(Byte *buffer, int index);
+			virtual int Pack(Byte *buffer, int index);
+
+			string UserName;						//用户名
+			Int64 ID;								//编号
 		};
 
 		//30001:用户登录回复

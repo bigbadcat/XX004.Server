@@ -9,6 +9,8 @@
 *******************************************************/
 
 #include "PlayerData.h"
+#include <MainBase.h>
+#include <NetManagerBase.h>
 
 namespace XX004
 {
@@ -24,6 +26,7 @@ namespace XX004
 
 		void PlayerData::Init(DWRoleBaseInfoResponse *res)
 		{
+			m_UserName = res->UserName;
 			m_ID = res->ID;
 			m_Prof = res->Prof;
 			m_CreateTime = res->CreateTime;
@@ -34,6 +37,11 @@ namespace XX004
 			m_PositionX = res->PositionX;
 			m_PositionY = res->PositionY;
 			m_Direction = res->Direction;
+		}
+
+		void PlayerData::Send(int command, NetMessage *msg)
+		{
+			MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_GATE, m_ID), command, msg);
 		}
 	}
 }

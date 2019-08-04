@@ -347,6 +347,46 @@ namespace XX004
 
 		//----------------------------------------
 
+		DWRoleBaseInfoResponse::DWRoleBaseInfoResponse() : ID(0), Prof(0), CreateTime(0), Level(0), Exp(0), Map(0), PositionX(0), PositionY(0), Direction(0)
+		{
+		}
+
+		int DWRoleBaseInfoResponse::Unpack(Byte *buffer, int index)
+		{
+			int i = index;
+			UserName = DataUtil::ReadString(buffer, i, &i);
+			ID = DataUtil::ReadInt64(buffer, i, &i);
+			Prof = DataUtil::ReadInt32(buffer, i, &i);
+			CreateTime = DataUtil::ReadInt64(buffer, i, &i);
+			Name = DataUtil::ReadString(buffer, i, &i);
+			Level = DataUtil::ReadInt32(buffer, i, &i);
+			Exp = DataUtil::ReadInt64(buffer, i, &i);
+			Map = DataUtil::ReadInt32(buffer, i, &i);
+			PositionX = DataUtil::ReadInt32(buffer, i, &i);
+			PositionY = DataUtil::ReadInt32(buffer, i, &i);
+			Direction = DataUtil::ReadInt32(buffer, i, &i);
+			return i;
+		}
+
+		int DWRoleBaseInfoResponse::Pack(Byte *buffer, int index)
+		{
+			int i = index;
+			i = DataUtil::WriteString(buffer, i, UserName);
+			i = DataUtil::WriteInt64(buffer, i, ID);
+			i = DataUtil::WriteInt32(buffer, i, Prof);
+			i = DataUtil::WriteInt64(buffer, i, CreateTime);
+			i = DataUtil::WriteString(buffer, i, Name);
+			i = DataUtil::WriteInt32(buffer, i, Level);
+			i = DataUtil::WriteInt64(buffer, i, Exp);
+			i = DataUtil::WriteInt32(buffer, i, Map);
+			i = DataUtil::WriteInt32(buffer, i, PositionX);
+			i = DataUtil::WriteInt32(buffer, i, PositionY);
+			i = DataUtil::WriteInt32(buffer, i, Direction);
+			return i;
+		}
+
+		//----------------------------------------
+
 		int LDUserInfoRequest::Unpack(Byte *buffer, int index)
 		{
 			int i = index;
@@ -428,6 +468,28 @@ namespace XX004
 			i = DataUtil::WriteString(buffer, i, UserName);
 			i = Role.Pack(buffer, i);
 			i = DataUtil::WriteInt32(buffer, i, Stamp);
+			return i;
+		}
+
+		//----------------------------------------
+
+		WDRoleBaseInfoRequest::WDRoleBaseInfoRequest() : ID(0)
+		{
+		}
+
+		int WDRoleBaseInfoRequest::Unpack(Byte *buffer, int index)
+		{
+			int i = index;
+			UserName = DataUtil::ReadString(buffer, i, &i);
+			ID = DataUtil::ReadInt64(buffer, i, &i);
+			return i;
+		}
+
+		int WDRoleBaseInfoRequest::Pack(Byte *buffer, int index)
+		{
+			int i = index;
+			i = DataUtil::WriteString(buffer, i, UserName);
+			i = DataUtil::WriteInt64(buffer, i, ID);
 			return i;
 		}
 
