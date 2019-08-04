@@ -152,11 +152,21 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWorld.cpp" />
     <ClCompile Include="NetManagerWorld.cpp" />
+    <ClCompile Include="Player\Module\ModuleBag.cpp" />
+    <ClCompile Include="Player\Module\ModuleSkill.cpp" />
+    <ClCompile Include="Player\PlayerData.cpp" />
+    <ClCompile Include="Player\PlayerManager.cpp" />
+    <ClCompile Include="Player\PlayerModule.cpp" />
     <ClCompile Include="ServerWorld.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainWorld.h" />
     <ClInclude Include="NetManagerWorld.h" />
+    <ClInclude Include="Player\Module\ModuleBag.h" />
+    <ClInclude Include="Player\Module\ModuleSkill.h" />
+    <ClInclude Include="Player\PlayerData.h" />
+    <ClInclude Include="Player\PlayerManager.h" />
+    <ClInclude Include="Player\PlayerModule.h" />
     <ClInclude Include="ServerWorld.h" />
   </ItemGroup>
   <ItemGroup>
