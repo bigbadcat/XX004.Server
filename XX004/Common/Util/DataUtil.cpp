@@ -81,7 +81,7 @@ namespace XX004
 	int DataUtil::WriteFloat(Byte *src, int index, float value)
 	{
 		Byte *p = (Byte*)&value;
-		::memcpy(src, p, sizeof(float));
+		::memcpy(src + index, p, sizeof(float));
 		return index + sizeof(float);
 	}
 
