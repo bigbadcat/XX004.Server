@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ServerLogin", "ServerLogin\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ServerWorld", "ServerWorld\ServerWorld.vcxproj", "{110CD8C6-492D-4AC5-A62C-DC3B7F67BEE2}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ServerScene", "ServerScene\ServerScene.vcxproj", "{94C7D612-0C6F-416C-9337-7AFE17A189D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -61,6 +63,14 @@ Global
 		{110CD8C6-492D-4AC5-A62C-DC3B7F67BEE2}.Release|x64.Build.0 = Release|x64
 		{110CD8C6-492D-4AC5-A62C-DC3B7F67BEE2}.Release|x86.ActiveCfg = Release|Win32
 		{110CD8C6-492D-4AC5-A62C-DC3B7F67BEE2}.Release|x86.Build.0 = Release|Win32
+		{94C7D612-0C6F-416C-9337-7AFE17A189D5}.Debug|x64.ActiveCfg = Debug|x64
+		{94C7D612-0C6F-416C-9337-7AFE17A189D5}.Debug|x64.Build.0 = Debug|x64
+		{94C7D612-0C6F-416C-9337-7AFE17A189D5}.Debug|x86.ActiveCfg = Debug|Win32
+		{94C7D612-0C6F-416C-9337-7AFE17A189D5}.Debug|x86.Build.0 = Debug|Win32
+		{94C7D612-0C6F-416C-9337-7AFE17A189D5}.Release|x64.ActiveCfg = Release|x64
+		{94C7D612-0C6F-416C-9337-7AFE17A189D5}.Release|x64.Build.0 = Release|x64
+		{94C7D612-0C6F-416C-9337-7AFE17A189D5}.Release|x86.ActiveCfg = Release|Win32
+		{94C7D612-0C6F-416C-9337-7AFE17A189D5}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

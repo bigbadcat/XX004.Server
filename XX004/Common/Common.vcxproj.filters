@@ -22,6 +22,9 @@
     <Filter Include="Config\LuaWrap">
       <UniqueIdentifier>{30bbd82f-38eb-4404-bf8c-b7e4c90578d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{b1c8b63f-41bb-4443-9276-233cae8e4945}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Net\NetServer.h">
@@ -107,6 +110,18 @@
     <ClInclude Include="Config\LuaWrap\ProfWrap.h">
       <Filter>Config\LuaWrap</Filter>
     </ClInclude>
+    <ClInclude Include="Scene\Actor.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Player.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Stage.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\StageObject.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Net\NetServer.cpp">
@@ -176,6 +191,18 @@
     </ClCompile>
     <ClCompile Include="Config\LuaWrap\ProfWrap.cpp">
       <Filter>Config\LuaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Actor.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Player.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Stage.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\StageObject.cpp">
+      <Filter>Scene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

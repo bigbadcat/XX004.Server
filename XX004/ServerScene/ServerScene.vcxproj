@@ -18,103 +18,34 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Config\ConfigDefine.h" />
-    <ClInclude Include="Config\LoginModuleConfig.h" />
-    <ClInclude Include="Config\LuaWrap.h" />
-    <ClInclude Include="Config\LuaWrap\CharacterWrap.h" />
-    <ClInclude Include="Config\LuaWrap\ProfWrap.h" />
-    <ClInclude Include="Config\ModuleConfig.h" />
-    <ClInclude Include="Core\semaphore.h" />
-    <ClInclude Include="Macro.h" />
-    <ClInclude Include="NetManagerBase.h" />
-    <ClInclude Include="Net\NetConnection.h" />
-    <ClInclude Include="Net\NetConnectionManager.h" />
-    <ClInclude Include="Net\NetConnectionSet.h" />
-    <ClInclude Include="Net\NetDefine.h" />
-    <ClInclude Include="Net\NetInternalConnection.h" />
-    <ClInclude Include="Net\NetListener.h" />
-    <ClInclude Include="Net\NetMessage.h" />
-    <ClInclude Include="Net\NetPackageHeader.h" />
-    <ClInclude Include="Net\NetServer.h" />
-    <ClInclude Include="Protocol\NetMsgID.h" />
-    <ClInclude Include="Protocol\NetMsgLogin.h" />
-    <ClInclude Include="Protocol\NetMsgScene.h" />
-    <ClInclude Include="Protocol\NetProtocol.h" />
-    <ClInclude Include="Scene\Actor.h" />
-    <ClInclude Include="Scene\Player.h" />
-    <ClInclude Include="Scene\Stage.h" />
-    <ClInclude Include="Scene\StageObject.h" />
-    <ClInclude Include="ServerBase.h" />
-    <ClInclude Include="MainBase.h" />
-    <ClInclude Include="StartSetting.h" />
-    <ClInclude Include="tinyxml2\tinyxml2.h" />
-    <ClInclude Include="Util\ByteBuffer.h" />
-    <ClInclude Include="Util\DataUtil.h" />
-    <ClInclude Include="Util\LockQueue.h" />
-    <ClInclude Include="Util\StringUtil.h" />
-    <ClInclude Include="Util\TimeUtil.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Config\ConfigDefine.cpp" />
-    <ClCompile Include="Config\LoginModuleConfig.cpp" />
-    <ClCompile Include="Config\LuaWrap.cpp" />
-    <ClCompile Include="Config\LuaWrap\CharacterWrap.cpp" />
-    <ClCompile Include="Config\LuaWrap\ProfWrap.cpp" />
-    <ClCompile Include="Config\ModuleConfig.cpp" />
-    <ClCompile Include="Core\semaphore.cpp" />
-    <ClCompile Include="NetManagerBase.cpp" />
-    <ClCompile Include="Net\NetConnection.cpp" />
-    <ClCompile Include="Net\NetConnectionManager.cpp" />
-    <ClCompile Include="Net\NetConnectionSet.cpp" />
-    <ClCompile Include="Net\NetInternalConnection.cpp" />
-    <ClCompile Include="Net\NetListener.cpp" />
-    <ClCompile Include="Net\NetMessage.cpp" />
-    <ClCompile Include="Net\NetPackageHeader.cpp" />
-    <ClCompile Include="Net\NetServer.cpp" />
-    <ClCompile Include="Protocol\NetMsgLogin.cpp" />
-    <ClCompile Include="Protocol\NetMsgScene.cpp" />
-    <ClCompile Include="Scene\Actor.cpp" />
-    <ClCompile Include="Scene\Player.cpp" />
-    <ClCompile Include="Scene\Stage.cpp" />
-    <ClCompile Include="Scene\StageObject.cpp" />
-    <ClCompile Include="ServerBase.cpp" />
-    <ClCompile Include="MainBase.cpp" />
-    <ClCompile Include="StartSetting.cpp" />
-    <ClCompile Include="tinyxml2\tinyxml2.cpp" />
-    <ClCompile Include="Util\ByteBuffer.cpp" />
-    <ClCompile Include="Util\DataUtil.cpp" />
-    <ClCompile Include="Util\StringUtil.cpp" />
-    <ClCompile Include="Util\TimeUtil.cpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{359A49BF-CA6D-448D-8FB9-7D55CC72C0AC}</ProjectGuid>
+    <ProjectGuid>{94C7D612-0C6F-416C-9337-7AFE17A189D5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Common</RootNamespace>
+    <RootNamespace>ServerScene</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -138,9 +69,19 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>..\ThirdPart\lua-5.3.4\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\ThirdPart\lua-5.3.4\lib;$(LibraryPath)</LibraryPath>
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\..\bin\</OutDir>
+    <IncludePath>..\Common;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -148,10 +89,11 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -160,14 +102,13 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <Lib>
-      <AdditionalDependencies>lua5.3.4-Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -177,12 +118,13 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -193,14 +135,31 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainScene.cpp" />
+    <ClCompile Include="NetManagerScene.cpp" />
+    <ClCompile Include="ServerScene.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MainScene.h" />
+    <ClInclude Include="NetManagerScene.h" />
+    <ClInclude Include="ServerScene.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.vcxproj">
+      <Project>{359a49bf-ca6d-448d-8fb9-7d55cc72c0ac}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

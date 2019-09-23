@@ -22,6 +22,34 @@ namespace XX004
 {
 	namespace Net
 	{
+		//3001:进入场景
+		class WSRoleEnter : public NetMessage
+		{
+		public:
+			WSRoleEnter();
+			virtual int Unpack(Byte *buffer, int index);
+			virtual int Pack(Byte *buffer, int index);
+
+			Int64 RoleID;							//角色编号
+			Int32 Map;								//地图
+			float PositionX;						//X位置
+			float PositionY;						//Y位置
+			float Direction;						//朝向
+		};
+
+		//3002:请求移动
+		class CSMoveRequest : public NetMessage
+		{
+		public:
+			CSMoveRequest();
+			virtual int Unpack(Byte *buffer, int index);
+
+			Int32 State;							//状态(0、开始 1、调整 2、结束)
+			float PositionX;						//X位置
+			float PositionY;						//Y位置
+			float Direction;						//移动朝向
+		};
+
 		//30021:进入场景
 		class WCSceneEnterNotify : public NetMessage
 		{
@@ -30,6 +58,18 @@ namespace XX004
 			virtual int Pack(Byte *buffer, int index);
 
 			Int32 Map;								//地图
+			float PositionX;						//X位置
+			float PositionY;						//Y位置
+			float Direction;						//朝向
+		};
+
+		//30022:位置同步通知
+		class WCPostionNotify : public NetMessage
+		{
+		public:
+			WCPostionNotify();
+			virtual int Pack(Byte *buffer, int index);
+
 			float PositionX;						//X位置
 			float PositionY;						//Y位置
 			float Direction;						//朝向

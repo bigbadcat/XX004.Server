@@ -13,5 +13,6 @@
 
 #include "NetMsgID.h"
 #include "NetMsgLogin.h"
+#include "NetMsgScene.h"
 
 #endif

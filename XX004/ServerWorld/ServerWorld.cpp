@@ -92,7 +92,6 @@ namespace XX004
 		DWRoleBaseInfoResponse res;
 		res.Unpack(item->data, 0);
 		cout << "OnRoleBaseInfoResponse roleid:" << res.ID << endl;
-		
 
 		//通知进入游戏成功		
 		PlayerData *player = m_PlayerManager.AddPlayer(&res);
@@ -102,6 +101,13 @@ namespace XX004
 		player->Send(NetMsgID::WG_ENTER_GAME_SUCCESS, &res2);		
 
 		//进入最后场景
+		WSRoleEnter req;
+		req.RoleID = res.ID;
+		req.Map = 0;
+		req.PositionX = 0;
+		req.PositionY = 0;
+		req.Direction = 0;
+		MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_SCENE, 0), NetMsgID::WS_ROLE_ENTER, &req);
 	}
 
 	void ServerWorld::OnRoleOutlineNotify(NetDataItem *item)

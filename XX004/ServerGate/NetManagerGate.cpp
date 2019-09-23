@@ -52,5 +52,6 @@ namespace XX004
 	{
 		infos.push_back(RemoteType::RT_LOGIN);
 		infos.push_back(RemoteType::RT_WORLD);
+		infos.push_back(RemoteType::RT_SCENE);
 	}
 }

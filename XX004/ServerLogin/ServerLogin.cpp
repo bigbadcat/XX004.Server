@@ -2,7 +2,7 @@
 * Copyright (c) 2018-2088, By XuXiang all rights reserved.
 *
 * FileName: ServerLogin.cpp
-* Summary: 网关服务模块。
+* Summary: 登陆服务模块。
 *
 * Author: XuXiang
 * Date: 2018-12-18 19:56
