@@ -27,6 +27,8 @@
     <ClInclude Include="Config\ModuleConfig.h" />
     <ClInclude Include="Core\semaphore.h" />
     <ClInclude Include="Macro.h" />
+    <ClInclude Include="MySQL\MySQLResult.h" />
+    <ClInclude Include="MySQL\MySQLWrap.h" />
     <ClInclude Include="NetManagerBase.h" />
     <ClInclude Include="Net\NetConnection.h" />
     <ClInclude Include="Net\NetConnectionManager.h" />
@@ -63,6 +65,8 @@
     <ClCompile Include="Config\LuaWrap\ProfWrap.cpp" />
     <ClCompile Include="Config\ModuleConfig.cpp" />
     <ClCompile Include="Core\semaphore.cpp" />
+    <ClCompile Include="MySQL\MySQLResult.cpp" />
+    <ClCompile Include="MySQL\MySQLWrap.cpp" />
     <ClCompile Include="NetManagerBase.cpp" />
     <ClCompile Include="Net\NetConnection.cpp" />
     <ClCompile Include="Net\NetConnectionManager.cpp" />
@@ -139,8 +143,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>..\ThirdPart\lua-5.3.4\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\ThirdPart\lua-5.3.4\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\ThirdPart\lua-5.3.4\include;..\ThirdPart\MySQL5.5\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\ThirdPart\lua-5.3.4\lib;..\ThirdPart\MySQL5.5\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

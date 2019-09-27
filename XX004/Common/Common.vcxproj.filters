@@ -25,6 +25,9 @@
     <Filter Include="Scene">
       <UniqueIdentifier>{b1c8b63f-41bb-4443-9276-233cae8e4945}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MySQL">
+      <UniqueIdentifier>{4cc3b05a-4ec7-4d1d-b602-514089dcae90}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Net\NetServer.h">
@@ -122,6 +125,12 @@
     <ClInclude Include="Scene\StageObject.h">
       <Filter>Scene</Filter>
     </ClInclude>
+    <ClInclude Include="MySQL\MySQLResult.h">
+      <Filter>MySQL</Filter>
+    </ClInclude>
+    <ClInclude Include="MySQL\MySQLWrap.h">
+      <Filter>MySQL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Net\NetServer.cpp">
@@ -170,7 +179,6 @@
     <ClCompile Include="Protocol\NetMsgLogin.cpp">
       <Filter>Protocol</Filter>
     </ClCompile>
-    <ClCompile Include="Util\TimeUtil.cpp" />
     <ClCompile Include="Config\ModuleConfig.cpp">
       <Filter>Config</Filter>
     </ClCompile>
@@ -203,6 +211,15 @@
     </ClCompile>
     <ClCompile Include="Scene\StageObject.cpp">
       <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="MySQL\MySQLResult.cpp">
+      <Filter>MySQL</Filter>
+    </ClCompile>
+    <ClCompile Include="MySQL\MySQLWrap.cpp">
+      <Filter>MySQL</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\TimeUtil.cpp">
+      <Filter>Util</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

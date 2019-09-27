@@ -19,6 +19,8 @@
 #include <string>
 #include <map>
 #include <Util/StringUtil.h>
+#include <MySQL/MySQLWrap.h>
+#include <Macro.h>
 using namespace std;
 using namespace XX004;
 
@@ -134,10 +136,29 @@ int main(int argc, char *argv[])
 	WSADATA wsa_data;
 	WSAStartup(MAKEWORD(2, 2), &wsa_data);
 
-	//http server
-	start_http_server();
-	wait_quit();
-	stop_http_server();
+	////http server
+	//start_http_server();
+	//wait_quit();
+	//stop_http_server();
+
+	{
+		//MySQL "localhost", "root", "1234", "xx004", 3306
+		MySQLWrap mysql;
+		mysql.Init("localhost", "root", "1234", "xx004", 3306);
+
+		char sql[64];
+		Int64 roleid = 1000100000004;
+		sprintf_s(sql, "call sp_select_role(%I64d);", roleid);
+
+		auto ret = mysql.Query(sql);
+		if (ret->GetRecord())
+		{
+			string name(ret->GetString("name"));
+			int prof = ret->GetInt("prof");
+			int level = ret->GetInt("level");
+			printf_s("name:%s prof:%d level:%d\n", name.c_str(), prof, level);
+		}
+	}
 
 	//release
 	WSACleanup();
