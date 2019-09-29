@@ -2,8 +2,11 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainMaster.cpp" />
+    <ClCompile Include="ServerMaster.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="main.h" />
+    <ClInclude Include="MainMaster.h" />
+    <ClInclude Include="ServerMaster.h" />
   </ItemGroup>
 </Project>

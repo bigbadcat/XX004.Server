@@ -76,4 +76,4 @@ namespace XX004
 	}
 }
 
-#endif	//__MySQLWrap_h__
+#endif

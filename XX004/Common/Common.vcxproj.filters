@@ -28,6 +28,9 @@
     <Filter Include="MySQL">
       <UniqueIdentifier>{4cc3b05a-4ec7-4d1d-b602-514089dcae90}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Http">
+      <UniqueIdentifier>{fa0842f7-1413-47b4-8683-9876de18d5cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Net\NetServer.h">
@@ -131,6 +134,9 @@
     <ClInclude Include="MySQL\MySQLWrap.h">
       <Filter>MySQL</Filter>
     </ClInclude>
+    <ClInclude Include="Http\HttpServer.h">
+      <Filter>Http</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Net\NetServer.cpp">
@@ -220,6 +226,9 @@
     </ClCompile>
     <ClCompile Include="Util\TimeUtil.cpp">
       <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Http\HttpServer.cpp">
+      <Filter>Http</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

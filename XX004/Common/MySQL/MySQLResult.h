@@ -78,4 +78,4 @@ namespace XX004
 	};
 }
 
-#endif	//__MySQLResult_h__
+#endif

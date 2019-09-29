@@ -75,8 +75,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\..\bin\</OutDir>
-    <IncludePath>..\ThirdPart\MySQL5.5\include;..\Common;..\ThirdPart\libevent-2.1.8\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\ThirdPart\MySQL5.5\lib;..\ThirdPart\libevent-2.1.8\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\ThirdPart\lua-5.3.4\include;..\ThirdPart\MySQL5.5\include;..\ThirdPart\libevent-2.1.8\include;..\Common;$(IncludePath)</IncludePath>
+    <LibraryPath>..\ThirdPart\lua-5.3.4\lib;..\ThirdPart\MySQL5.5\lib;..\ThirdPart\libevent-2.1.8\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -147,14 +147,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="main.h" />
+    <ClCompile Include="MainMaster.cpp" />
+    <ClCompile Include="ServerMaster.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.vcxproj">
       <Project>{359a49bf-ca6d-448d-8fb9-7d55cc72c0ac}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MainMaster.h" />
+    <ClInclude Include="ServerMaster.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
