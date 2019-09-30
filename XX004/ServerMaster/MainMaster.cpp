@@ -24,7 +24,7 @@ namespace XX004
 	{		
 	}
 
-	void wait_quit()
+	void wait_quit(ServerMaster &server)
 	{
 		char str[64];
 		while (true)
@@ -45,6 +45,10 @@ namespace XX004
 			{
 				break;
 			}
+			else if (cmd.compare("/r") == 0)
+			{
+				server.SetServerDirty();
+			}
 		}
 	}
 
@@ -64,7 +68,7 @@ namespace XX004
 
 		ServerMaster server;
 		server.Start(8081);
-		wait_quit();
+		wait_quit(server);
 		server.Stop();
 
 		::WSACleanup();

@@ -9,6 +9,7 @@
 *******************************************************/
 
 #include "HttpServer.h"
+#include <assert.h>
 #include <event2/event.h>
 #include <event2/http.h>
 #include <event2/http_struct.h>
@@ -42,6 +43,57 @@ namespace XX004
 	void HttpResponse::SendReply(struct evhttp_request *req)
 	{
 		evhttp_send_reply(req, HTTP_OK, NULL, m_ResBuff);
+	}
+
+	void HttpResponse::AddLuaKey(const char *key)
+	{
+		assert(m_LuaTableKeyCount.size() > 0);
+		if (AddLuaKeyCount() > 0)
+		{
+			AddText(", ");
+		}
+		if (key != NULL)
+		{
+			AddText("%s=", key);
+		}		
+	}
+	
+	void HttpResponse::BeginLuaTable()
+	{
+		AddText ("{");
+		m_LuaTableKeyCount.push(0);
+	}
+
+	void HttpResponse::EndLuaTable()
+	{
+		m_LuaTableKeyCount.pop();
+		AddText ("}");
+	}
+
+	void HttpResponse::AddLuaKeyValue(const char *key, int value)
+	{
+		AddLuaKey(key);
+		AddText("%d", value);
+	}
+
+	void HttpResponse::AddLuaKeyValue(const char *key, Int64 value)
+	{
+		AddLuaKey(key);
+		AddText("%I64d", value);
+	}
+
+	void HttpResponse::AddLuaKeyValue(const char *key, const char *value)
+	{
+		AddLuaKey(key);
+		AddText("\"%s\"", value);
+	}
+
+	int HttpResponse::AddLuaKeyCount()
+	{
+		int n = m_LuaTableKeyCount.top();
+		m_LuaTableKeyCount.pop();
+		m_LuaTableKeyCount.push(n + 1);
+		return n;
 	}
 
 	HttpServer::HttpServer() : m_Run(false), m_Port(0)

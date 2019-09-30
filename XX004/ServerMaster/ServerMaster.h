@@ -11,17 +11,65 @@
 #ifndef __ServerMaster_h__
 #define __ServerMaster_h__
 
+#include <Macro.h>
 #include <Http/HttpServer.h>
+#include <mysql/MySQLWrap.h>
 #include <string>
+#include <vector>
 using namespace std;
 
 namespace XX004
 {
+	//服务器信息
+	struct ServerInfo
+	{
+		ServerInfo();
+		~ServerInfo();
+
+		void Init(MySQLResult *result);
+
+		int id;
+		int group;
+		int index;
+		string ip;
+		int port;
+		int http_port;
+		int type;
+		int state;
+		int recommend;
+		Int64 open_time;
+	};
+
+	typedef vector<ServerInfo*> ServerInfoVector;
+
+	//服务器组信息
+	struct ServerGroupInfo
+	{
+		ServerGroupInfo();
+		~ServerGroupInfo();
+
+		void Init(MySQLResult *result);
+
+		void AddServerInfo(ServerInfo *info);
+
+		int id;
+		vector<int> sub_channel;
+		ServerInfoVector servers;
+	};
+
+	typedef map<int, ServerGroupInfo*> ServerGroupInfoMap;
+
 	class ServerMaster : public HttpServer
 	{
 	public:
 		ServerMaster();
 		virtual ~ServerMaster();
+
+		//设置服务器数据需要刷新
+		inline void SetServerDirty() { m_IsServerDirty = true; }
+
+		//服务器信息失效间隔
+		static const UInt64 SERVER_DIRTY_GAP;
 
 	protected:
 		virtual void OnRegisterServer();
@@ -37,8 +85,28 @@ namespace XX004
 
 	private:
 
+		//加载服务器信息
+		void LoadServerInfo();
+
+		//检查服务器信息
+		void CheckServerInfo();
+
 		//登陆请求
 		void OnLoginRequest(const string &path, HttpParamMap &params, HttpResponse &res);
+		bool CheckAccount(const string& user, const string& password, Int64 &create_time, HttpResponse &res);
+		void ReplyLogin(const string& user, Int64 create_time, int sub_channel, HttpResponse &res);
+
+		//MySQL接口
+		MySQLWrap m_MySQL;
+
+		//服务器数据是否需要刷新
+		bool m_IsServerDirty;
+
+		//服务器数据加载时间
+		UInt64 m_ServerTimeStamp;
+
+		//服务器组信息
+		ServerGroupInfoMap m_ServerGroups;
 	};
 }
 

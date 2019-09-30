@@ -13,6 +13,7 @@
 
 #include <string>
 #include <vector>
+#include <stack>
 #include <map>
 #include <thread>
 #include "../Macro.h"
@@ -36,8 +37,23 @@ namespace XX004
 		//发送回复
 		void SendReply(struct evhttp_request *req);
 
+		void AddLuaKey(const char *key);		//key为NULL表示添加数组元素
+		void BeginLuaTable();
+		void EndLuaTable();
+		void AddLuaKeyValue(const char *key, int value);
+		void AddLuaKeyValue(const char *key, Int64 value);
+		void AddLuaKeyValue(const char *key, const char *value);
+
 	private:
+
+		//添加Lua字段计数 ret:添加计数前的值
+		int AddLuaKeyCount();
+
+		//回复缓冲区
 		struct evbuffer *m_ResBuff;
+
+		//LuaTabe添加key的数量
+		stack<int> m_LuaTableKeyCount;
 	};
 
 	typedef map<string, string> HttpParamMap;
