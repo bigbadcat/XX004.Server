@@ -24,23 +24,23 @@ namespace XX004
 			//玩家客户端。
 			RT_CLIENT = 1,
 
-			//网关
-			RT_GATE = 2,
+			//中控
+			RT_MASTER = 2,
 
-			//登陆服
-			RT_LOGIN = 3,
+			//跨服
+			RT_GAME = 3,
 
-			//数据服
-			RT_DATA = 4,
+			//跨服
+			RT_CROSS = 4,
 
-			//世界服
-			RT_WORLD = 5,
+			////世界服
+			//RT_WORLD = 5,
 
-			//场景服
-			RT_SCENE = 6,
+			////场景服
+			//RT_SCENE = 6,
 
-			//区服
-			RT_REGION = 7,
+			////区服
+			//RT_REGION = 7,
 		};
 
 #define SAFE_CLOSE_SOCKET(s) if (s!=SOCKET_ERROR){::closesocket(s); s=SOCKET_ERROR;}
