@@ -11,6 +11,7 @@
 #include "MainBase.h"
 #include "NetManagerBase.h"
 #include "ServerBase.h"
+#include "StorageBase.h"
 #include "StartSetting.h"
 #include <iostream>
 #include <assert.h>
@@ -23,7 +24,7 @@ namespace XX004
 
 	const string MainBase::COMMAND_QUIT = "/q";
 
-	MainBase::MainBase() : m_Type(0), m_pNetManager(NULL), m_pServer(NULL)
+	MainBase::MainBase() : m_Type(0), m_pNetManager(NULL), m_pStorageManager(NULL), m_pServer(NULL)
 	{
 		pCurMain = this;
 	}
@@ -34,6 +35,7 @@ namespace XX004
 		{
 			pCurMain = NULL;
 		}
+		SAFE_DELETE(m_pStorageManager);
 		SAFE_DELETE(m_pNetManager);
 		SAFE_DELETE(m_pServer);
 	}
@@ -57,26 +59,33 @@ namespace XX004
 		m_pNetManager = OnCreateNetManager();
 		assert(m_pNetManager != NULL);
 		m_pServer = OnCreateServer();
+		m_pStorageManager = new StorageBase();
+		m_pServer->RegisterStorageMessage(m_pStorageManager);
 		assert(m_pServer != NULL);
 		m_pServer->RegisterNetMessage(m_pNetManager);
 
 		//模块运行
-		int group = StartSetting::GetInstance()->GetGroup();
-		int id = StartSetting::GetInstance()->GetID();
+		//int group = StartSetting::GetInstance()->GetGroup();
+		//int id = StartSetting::GetInstance()->GetID();
+		int id = 10001;		//通过命令行传入
+		int group = id / 10000;
 		StartSettingInfo* info = StartSetting::GetInstance()->GetSettingInfo(m_Type);
 		assert(info != NULL);
+		m_pStorageManager->Start();
 		m_pNetManager->Start(info->GetPort());
 		m_pServer->Start(group, id, true);
 		CommandLoop();
 		cout << "Waitting server end ..." << endl;
-		m_pServer->Stop();		//Server停止还需要依赖网络，如逻辑服停止后需要把服务器状态数据提交给数据服
+		m_pServer->Stop();
 		m_pServer->Join();
 		cout << "Waitting net end ..." << endl;
 		m_pNetManager->Stop();
 		m_pNetManager->Join();
+		m_pStorageManager->Stop();
 
 		//模块销毁
 		m_pNetManager->UnregisterAllCallBack();		//先清掉注册再删除Server
+		m_pStorageManager->UnregisterAllCallBack();
 		SAFE_DELETE(m_pServer);
 		SAFE_DELETE(m_pNetManager);		
 		::WSACleanup();

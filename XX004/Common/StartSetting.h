@@ -84,4 +84,4 @@ namespace XX004
 	};
 }
 
-#endif	//__StartSetting_h__
+#endif

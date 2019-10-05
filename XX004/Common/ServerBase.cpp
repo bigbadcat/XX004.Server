@@ -186,15 +186,17 @@ namespace XX004
 			{
 				//先初始化配置
 				ok = OnInitStep(++step, r);
-				MoveCursorBack(24);
-				cout << "Init step:" << step << " r:" << (int)(r * 100) << "%";
+				//MoveCursorBack(24);
+				//cout << "Init step:" << step << " r:" << (int)(r * 100) << "%";
+				printf_s("Init step:%d r:%d\n", step, (int)(r * 100));
 			}
 			
 
 			this_thread::sleep_for(dura);
 		} while (!ok);
-		MoveCursorBack(24);
-		cout << endl << "Init complete" << endl;
+		//MoveCursorBack(24);
+		//cout << endl << "Init complete" << endl;
+		printf_s("Init complete\n");
 	}
 
 	void ServerBase::Update()

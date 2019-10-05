@@ -31,7 +31,7 @@ namespace XX004
 			RT_GAME = 3,
 
 			//跨服
-			RT_CROSS = 4,
+			RT_REGION = 4,
 
 			////世界服
 			//RT_WORLD = 5,

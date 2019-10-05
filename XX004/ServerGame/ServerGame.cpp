@@ -9,6 +9,7 @@
 *******************************************************/
 
 #include "ServerGame.h"
+#include "Module/LoginModule.h"
 #include <NetManagerBase.h>
 using namespace XX004::Net;
 
@@ -16,18 +17,30 @@ namespace XX004
 {
 	ServerGame::ServerGame()
 	{
+		InitModules();
 	}
 
 	ServerGame::~ServerGame()
 	{
+		SAFE_DELETE_VECTOR(m_Modules);
 	}
 
 	void ServerGame::RegisterNetMessage(NetManagerBase *pMgr)
 	{
 		pMgr->SetOnConnectCallBack([this](NetDataItem *item){this->OnConnect(item); });
 		pMgr->SetOnDisconnectCallBack([this](NetDataItem *item){this->OnDisconnect(item); });
-		//NET_REGISTER(pMgr, NetMsgID::WS_ROLE_ENTER, OnRoleEnter);
-		//NET_REGISTER(pMgr, NetMsgID::CS_MOVE_REQ, OnMoveRequest);
+		for (ModuleVector::iterator itr = m_Modules.begin(); itr != m_Modules.end(); ++itr)
+		{
+			(*itr)->RegisterNetMessage(pMgr);
+		}
+	}
+
+	void ServerGame::RegisterStorageMessage(StorageBase *pMgr)
+	{
+		for (ModuleVector::iterator itr = m_Modules.begin(); itr != m_Modules.end(); ++itr)
+		{
+			(*itr)->RegisterStorageMessage(pMgr);
+		}
 	}
 
 	void ServerGame::OnAddConfig(vector<ModuleConfig*> &cfgs)
@@ -37,8 +50,10 @@ namespace XX004
 
 	bool ServerGame::OnInitStep(int step, float &r)
 	{
-		r = 1;
-		return true;
+		int i = step - 1;
+		m_Modules[i]->Init();
+		r = (i + 1) * 1.0f / m_Modules.size();
+		return (i + 1) >= m_Modules.size();
 	}
 
 	void ServerGame::OnUpdate()
@@ -53,10 +68,17 @@ namespace XX004
 	{
 	}
 
+	void ServerGame::InitModules()
+	{
+		m_Modules.push_back(new LoginModule());
+	}
+
 	bool ServerGame::OnReleaseStep(int step, float &r)
 	{
-		r = 1;
-		return true;
+		int i = step - 1;
+		m_Modules[i]->Init();
+		r = (i + 1) * 1.0f / m_Modules.size();
+		return (i + 1) >= m_Modules.size();
 	}
 
 	void ServerGame::OnConnect(NetDataItem *item)

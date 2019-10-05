@@ -51,6 +51,7 @@
     <ClInclude Include="ServerBase.h" />
     <ClInclude Include="MainBase.h" />
     <ClInclude Include="StartSetting.h" />
+    <ClInclude Include="StorageBase.h" />
     <ClInclude Include="tinyxml2\tinyxml2.h" />
     <ClInclude Include="Util\ByteBuffer.h" />
     <ClInclude Include="Util\DataUtil.h" />
@@ -87,6 +88,7 @@
     <ClCompile Include="ServerBase.cpp" />
     <ClCompile Include="MainBase.cpp" />
     <ClCompile Include="StartSetting.cpp" />
+    <ClCompile Include="StorageBase.cpp" />
     <ClCompile Include="tinyxml2\tinyxml2.cpp" />
     <ClCompile Include="Util\ByteBuffer.cpp" />
     <ClCompile Include="Util\DataUtil.cpp" />

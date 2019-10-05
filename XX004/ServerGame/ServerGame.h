@@ -11,10 +11,15 @@
 #ifndef __ServerGame_h__
 #define __ServerGame_h__
 
+#include <vector>
+#include <map>
 #include "ServerBase.h"
+#include "Module/ModuleBase.h"
+using namespace std;
 
 namespace XX004
 {
+	typedef vector<ModuleBase*> ModuleVector;
 	class ServerGame : public ServerBase
 	{
 	public:
@@ -24,6 +29,9 @@ namespace XX004
 	protected:
 		//注册网络消息
 		virtual void RegisterNetMessage(NetManagerBase *pMgr);
+
+		//注册存储消息
+		virtual void RegisterStorageMessage(StorageBase *pMgr);
 
 		//初始化配置列表
 		virtual void OnAddConfig(vector<ModuleConfig*> &cfgs);
@@ -44,12 +52,13 @@ namespace XX004
 		virtual void OnCommand(const std::string& cmd, const std::vector<std::string> &param);
 
 	private:
+		void InitModules();
+
 		void OnConnect(NetDataItem *item);
 		void OnDisconnect(NetDataItem *item);
 
-		//void OnRoleEnter(NetDataItem *item);
-		//void OnMoveRequest(NetDataItem *item);
-
+		//模块列表
+		ModuleVector m_Modules;
 	};
 }
 

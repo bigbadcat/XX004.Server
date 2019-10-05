@@ -15,6 +15,7 @@
 #include <string>
 #include <vector>
 #include "NetManagerBase.h"
+#include "StorageBase.h"
 #include "Core/semaphore.h"
 #include "Util/LockQueue.h"
 #include "Config/ModuleConfig.h"
@@ -75,6 +76,9 @@ namespace XX004
 		//注册网络消息
 		virtual void RegisterNetMessage(NetManagerBase *pMgr) = 0;
 
+		//注册存储消息
+		virtual void RegisterStorageMessage(StorageBase *pMgr) = 0;
+
 		//提交命令
 		void PostCommand(const std::string& cmd_line);
 
@@ -83,9 +87,6 @@ namespace XX004
 
 		//获取服务器编号
 		int GetServerID()const { return m_ID; }
-
-		//获取服务器标识
-		int GetServerKey()const { return m_Group * 10000 + m_ID; }
 
 		//每一帧的间隔毫秒
 		static const Int64 FRAME_GAP;

@@ -49,11 +49,12 @@ namespace XX004
 
 	NetManagerBase::~NetManagerBase()
 	{
-		for (InternalConnectionMap::iterator itr = m_InternalConnections.begin(); itr != m_InternalConnections.end(); ++itr)
-		{
-			delete itr->second;
-		}
-		m_InternalConnections.clear();
+		//for (InternalConnectionMap::iterator itr = m_InternalConnections.begin(); itr != m_InternalConnections.end(); ++itr)
+		//{
+		//	delete itr->second;
+		//}
+		//m_InternalConnections.clear();
+		SAFE_DELETE_MAP(m_InternalConnections);
 	}
 
 	void NetManagerBase::OnConnected(NetConnection *connection)
@@ -219,6 +220,16 @@ namespace XX004
 		item->cmd = command;
 		item->len = msg->Pack(item->data, 0);
 		m_SendQueue.Push(item);
+	}
+
+	void NetManagerBase::SendToSelf(const RemoteKey& key, int command, NetMessage *msg)
+	{
+		NetDataItem *item = GetNetDataItem();
+		item->op = NetOperateType::NOT_DATA;
+		item->key = key;
+		item->cmd = command;
+		item->len = msg->Pack(item->data, 0);
+		OnAddRecvData(item);
 	}
 
 	void NetManagerBase::Close(UInt64 uid)

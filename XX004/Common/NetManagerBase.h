@@ -102,7 +102,6 @@ namespace XX004
 		virtual void OnDisconnected(NetConnection *connection);
 		virtual void OnRecvData(NetConnection *connection, const NetPackageHeader& header, Byte *buffer);
 
-
 		//设置建立连接回调
 		inline void SetOnConnectCallBack(NetMessageCallBack call) { m_OnConnectCallBack = call; }
 
@@ -153,6 +152,9 @@ namespace XX004
 
 		//发送数据
 		void Send(const RemoteKey& key, int command, NetMessage *msg);
+
+		//发送给自己 用于其他线程将网络数据提交到接收队列
+		void SendToSelf(const RemoteKey& key, int command, NetMessage *msg);
 
 		//关闭连接
 		void Close(UInt64 uid);
@@ -242,4 +244,4 @@ namespace XX004
 	};
 }
 
-#endif	//__NetManagerBase_h__
+#endif

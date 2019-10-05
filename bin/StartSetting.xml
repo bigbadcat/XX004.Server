@@ -2,38 +2,20 @@
 <StartSetting group="1" id="1">
 	<Setting>
 		<type>2</type>
-		<name>Gate</name>
+		<name>Master</name>
 		<ip>127.0.0.1</ip>
 		<port>9000</port>
 	</Setting>
 	<Setting>
 		<type>3</type>
-		<name>Login</name>
+		<name>Game</name>
 		<ip>127.0.0.1</ip>
 		<port>9001</port>
 	</Setting>
 	<Setting>
 		<type>4</type>
-		<name>Data</name>
-		<ip>127.0.0.1</ip>
-		<port>9002</port>
-	</Setting>
-	<Setting>
-		<type>5</type>
-		<name>World</name>
-		<ip>127.0.0.1</ip>
-		<port>9003</port>
-	</Setting>
-	<Setting>
-		<type>6</type>
-		<name>Scene</name>
-		<ip>127.0.0.1</ip>
-		<port>9004</port>
-	</Setting>
-	<Setting>
-		<type>7</type>
 		<name>Region</name>
 		<ip>127.0.0.1</ip>
-		<port>9005</port>
+		<port>9002</port>
 	</Setting>
 </StartSetting>
