@@ -1,15 +1,15 @@
 ﻿/*******************************************************
 * Copyright (c) 2018-2088, By XuXiang all rights reserved.
 *
-* FileName: StorageBase.h
-* Summary: 存储模块基类。
+* FileName: StorageManager.h
+* Summary: 存储模块管理。
 *
 * Author: XuXiang
 * Date: 2019-10-05 10:53
 *******************************************************/
 
-#ifndef __StorageBase_h__
-#define __StorageBase_h__
+#ifndef __StorageManager_h__
+#define __StorageManager_h__
 
 #include "NetManagerBase.h"
 #include "MySQL/MySQLWrap.h"
@@ -25,11 +25,11 @@ namespace XX004
 
 	//创建独立线程来进行数据库存储
 	//数据通信基于网络
-	class StorageBase
+	class StorageManager
 	{
 	public:
-		StorageBase();
-		virtual ~StorageBase();
+		StorageManager();
+		virtual ~StorageManager();
 
 		//启动
 		void Start();

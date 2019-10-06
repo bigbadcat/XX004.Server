@@ -137,7 +137,7 @@
     <ClInclude Include="Http\HttpServer.h">
       <Filter>Http</Filter>
     </ClInclude>
-    <ClInclude Include="StorageBase.h" />
+    <ClInclude Include="StorageManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Net\NetServer.cpp">
@@ -231,6 +231,6 @@
     <ClCompile Include="Http\HttpServer.cpp">
       <Filter>Http</Filter>
     </ClCompile>
-    <ClCompile Include="StorageBase.cpp" />
+    <ClCompile Include="StorageManager.cpp" />
   </ItemGroup>
 </Project>

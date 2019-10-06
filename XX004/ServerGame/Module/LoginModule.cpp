@@ -31,7 +31,7 @@ namespace XX004
 		NET_REGISTER(pMgr, NetMsgID::DS_ROLE_LIST_RES, OnRoleListResponse);
 	}
 
-	void LoginModule::RegisterStorageMessage(StorageBase *pMgr)
+	void LoginModule::RegisterStorageMessage(StorageManager *pMgr)
 	{
 		DB_REGISTER(pMgr, NetMsgID::SD_ROLE_LIST_REQ, OnRoleListRequest);
 	}

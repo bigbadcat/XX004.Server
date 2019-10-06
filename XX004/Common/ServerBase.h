@@ -15,7 +15,7 @@
 #include <string>
 #include <vector>
 #include "NetManagerBase.h"
-#include "StorageBase.h"
+#include "StorageManager.h"
 #include "Core/semaphore.h"
 #include "Util/LockQueue.h"
 #include "Config/ModuleConfig.h"
@@ -77,7 +77,7 @@ namespace XX004
 		virtual void RegisterNetMessage(NetManagerBase *pMgr) = 0;
 
 		//注册存储消息
-		virtual void RegisterStorageMessage(StorageBase *pMgr) = 0;
+		virtual void RegisterStorageMessage(StorageManager *pMgr) = 0;
 
 		//提交命令
 		void PostCommand(const std::string& cmd_line);

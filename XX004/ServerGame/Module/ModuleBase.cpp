@@ -10,7 +10,7 @@
 
 #include "ModuleBase.h"
 #include "../ServerGame.h"
-#include <StorageBase.h>
+#include <StorageManager.h>
 #include <MainBase.h>
 
 namespace XX004

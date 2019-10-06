@@ -35,7 +35,7 @@ namespace XX004
 		}
 	}
 
-	void ServerGame::RegisterStorageMessage(StorageBase *pMgr)
+	void ServerGame::RegisterStorageMessage(StorageManager *pMgr)
 	{
 		for (ModuleVector::iterator itr = m_Modules.begin(); itr != m_Modules.end(); ++itr)
 		{

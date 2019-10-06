@@ -31,7 +31,7 @@ namespace XX004
 		virtual void RegisterNetMessage(NetManagerBase *pMgr);
 
 		//注册存储消息
-		virtual void RegisterStorageMessage(StorageBase *pMgr);
+		virtual void RegisterStorageMessage(StorageManager *pMgr);
 
 		//初始化配置列表
 		virtual void OnAddConfig(vector<ModuleConfig*> &cfgs);

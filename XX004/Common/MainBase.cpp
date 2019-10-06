@@ -11,7 +11,7 @@
 #include "MainBase.h"
 #include "NetManagerBase.h"
 #include "ServerBase.h"
-#include "StorageBase.h"
+#include "StorageManager.h"
 #include "StartSetting.h"
 #include <iostream>
 #include <assert.h>
@@ -59,7 +59,7 @@ namespace XX004
 		m_pNetManager = OnCreateNetManager();
 		assert(m_pNetManager != NULL);
 		m_pServer = OnCreateServer();
-		m_pStorageManager = new StorageBase();
+		m_pStorageManager = new StorageManager();
 		m_pServer->RegisterStorageMessage(m_pStorageManager);
 		assert(m_pServer != NULL);
 		m_pServer->RegisterNetMessage(m_pNetManager);

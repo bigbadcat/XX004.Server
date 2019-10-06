@@ -18,7 +18,7 @@ using namespace std;
 
 namespace XX004
 {
-	class StorageBase;
+	class StorageManager;
 	class NetManagerBase;
 	class ServerBase;
 
@@ -39,7 +39,7 @@ namespace XX004
 		inline NetManagerBase* GetNetManager()const { return m_pNetManager; }
 
 		//获取存储管理
-		inline StorageBase* GetStorageManager()const { return m_pStorageManager; }
+		inline StorageManager* GetStorageManager()const { return m_pStorageManager; }
 
 		//获取服务对象
 		inline ServerBase* GetServe()const { return m_pServer; }
@@ -76,7 +76,7 @@ namespace XX004
 		NetManagerBase* m_pNetManager;
 
 		//存储管理
-		StorageBase* m_pStorageManager;
+		StorageManager* m_pStorageManager;
 
 		//服务对象
 		ServerBase* m_pServer;		

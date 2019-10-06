@@ -17,7 +17,7 @@ namespace XX004
 {
 	class ServerGame;
 	class NetManagerBase;	
-	class StorageBase;
+	class StorageManager;
 	class MySQLWrap;
 	struct NetDataItem;
 
@@ -36,7 +36,7 @@ namespace XX004
 		virtual void RegisterNetMessage(NetManagerBase *pMgr) = 0;
 
 		//注册存储消息
-		virtual void RegisterStorageMessage(StorageBase *pMgr) = 0;
+		virtual void RegisterStorageMessage(StorageManager *pMgr) = 0;
 
 		//初始化
 		virtual void Init();

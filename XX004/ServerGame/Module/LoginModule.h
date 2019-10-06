@@ -25,7 +25,7 @@ namespace XX004
 		virtual void RegisterNetMessage(NetManagerBase *pMgr);
 
 		//注册存储消息
-		virtual void RegisterStorageMessage(StorageBase *pMgr);
+		virtual void RegisterStorageMessage(StorageManager *pMgr);
 
 		//初始化 mysql:数据库访问接口，不要保存起来。
 		virtual void Init();
