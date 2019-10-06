@@ -91,7 +91,7 @@ namespace XX004
 			SCCreateRoleResponse();
 			virtual int Pack(Byte *buffer, int index);
 
-			Int32 Result;							//创建结果(0、成功 1、非法名称 2、非法职业 3、角色已满)
+			Int32 Result;							//创建结果(0、成功 1、非法名称 2、非法职业 3、角色已满 4、用户未登陆 5、服务器已满 6、名称已存在)
 			LoginRoleInfo Role;						//角色
 		};
 
@@ -134,7 +134,7 @@ namespace XX004
 			vector<LoginRoleInfo> RoleList;			//角色列表
 		};
 
-		//1803:请求保存角色信息
+		//1803:请求添加角色
 		class SDRoleAddRequest : public NetMessage
 		{
 		public:
@@ -147,7 +147,7 @@ namespace XX004
 			Int32 Stamp;							//角色创建序号
 		};
 
-		//1804:回复登陆服角色添加
+		//1804:回复添加角色
 		class DSRoleAddResponse : public NetMessage
 		{
 		public:

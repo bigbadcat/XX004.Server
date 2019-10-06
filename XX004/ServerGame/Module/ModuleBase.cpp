@@ -33,7 +33,7 @@ namespace XX004
 
 	ServerGame* ModuleBase::GetServer()
 	{
-		return dynamic_cast<ServerGame*>(MainBase::GetCurMain()->GetServe());
+		return dynamic_cast<ServerGame*>(MainBase::GetCurMain()->GetServer());
 	}
 
 	MySQLWrap* ModuleBase::GetMySQL()

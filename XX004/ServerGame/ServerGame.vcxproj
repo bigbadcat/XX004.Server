@@ -153,14 +153,16 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainGame.cpp" />
-    <ClCompile Include="Module\LoginModule.cpp" />
+    <ClCompile Include="Module\Login\LoginModule.cpp" />
+    <ClCompile Include="Module\Login\UserInfo.cpp" />
     <ClCompile Include="Module\ModuleBase.cpp" />
     <ClCompile Include="NetManagerGame.cpp" />
     <ClCompile Include="ServerGame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
-    <ClInclude Include="Module\LoginModule.h" />
+    <ClInclude Include="Module\Login\LoginModule.h" />
+    <ClInclude Include="Module\Login\UserInfo.h" />
     <ClInclude Include="Module\ModuleBase.h" />
     <ClInclude Include="NetManagerGame.h" />
     <ClInclude Include="ServerGame.h" />

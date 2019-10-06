@@ -12,6 +12,7 @@
 #define __ModuleBase_h__
 
 #include <Macro.h>
+#include <Config/ModuleConfig.h>
 
 namespace XX004
 {
@@ -38,6 +39,9 @@ namespace XX004
 		//注册存储消息
 		virtual void RegisterStorageMessage(StorageManager *pMgr) = 0;
 
+		//初始化配置列表
+		virtual void AddConfig(vector<ModuleConfig*> &cfgs) = 0;
+
 		//初始化
 		virtual void Init();
 
@@ -45,19 +49,19 @@ namespace XX004
 		virtual void Release();
 
 		//获取服务
-		ServerGame* GetServer();
+		static ServerGame* GetServer();
 
 		//获取数据库
-		MySQLWrap* GetMySQL();
+		static MySQLWrap* GetMySQL();
 
 		//发送网络消息
-		void SendNet(Int64 rid, int command, Net::NetMessage *msg);
+		static void SendNet(Int64 rid, int command, Net::NetMessage *msg);
 
 		//存储请求
-		void RequestStorage(Int64 rid, int command, Net::NetMessage *msg);
+		static void RequestStorage(Int64 rid, int command, Net::NetMessage *msg);
 
 		//存储回复
-		void ResponseStorage(Int64 rid, int command, Net::NetMessage *msg);
+		static void ResponseStorage(Int64 rid, int command, Net::NetMessage *msg);
 
 	};
 }

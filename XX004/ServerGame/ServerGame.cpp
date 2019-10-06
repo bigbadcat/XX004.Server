@@ -9,7 +9,7 @@
 *******************************************************/
 
 #include "ServerGame.h"
-#include "Module/LoginModule.h"
+#include "Module/Login/LoginModule.h"
 #include <NetManagerBase.h>
 using namespace XX004::Net;
 
@@ -45,7 +45,10 @@ namespace XX004
 
 	void ServerGame::OnAddConfig(vector<ModuleConfig*> &cfgs)
 	{
-		//cfgs.push_back(ModuleConfig::GetInstance<LoginModuleConfig>());
+		for (ModuleVector::iterator itr = m_Modules.begin(); itr != m_Modules.end(); ++itr)
+		{
+			(*itr)->AddConfig(cfgs);
+		}		
 	}
 
 	bool ServerGame::OnInitStep(int step, float &r)

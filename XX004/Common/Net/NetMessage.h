@@ -115,4 +115,4 @@ namespace XX004
 	}
 }
 
-#endif	//__NetMessage_h__
+#endif

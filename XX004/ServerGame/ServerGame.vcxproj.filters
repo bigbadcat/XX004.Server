@@ -5,27 +5,36 @@
     <ClCompile Include="NetManagerGame.cpp" />
     <ClCompile Include="ServerGame.cpp" />
     <ClCompile Include="MainGame.cpp" />
-    <ClCompile Include="Module\LoginModule.cpp">
-      <Filter>Module</Filter>
-    </ClCompile>
     <ClCompile Include="Module\ModuleBase.cpp">
       <Filter>Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Module\Login\LoginModule.cpp">
+      <Filter>Module\Login</Filter>
+    </ClCompile>
+    <ClCompile Include="Module\Login\UserInfo.cpp">
+      <Filter>Module\Login</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetManagerGame.h" />
     <ClInclude Include="ServerGame.h" />
     <ClInclude Include="MainGame.h" />
-    <ClInclude Include="Module\LoginModule.h">
-      <Filter>Module</Filter>
-    </ClInclude>
     <ClInclude Include="Module\ModuleBase.h">
       <Filter>Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Module\Login\LoginModule.h">
+      <Filter>Module\Login</Filter>
+    </ClInclude>
+    <ClInclude Include="Module\Login\UserInfo.h">
+      <Filter>Module\Login</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Module">
       <UniqueIdentifier>{709c1167-524f-470a-9d85-73faa30eddf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Module\Login">
+      <UniqueIdentifier>{a3f4a267-2a66-4fc2-8db4-68500a20f4aa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

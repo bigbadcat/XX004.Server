@@ -72,13 +72,13 @@ namespace XX004
 		assert(m_State == ServerState::SS_CREATE || m_State == ServerState::SS_END);
 	}
 
-	void ServerBase::Start(int group, int id, bool wait_init_finish)
+	void ServerBase::Start(int id, bool wait_init_finish)
 	{
 		if (m_State != ServerState::SS_CREATE)
 		{
 			return;
 		}
-		m_Group = group;
+		m_Group = id / 1000;
 		m_ID = id;
 		m_Thread = thread([](ServerBase *t){t->ThreadProcess(); }, this);
 

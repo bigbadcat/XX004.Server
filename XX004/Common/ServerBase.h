@@ -62,10 +62,9 @@ namespace XX004
 		inline ServerState GetState()const { return m_State; }
 
 		//启动服务
-		//group:服务器组
 		//id:服务器编号
 		//wait_init_finish:是否等待初始化完成才返回
-		void Start(int group, int id, bool wait_init_finish);
+		void Start(int id, bool wait_init_finish);
 
 		//停止服务
 		void Stop();

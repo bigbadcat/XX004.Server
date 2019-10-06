@@ -68,12 +68,11 @@ namespace XX004
 		//int group = StartSetting::GetInstance()->GetGroup();
 		//int id = StartSetting::GetInstance()->GetID();
 		int id = 10001;		//通过命令行传入
-		int group = id / 10000;
 		StartSettingInfo* info = StartSetting::GetInstance()->GetSettingInfo(m_Type);
 		assert(info != NULL);
 		m_pStorageManager->Start();
 		m_pNetManager->Start(info->GetPort());
-		m_pServer->Start(group, id, true);
+		m_pServer->Start(id, true);
 		CommandLoop();
 		cout << "Waitting server end ..." << endl;
 		m_pServer->Stop();

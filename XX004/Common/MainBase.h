@@ -42,7 +42,7 @@ namespace XX004
 		inline StorageManager* GetStorageManager()const { return m_pStorageManager; }
 
 		//获取服务对象
-		inline ServerBase* GetServe()const { return m_pServer; }
+		inline ServerBase* GetServer()const { return m_pServer; }
 
 		//获取当前Main对象
 		static inline MainBase* GetCurMain() { return pCurMain; }

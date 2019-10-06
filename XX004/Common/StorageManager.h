@@ -21,7 +21,7 @@ using namespace XX004::Net;
 
 namespace XX004
 {
-#define DB_REGISTER(mgr, id, fun) NET_REGISTER(mgr, id, fun)
+#define DB_REGISTER(mgr, id, fun) mgr->RegisterMessageCallBack(id, fun)
 
 	//创建独立线程来进行数据库存储
 	//数据通信基于网络
