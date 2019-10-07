@@ -186,28 +186,11 @@ namespace XX004
 			return;
 		}
 
-		//判断服务器创建状态或者是否正在创建
-		Int64 roleid = UserInfo::GetNewID();
-		if (roleid == 0)
-		{
-			res.Result = 5;
-			MainBase::GetCurMain()->GetNetManager()->Send(item->uid, NetMsgID::SC_CREATE_ROLE_RES, &res);
-			return;
-		}
-
-		//创建角色
-		LoginRoleInfo role;
-		role.ID = roleid;
-		role.Prof = req.Prof;
-		role.CreateTime = (Int64)TimeUtil::GetCurrentSecond();
-		role.Name = req.RoleName;
-		role.Level = 1;
-
 		//通知数据库保存
 		SDRoleAddRequest req2;
 		req2.UserName = info->GetName();
-		req2.Role = role;
-		req2.Stamp = roleid % UserInfo::ROLE_ID_STAMP_BIT;
+		req2.RoleName = req.RoleName;
+		req2.Prof = req.Prof;
 		RequestStorage(0, NetMsgID::SD_ROLE_ADD_REQ, &req2);
 	}
 
@@ -275,33 +258,69 @@ namespace XX004
 	{
 		SDRoleAddRequest req;
 		req.Unpack(item->data, 0);
-		printf_s("LoginModule::OnRoleAddRequest user:%s stamp:%d\n", req.UserName.c_str(), req.Stamp);
+		printf_s("LoginModule::OnRoleAddRequest user:%s\n", req.UserName.c_str());
 
 		DSRoleAddResponse res;
 		res.UserName = req.UserName;
-		res.Role = req.Role;
 
+		//名称重复判断
+		MySQLWrap *mysql = GetMySQL();
 		char sql[128];
-		sprintf_s(sql, "call sp_select_role_by_name('%s');", req.Role.Name.c_str());
-		auto ret = GetMySQL()->Query(sql);
+		sprintf_s(sql, "call sp_select_role_by_name('%s');", req.RoleName.c_str());
+		auto ret = mysql->Query(sql);
 		if (ret->GetRecord())
 		{
 			Int64 roleid = ret->GetInt64("id");
 			if (roleid != 0)
 			{
-				res.Result = 1;
+				res.Result = 6;
+				ResponseStorage(0, NetMsgID::DS_ROLE_ADD_RES, &res);
+				return;
 			}
 		}
 
-		//可以创建，保存角色
-		if (res.Result == 0)
+		//数据库级的角色数量判断
+		int sid = GetServer()->GetServerID();
+		sprintf_s(sql, "call sp_select_user_role_count('%s',%d);", req.UserName.c_str(), sid);
+		ret = mysql->Query(sql);
+		if (ret->GetRecord())
 		{
-			LoginRoleInfo &role = req.Role;
-			int sid = GetServer()->GetServerID();
-			sprintf_s(sql, "call sp_insert_update_role(%I64d,'%s','%s',%d,%d,%d,%d,%d,%d,%I64d);",
-				role.ID, role.Name.c_str(), req.UserName.c_str(), sid, req.Stamp, role.Prof, role.Level, 0, 0, role.CreateTime);
-			GetMySQL()->Execute(sql);
+			int count = ret->GetInt64("count");
+			if (count >= UserInfo::MAX_ROLE_NUMBER)
+			{
+				res.Result = 3;
+				ResponseStorage(0, NetMsgID::DS_ROLE_ADD_RES, &res);
+				return;
+			}
 		}
+
+		//判断服务器创建状态或者是否正在创建
+		Int64 roleid = UserInfo::GetNewID();		//此函数会导致Stamp增加，所以放在最后，以免创建失败也会导致Stamp增加
+		if (roleid == 0)
+		{
+			res.Result = 5;
+			ResponseStorage(0, NetMsgID::DS_ROLE_ADD_RES, &res);
+			return;
+		}
+
+		//创建角色
+		LoginRoleInfo role;
+		role.ID = roleid;
+		role.Prof = req.Prof;
+		role.CreateTime = (Int64)TimeUtil::GetCurrentSecond();
+		role.Name = req.RoleName;
+		role.Level = 1;
+		res.Role = role;
+
+		//保存角色
+		int stamp = (int)(roleid % UserInfo::ROLE_ID_STAMP_BIT);
+		sprintf_s(sql, "call sp_insert_update_role(%I64d,'%s','%s',%d,%d,%d,%d,%d,%d,%I64d);",
+			role.ID, role.Name.c_str(), req.UserName.c_str(), sid, stamp, role.Prof, role.Level, 0, 0, role.CreateTime);
+		mysql->StartTransaction();
+		mysql->Execute(sql);
+		mysql->EndTransaction(true);
+
+		//返回
 		ResponseStorage(0, NetMsgID::DS_ROLE_ADD_RES, &res);
 	}
 
@@ -319,7 +338,7 @@ namespace XX004
 		}
 
 		SCCreateRoleResponse res2;
-		res2.Result = res.Result == 0 ? 0 : 6;
+		res2.Result = res.Result;
 		if (res2.Result == 0)
 		{
 			//记录创建的角色

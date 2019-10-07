@@ -84,7 +84,7 @@ namespace XX004
 			vector<LoginRoleInfo> RoleList;			//角色列表
 		};
 
-		//1402:创建角色回复(
+		//1402:创建角色回复
 		class SCCreateRoleResponse : public NetMessage
 		{
 		public:
@@ -143,8 +143,8 @@ namespace XX004
 			virtual int Pack(Byte *buffer, int index);
 
 			string UserName;						//用户名
-			LoginRoleInfo Role;						//角色
-			Int32 Stamp;							//角色创建序号
+			string RoleName;						//角色名
+			Int32 Prof;								//职业
 		};
 
 		//1804:回复添加角色
@@ -156,7 +156,7 @@ namespace XX004
 			virtual int Pack(Byte *buffer, int index);
 
 			string UserName;						//用户名
-			Int32 Result;							//添加结果(0、成功 1、名称重复)
+			Int32 Result;							//添加结果(0、成功 3、角色已满 5、服务器已满 6、名称重复)
 			LoginRoleInfo Role;						//角色
 		};
 	}

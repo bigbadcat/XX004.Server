@@ -181,7 +181,7 @@ namespace XX004
 
 		//----------------------------------------
 
-		SDRoleAddRequest::SDRoleAddRequest() : Stamp(0)
+		SDRoleAddRequest::SDRoleAddRequest() : Prof(0)
 		{
 		}
 
@@ -189,8 +189,8 @@ namespace XX004
 		{
 			int i = index;
 			UserName = DataUtil::ReadString(buffer, i, &i);
-			i = Role.Unpack(buffer, i);
-			Stamp = DataUtil::ReadInt32(buffer, i, &i);
+			RoleName = DataUtil::ReadString(buffer, i, &i);
+			Prof = DataUtil::ReadInt32(buffer, i, &i);
 			return i;
 		}
 
@@ -198,8 +198,8 @@ namespace XX004
 		{
 			int i = index;
 			i = DataUtil::WriteString(buffer, i, UserName);
-			i = Role.Pack(buffer, i);
-			i = DataUtil::WriteInt32(buffer, i, Stamp);
+			i = DataUtil::WriteString(buffer, i, RoleName);
+			i = DataUtil::WriteInt32(buffer, i, Prof);
 			return i;
 		}
 
