@@ -33,6 +33,8 @@ namespace XX004
 	{
 		NET_REGISTER(pMgr, NetMsgID::CS_LOGIN_REQ, OnLoginRequest);
 		NET_REGISTER(pMgr, NetMsgID::CS_CREATE_ROLE_REQ, OnCreateRoleRequest);
+		NET_REGISTER(pMgr, NetMsgID::CS_ENTER_GAME_REQ, OnEnterGameRequest);
+		NET_REGISTER(pMgr, NetMsgID::CS_QUIT_GAME_REQ, OnQuitGameRequest);
 		NET_REGISTER(pMgr, NetMsgID::DS_ROLE_LIST_RES, OnRoleListResponse);
 		NET_REGISTER(pMgr, NetMsgID::DS_ROLE_ADD_RES, OnRoleAddResponse);
 	}
@@ -95,6 +97,20 @@ namespace XX004
 		return GetUser(itr->second);
 	}
 
+	void LoginModule::OnConnect(NetDataItem *item)
+	{
+	}
+
+	void LoginModule::OnDisconnect(NetDataItem *item)
+	{
+		UserInfo *info = GetUser(item->uid);
+		if (info != NULL)
+		{
+			OnUserOutline(info->GetName());
+			info = NULL;
+		}
+	}
+
 	void LoginModule::AddUserInfo(const string& username, UInt64 uid)
 	{
 		UserInfoMap::iterator itr = m_Users.find(username);
@@ -111,6 +127,29 @@ namespace XX004
 		info->SetUID(uid);
 		m_Users.insert(UserInfoMap::value_type(username, info));
 		m_UIDToUserName[uid] = username;
+	}
+
+	void LoginModule::OnUserOutline(const string& username)
+	{
+		//通知掉线
+		printf_s("OnUserOutline user:%s\n", username.c_str());
+
+		//正常情况下用户掉线应该先做标记，一段时间后没有重连请求再自动退出
+		OnUserQuit(username);
+	}
+
+	void LoginModule::OnUserQuit(const string& username)
+	{
+		//通知退出
+		printf_s("OnUserQuit user:%s\n", username.c_str());
+
+		//删除玩家数据
+		UserInfoMap::iterator itr = m_Users.find(username);
+		if (itr != m_Users.end())
+		{
+			SAFE_DELETE(itr->second);
+			itr = m_Users.erase(itr);
+		}
 	}
 
 	void LoginModule::OnLoginRequest(NetDataItem *item)
@@ -194,6 +233,76 @@ namespace XX004
 		RequestStorage(0, NetMsgID::SD_ROLE_ADD_REQ, &req2);
 	}
 
+	void LoginModule::OnEnterGameRequest(NetDataItem *item)
+	{
+		CSEnterGameRequest req;
+		req.Unpack(item->data, 0);
+		printf_s("LoginModule::OnEnterGameRequest uid:%I64d role:%I64d\n", item->uid, req.RoleID);
+
+		//判断玩家是否登陆(客户端没叛变是不会有这个问题)
+		SCEnterGameResponse res;
+		UserInfo *info = GetUser(item->uid);
+		if (info == NULL)
+		{
+			res.Result = 3;
+			MainBase::GetCurMain()->GetNetManager()->Send(item->uid, NetMsgID::SC_ENTER_GAME_RES, &res);
+			return;
+		}
+
+		//判断角色是否存在
+		RoleInfo *roleinfo = info->GetRoleInfo(req.RoleID);
+		if (info == NULL)
+		{
+			res.Result = 1;
+			MainBase::GetCurMain()->GetNetManager()->Send(item->uid, NetMsgID::SC_ENTER_GAME_RES, &res);
+			return;
+		}
+
+		//判断角色是否被冻结
+		if ((UInt64)(roleinfo->FreeTime) > TimeUtil::GetCurrentSecond())
+		{
+			res.Result = 2;
+			res.FreeTime = roleinfo->FreeTime;
+			MainBase::GetCurMain()->GetNetManager()->Send(item->uid, NetMsgID::SC_ENTER_GAME_RES, &res);
+			return;
+		}
+
+		//将连接与角色id关联，回复登陆成功
+		MainBase::GetCurMain()->GetNetManager()->Update(item->uid, RemoteKey(RemoteType::RT_CLIENT, roleinfo->ID));
+		SendNet(roleinfo->ID, NetMsgID::SC_ENTER_GAME_RES, &res);
+
+		//通知玩家上线，发送初始化数据
+
+		//通知进场
+		SCSceneEnterNotify notify;
+		notify.Map = 0;
+		notify.PositionX = 0;
+		notify.PositionY = 0;
+		notify.Direction = 0;
+		SendNet(roleinfo->ID, NetMsgID::SC_SCENE_ENTER, &notify);
+	}
+
+	void LoginModule::OnQuitGameRequest(NetDataItem *item)
+	{
+		CSQuitGameRequest req;
+		req.Unpack(item->data, 0);
+		printf_s("LoginModule::OnQuitGameRequest uid:%I64d\n", item->uid);
+
+		UserInfo *info = GetUser(item->uid);
+		if (info == NULL)
+		{
+			//已经断线了 不用再理
+			return;
+		}
+
+		SCQuitGameResponse res;
+		MainBase::GetCurMain()->GetNetManager()->Send(item->uid, NetMsgID::SC_QUIT_GAME_RES, &res);
+
+		//退出
+		OnUserQuit(info->GetName());
+		info = NULL;
+	}
+
 	void LoginModule::OnRoleListRequest(NetDataItem *item)
 	{
 		SDRoleListRequest req;
@@ -213,6 +322,7 @@ namespace XX004
 			role.ID = ret->GetInt64("id");
 			role.Prof = ret->GetInt("prof");
 			role.CreateTime = ret->GetInt64("create_time");
+			role.FreeTime = ret->GetInt64("free_time");
 			role.Name = ret->GetString("name");
 			role.Level = ret->GetInt("level");
 			res.RoleList.push_back(role);
@@ -242,6 +352,7 @@ namespace XX004
 			role.ID = itr->ID;
 			role.Prof = itr->Prof;
 			role.CreateTime = itr->CreateTime;
+			role.FreeTime = itr->FreeTime;
 			role.Name = itr->Name;
 			role.Level = itr->Level;
 			info->AddRoleInfo(role);
@@ -285,7 +396,7 @@ namespace XX004
 		ret = mysql->Query(sql);
 		if (ret->GetRecord())
 		{
-			int count = ret->GetInt64("count");
+			int count = ret->GetInt("count");
 			if (count >= UserInfo::MAX_ROLE_NUMBER)
 			{
 				res.Result = 3;

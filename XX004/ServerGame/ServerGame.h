@@ -20,11 +20,17 @@ using namespace std;
 namespace XX004
 {
 	typedef vector<ModuleBase*> ModuleVector;
+	class LoginModule;
+
 	class ServerGame : public ServerBase
 	{
 	public:
 		ServerGame();
 		virtual ~ServerGame();
+
+		//获取模块 若需要频繁使用，建议缓存结果，在ServerGame对象销毁后返回值无效
+		template<class T>
+		T* GetModule();
 
 	protected:
 		//注册网络消息
@@ -59,7 +65,24 @@ namespace XX004
 
 		//模块列表
 		ModuleVector m_Modules;
+
+		LoginModule *m_LoginModule;
 	};
+
+	template<class T>
+	T* ServerGame::GetModule()
+	{
+		for (ModuleVector::iterator itr = m_Modules.begin(); itr != m_Modules.end(); ++itr)
+		{
+			ModuleBase *m = (*itr);
+			T *t = dynamic_cast<T*>(m);
+			if (t != NULL)
+			{
+				return t;
+			}
+		}
+		return NULL;
+	}
 }
 
 #endif

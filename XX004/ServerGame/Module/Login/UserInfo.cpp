@@ -15,7 +15,7 @@
 
 namespace XX004
 {
-	RoleInfo::RoleInfo() : ID(0), Prof(0), CreateTime(0), Level(0)
+	RoleInfo::RoleInfo() : ID(0), Prof(0), CreateTime(0), FreeTime(0), Level(0)
 	{
 	}
 
@@ -40,7 +40,7 @@ namespace XX004
 		return uid;
 	}
 
-	UserInfo::UserInfo(const string& name) : m_Name(name), m_UID(0)
+	UserInfo::UserInfo(const string& name) : m_Name(name), m_UID(0), m_CurRoleID(0)
 	{
 
 	}

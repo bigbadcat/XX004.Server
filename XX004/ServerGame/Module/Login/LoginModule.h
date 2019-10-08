@@ -55,13 +55,25 @@ namespace XX004
 		//通过链接标识获取用户名
 		UserInfo* GetUser(Int64 uid);
 
+		void OnConnect(NetDataItem *item);
+		void OnDisconnect(NetDataItem *item);
+
 	private:
 
 		//添加用户信息
 		void AddUserInfo(const string& username, UInt64 uid);
+
+		//用户离线
+		void OnUserOutline(const string& username);
+
+		//用户退出游戏，调用后username对应的UserInfo将无效
+		void OnUserQuit(const string& username);
+
 		
 		void OnLoginRequest(NetDataItem *item);					//登陆请求		
 		void OnCreateRoleRequest(NetDataItem *item);			//角色创建请求
+		void OnEnterGameRequest(NetDataItem *item);				//进入游戏请求
+		void OnQuitGameRequest(NetDataItem *item);				//退出游戏请求
 		
 		static void OnRoleListRequest(NetDataItem *item);		//请求用户角色数据		
 		void OnRoleListResponse(NetDataItem *item);				//回复用户角色数据

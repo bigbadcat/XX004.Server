@@ -27,6 +27,7 @@ namespace XX004
 		Int64 ID;								//编号
 		Int32 Prof;								//职业
 		Int64 CreateTime;						//创建时间
+		Int64 FreeTime;							//解冻时间
 		string Name;							//名称
 		Int32 Level;							//等级
 	};
@@ -59,6 +60,11 @@ namespace XX004
 		//设置连接标识
 		inline void SetUID(UInt64 uid) { m_UID = uid; }
 
+		//获取当前登录的角色ID
+		inline const UInt64 GetCurRoleID()const { return m_CurRoleID; }
+		//设置当前登录的角色ID
+		inline void SetCurRoleID(UInt64 rid) { m_CurRoleID = rid; }
+
 		//获取角色列表
 		vector<RoleInfo>& GetRoleInfos() { return m_RoleInfos; }
 
@@ -75,6 +81,9 @@ namespace XX004
 
 		//连接标识
 		UInt64 m_UID;
+
+		//当前登录的角色ID
+		Int64 m_CurRoleID;
 
 		//角色信息
 		vector<RoleInfo> m_RoleInfos;

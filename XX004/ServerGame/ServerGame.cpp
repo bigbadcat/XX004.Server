@@ -15,13 +15,15 @@ using namespace XX004::Net;
 
 namespace XX004
 {
-	ServerGame::ServerGame()
+	ServerGame::ServerGame() : m_LoginModule(NULL)
 	{
 		InitModules();
+		m_LoginModule = GetModule<LoginModule>();
 	}
 
 	ServerGame::~ServerGame()
 	{
+		m_LoginModule = NULL;
 		SAFE_DELETE_VECTOR(m_Modules);
 	}
 
@@ -86,10 +88,12 @@ namespace XX004
 
 	void ServerGame::OnConnect(NetDataItem *item)
 	{
+		m_LoginModule->OnConnect(item);
 	}
 
 	void ServerGame::OnDisconnect(NetDataItem *item)
 	{
+		m_LoginModule->OnDisconnect(item);
 	}
 
 	//void ServerGame::OnRoleEnter(NetDataItem *item)

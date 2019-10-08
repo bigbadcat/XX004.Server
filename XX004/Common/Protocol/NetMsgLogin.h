@@ -68,6 +68,7 @@ namespace XX004
 			Int64 ID;								//编号
 			Int32 Prof;								//职业
 			Int64 CreateTime;						//创建时间
+			Int64 FreeTime;							//解冻时间
 			string Name;							//名称
 			Int32 Level;							//等级
 		};

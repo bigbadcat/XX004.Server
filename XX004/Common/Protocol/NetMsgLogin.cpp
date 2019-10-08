@@ -54,7 +54,7 @@ namespace XX004
 
 		//----------------------------------------
 
-		LoginRoleInfo::LoginRoleInfo() : ID(0), Prof(0), CreateTime(0), Level(0)
+		LoginRoleInfo::LoginRoleInfo() : ID(0), Prof(0), CreateTime(0), FreeTime(0), Level(0)
 		{
 		}
 
@@ -64,6 +64,7 @@ namespace XX004
 			ID = DataUtil::ReadInt64(buffer, i, &i);
 			Prof = DataUtil::ReadInt32(buffer, i, &i);
 			CreateTime = DataUtil::ReadInt64(buffer, i, &i);
+			FreeTime = DataUtil::ReadInt64(buffer, i, &i);
 			Name = DataUtil::ReadString(buffer, i, &i);
 			Level = DataUtil::ReadInt32(buffer, i, &i);
 			return i;
@@ -75,6 +76,7 @@ namespace XX004
 			i = DataUtil::WriteInt64(buffer, i, ID);
 			i = DataUtil::WriteInt32(buffer, i, Prof);
 			i = DataUtil::WriteInt64(buffer, i, CreateTime);
+			i = DataUtil::WriteInt64(buffer, i, FreeTime);
 			i = DataUtil::WriteString(buffer, i, Name);
 			i = DataUtil::WriteInt32(buffer, i, Level);
 			return i;

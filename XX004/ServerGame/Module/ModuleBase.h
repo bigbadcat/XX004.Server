@@ -54,7 +54,7 @@ namespace XX004
 		//获取数据库
 		static MySQLWrap* GetMySQL();
 
-		//发送网络消息
+		//发送网络消息 rid:角色编号
 		static void SendNet(Int64 rid, int command, Net::NetMessage *msg);
 
 		//存储请求
