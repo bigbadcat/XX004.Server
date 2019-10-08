@@ -5,16 +5,6 @@ XX004/XX004.VC.*
 XX004/x64/
 XX004/Common/x64/
 XX004/Common/Common.vcxproj.user
-XX004/ServerGate/x64/
-XX004/ServerGate/ServerGate.vcxproj.user
-XX004/ServerData/x64/
-XX004/ServerData/ServerData.vcxproj.user
-XX004/ServerLogin/x64/
-XX004/ServerLogin/ServerData.vcxproj.user
-XX004/ServerWorld/x64/
-XX004/ServerWorld/ServerWorld.vcxproj.user
-XX004/ServerScene/x64/
-XX004/ServerScene/ServerScene.vcxproj.user
 XX004/ServerMaster/x64/
 XX004/ServerMaster/ServerMaster.vcxproj.user
 XX004/ServerGame/x64/
