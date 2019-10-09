@@ -69,9 +69,6 @@ namespace XX004
 		//停止服务
 		void Stop();
 
-		//等待结束
-		void Join();
-
 		//注册网络消息
 		virtual void RegisterNetMessage(NetManagerBase *pMgr) = 0;
 
@@ -99,13 +96,13 @@ namespace XX004
 		//step:初始化分步计数
 		//r:初始化进度0-1
 		//ret:是否初始化完成
-		virtual bool OnInitStep(int step, float &r) = 0;
+		virtual bool OnInitStep(int step) = 0;
 
 		//释放过程
 		//step:释放分步计数
 		//r:释放进度0-1
 		//ret:是否释放完成
-		virtual bool OnReleaseStep(int step, float &r) = 0;
+		virtual bool OnReleaseStep(int step) = 0;
 
 		//帧更新
 		virtual void OnUpdate() = 0;

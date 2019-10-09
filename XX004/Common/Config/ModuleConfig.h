@@ -31,6 +31,9 @@ namespace XX004
 		//销毁
 		virtual void Release() = 0;
 
+		//获取名称
+		virtual const char* GetName()const = 0;
+
 		//获取实例
 		template<class T>
 		static T* GetInstance();

@@ -53,11 +53,10 @@ namespace XX004
 		}		
 	}
 
-	bool ServerGame::OnInitStep(int step, float &r)
+	bool ServerGame::OnInitStep(int step)
 	{
 		int i = step - 1;
 		m_Modules[i]->Init();
-		r = (i + 1) * 1.0f / m_Modules.size();
 		return (i + 1) >= m_Modules.size();
 	}
 
@@ -78,11 +77,10 @@ namespace XX004
 		m_Modules.push_back(new LoginModule());
 	}
 
-	bool ServerGame::OnReleaseStep(int step, float &r)
+	bool ServerGame::OnReleaseStep(int step)
 	{
 		int i = step - 1;
-		m_Modules[i]->Init();
-		r = (i + 1) * 1.0f / m_Modules.size();
+		m_Modules[i]->Release();
 		return (i + 1) >= m_Modules.size();
 	}
 

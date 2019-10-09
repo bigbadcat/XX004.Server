@@ -62,7 +62,7 @@ namespace XX004
 			inline void SetManager(NetConnectionManager* manager) { m_pManager = manager; }
 
 
-			//一个线程管理的最大连接数
+			//一个集合管理的最大连接数
 			static const std::size_t MAX_CONNECTION_NUMBER = 64;
 
 		private:

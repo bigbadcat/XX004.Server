@@ -72,7 +72,7 @@ namespace XX004
 		//是否运行
 		bool m_IsRunning;
 
-		//网络处理线程
+		//处理线程
 		thread m_Thread;
 
 		//消息集合

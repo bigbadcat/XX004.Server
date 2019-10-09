@@ -98,10 +98,6 @@ namespace XX004
 			return;
 		}
 		m_State = ServerState::SS_RELEASE;
-	}
-
-	void ServerBase::Join()
-	{
 		JoinThread(m_Thread);
 	}
 
@@ -130,12 +126,11 @@ namespace XX004
 	void ServerBase::ThreadProcess()
 	{
 		//服务器完整周期 初始->更新->销毁
-		this_thread::sleep_for(chrono::milliseconds(100));		//先稍等一下，让网络线程的输出做完，否则会显示混乱，逻辑不会出错
 		m_State = ServerState::SS_INIT;
 		Init();
 		m_InitSemaphore.post();
 		m_State = ServerState::SS_UPDATE;
-		Update();			//Update函数会等m_State==ServerState::SS_RELEASE时结束
+		Update();			//Update函数会等m_State!=ServerState::SS_UPDATE时结束
 		Release();
 		m_State = ServerState::SS_END;
 	}
@@ -164,7 +159,6 @@ namespace XX004
 	void ServerBase::Init()
 	{
 		//分步初始化
-		float r = 0;
 		int step = 0;
 		bool ok = false;
 		int config_index = 0;
@@ -175,27 +169,19 @@ namespace XX004
 		{
 			if (config_index < m_Configs.size())
 			{
-				m_Configs[config_index++]->Init();
-				cout << "Init config:" << config_index << "/" << m_Configs.size();
-				if (config_index >= m_Configs.size())
-				{
-					cout << endl;
-				}
+				ModuleConfig *cfg = m_Configs[config_index++];
+				cfg->Init();
+				printf_s("Init %s\n", cfg->GetName());
 			}
 			else
 			{
 				//先初始化配置
-				ok = OnInitStep(++step, r);
-				//MoveCursorBack(24);
-				//cout << "Init step:" << step << " r:" << (int)(r * 100) << "%";
-				printf_s("Init step:%d r:%d\n", step, (int)(r * 100));
+				ok = OnInitStep(++step);
+				printf_s("Init step:%d\n", step);
 			}
-			
 
 			this_thread::sleep_for(dura);
 		} while (!ok);
-		//MoveCursorBack(24);
-		//cout << endl << "Init complete" << endl;
 		printf_s("Init complete\n");
 	}
 
@@ -230,19 +216,16 @@ namespace XX004
 	void ServerBase::Release()
 	{
 		//分步释放
-		float r = 0;
 		int step = 0;
 		bool ok = false;
 		chrono::milliseconds dura(50);
 		do
 		{
-			ok = OnReleaseStep(++step, r);
-			MoveCursorBack(24);
-			cout << "Release step:" << step << " r:" << (int)(r * 100) << "%";
+			ok = OnReleaseStep(++step);
+			printf_s("Release step:%d\n", step);
 			this_thread::sleep_for(dura);
 		} while (!ok);
-		MoveCursorBack(24);
-		cout << endl << "Release complete" << endl;
+		printf_s("Release complete\n");
 
 		//销毁配置
 		for (vector<ModuleConfig*>::iterator itr = m_Configs.begin(); itr != m_Configs.end(); ++itr)

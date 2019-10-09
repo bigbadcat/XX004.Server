@@ -49,11 +49,6 @@ namespace XX004
 
 	NetManagerBase::~NetManagerBase()
 	{
-		//for (InternalConnectionMap::iterator itr = m_InternalConnections.begin(); itr != m_InternalConnections.end(); ++itr)
-		//{
-		//	delete itr->second;
-		//}
-		//m_InternalConnections.clear();
 		SAFE_DELETE_MAP(m_InternalConnections);
 	}
 
@@ -142,10 +137,6 @@ namespace XX004
 	{
 		cout << "NetManagerBase::Stop" << endl;
 		m_IsRunning = false;
-	}
-
-	void NetManagerBase::Join()
-	{
 		JoinThread(m_Thread);
 	}
 
@@ -256,7 +247,6 @@ namespace XX004
 
 	void NetManagerBase::OnCreateInternalInfo(std::vector<int> &infos)
 	{
-
 	}
 
 	NetDataItem* NetManagerBase::GetNetDataItem()
@@ -467,6 +457,7 @@ namespace XX004
 					item->uid = 0;
 					item->key = con->GetRemote();
 					m_RecvQueue.Push(item);
+					break;
 				}
 				if (ret == 1)
 				{

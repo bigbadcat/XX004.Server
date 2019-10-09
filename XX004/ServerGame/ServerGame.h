@@ -43,10 +43,10 @@ namespace XX004
 		virtual void OnAddConfig(vector<ModuleConfig*> &cfgs);
 
 		//启动服务
-		virtual bool OnInitStep(int step, float &r);
+		virtual bool OnInitStep(int step);
 
 		//停止服务
-		virtual bool OnReleaseStep(int step, float &r);
+		virtual bool OnReleaseStep(int step);
 
 		//帧更新
 		virtual void OnUpdate();

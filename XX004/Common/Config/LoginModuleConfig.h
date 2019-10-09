@@ -24,6 +24,7 @@ namespace XX004
 
 		virtual void Init();
 		virtual void Release();
+		virtual const char* GetName()const { return "LoginModuleConfig"; }
 
 		const CharacterConfigMap& GetAllCharacter()const { return m_Characters; }
 		CharacterConfig* GetCharacter(int id)const { auto itr = m_Characters.find(id); return itr == m_Characters.end() ? NULL : itr->second; }

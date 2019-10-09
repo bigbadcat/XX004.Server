@@ -132,9 +132,6 @@ namespace XX004
 		//停止网络
 		void Stop();
 
-		//等待网络
-		void Join();
-
 		//分发消息给Server
 		void Dispatch();
 

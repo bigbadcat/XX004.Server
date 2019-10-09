@@ -50,7 +50,7 @@ namespace XX004
 		err = ::WSAStartup(wVersionRequested, &wsaData);
 		if (err != 0)
 		{
-			cout << "WSAStartup err:" << err << endl;
+			printf_s("WSAStartup err:%d\n", err);
 			return 1;
 		}
 
@@ -65,8 +65,6 @@ namespace XX004
 		m_pServer->RegisterNetMessage(m_pNetManager);
 
 		//模块运行
-		//int group = StartSetting::GetInstance()->GetGroup();
-		//int id = StartSetting::GetInstance()->GetID();
 		int id = 10001;		//通过命令行传入
 		StartSettingInfo* info = StartSetting::GetInstance()->GetSettingInfo(m_Type);
 		assert(info != NULL);
@@ -74,12 +72,9 @@ namespace XX004
 		m_pNetManager->Start(info->GetPort());
 		m_pServer->Start(id, true);
 		CommandLoop();
-		cout << "Waitting server end ..." << endl;
+		printf_s("Waitting end ...\n");
 		m_pServer->Stop();
-		m_pServer->Join();
-		cout << "Waitting net end ..." << endl;
 		m_pNetManager->Stop();
-		m_pNetManager->Join();
 		m_pStorageManager->Stop();
 
 		//模块销毁
@@ -87,6 +82,7 @@ namespace XX004
 		m_pStorageManager->UnregisterAllCallBack();
 		SAFE_DELETE(m_pServer);
 		SAFE_DELETE(m_pNetManager);		
+		SAFE_DELETE(m_pStorageManager);
 		::WSACleanup();
 
 		return 0;
@@ -94,7 +90,7 @@ namespace XX004
 
 	void MainBase::CommandLoop()
 	{
-		cout << "Start command ..." << endl;
+		printf_s("Start command ...\n");
 		char str[64];
 		while (true)
 		{
