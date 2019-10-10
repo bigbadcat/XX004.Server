@@ -1,20 +1,23 @@
-﻿客户端-Client(C) 网关-Gate(G) 登陆服-Login(L) 世界服-World(W) 场景服-Scene(S) 数据服-Data(D) 区服-Region(R)[跨服玩法]
-所有消息都是单向的，消息体前缀做为走向标识
-标识只对服务端有意义，对客户端来说都是发给服务端(网关)
+﻿客户端-Client(C) 中控-Master(M) 游戏服-Game(G) 区服-Region(R)[跨服玩法]
+
+中控只提供Http服务，不维持任何长连接，中控与游戏服之间的通信也由Http完成。
+中控会向游戏服发起HTTP请求，一般用在SDK充值到账等情形。
+客户端通过中控获取服务器列表后，只与对应游戏服建立一个TCP长连接。
+游戏服与自己所属区服建立一个TCP长连接。
+客户端与区服的通信经游戏服转发。
+
+消息体前缀做为走向标识，逻辑模块与数据存储模块也走网络通信逻辑。
+C:客户端 S:服务端 D:数据存取
+所有消息都是单向的，请求和回复各占一个协议号。
+一个请求可以没回复，也可以有多个回复。
+没有请求时服务器也会根据需求逻辑主动给客户端发消息通知(Notify)。
 
 网络消息由三部分组成：角色标识(RoleID)、协议号(Command)和数据(Data)
-PS：登陆相关的部分消息没有RoleID
-
-网关对收到的消息只有自己处理或者转发两种方式。
-既涉及网关逻辑处理，又要转发的消息拆分成两个Command实现。
-例如：登陆请求
-1、网关处理CGLoginReq请求(UserID与连接关联)
-2、网关再发送GLLoginReq给登陆服
-3、登陆服发送LCLoginRes给网关
-4、网关单纯转发LCLoginRes给对应客户端
+RoleID和Command一起封装在数据头中(NetPackageHeader)。
+PS：登陆相关的部分消息没有RoleID。
 
 Server和Net有自己独立的线程循环，它们之间通过NetMgr进行交流
-核心在于两个临界队：RecvQueue和SendQueue，保存于NetMgr中
+核心在于两个临界队列：RecvQueue和SendQueue，保存于NetMgr中
 队列元素格式为NetDataItem，包含了操作OP(ADD DEL UPDATE CMD)和对应参数
 RecvQueue：
 当Net有连接建立、断开和收到数据包时，会构造对应NetDataItem，放入RecvQueue中
@@ -25,17 +28,13 @@ Net循环会定时调用NetMgr的OnPostSend函数，将队列内容提交给Net
 
 基础框架：Main、Server、NetMgr、Net关系
 Main：
-全局唯一，通过静态成员函数ServerMain::GetCurMain获取，包含两个成员Server和NetMgr。
+全局唯一，通过静态成员函数ServerMain::GetCurMain获取，成员包含Server和NetMgr。
 Server:
 提供一组函数处理网络消息，注册到NetMgr中,创建Server循环线程。
 NetMgr：
 包含Net成员，继承INetProcesser接口，将自己传入Net以收发网络消息，维护RecvQueue和SendQueue，创建Net循环线程。
 Net：
 分为NetServer和NetInternalConnection两种网络模块，通过传入的INetProcesser接口与外部进行协作。
-NetServer用于监听端口，等待远端主动连接。NetInternalConnection用于主动连接远端。
+NetServer用于监听端口，等待远端主动连接。NetInternalConnection用于主动连接远端(游戏服连区服)。
 
-
-网关的NetMgr
-NetServer：用于接受和保持客户端的连接
-4个InternalConnection：分别连接登陆服、世界服、场景服和区服。
 
