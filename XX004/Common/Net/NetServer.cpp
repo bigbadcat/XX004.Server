@@ -34,14 +34,16 @@ namespace XX004
 
 		void NetServer::Start(int port)
 		{
-			cout << "NetServer::Start port:" << port << endl;
+			//cout << "NetServer::Start port:" << port << endl;
+			::printf_s("NetServer::Start port:%d\n", port);
 			m_pListener->Start(port);
 			m_pConnectionManager->Init();
 		}
 
 		void NetServer::Stop()
 		{
-			cout << "NetServer::Stop" << endl;
+			//cout << "NetServer::Stop" << endl;
+			::printf_s("NetServer::Stop\n");
 			m_pListener->Stop();
 			m_pConnectionManager->Release();
 		}
@@ -75,20 +77,32 @@ namespace XX004
 		void NetServer::OnConnect(SOCKET s)
 		{
 			//添加到连接管理器
-			if (m_pConnectionManager != NULL)
+			if (m_pConnectionManager == NULL)
 			{
-				NetConnection* con = m_pConnectionManager->AddConnection(s);
-				cout << "OnConnect ip:" << con->GetIPAddress() << " port:" << con->GetPort() << endl;
-				if (m_pProcesser != NULL)
-				{
-					m_pProcesser->OnConnected(con);
-				}
+				return;
+			}
+
+			NetConnection* con = m_pConnectionManager->AddConnection(s);
+			if (con == NULL)
+			{
+				//无法再接受连接，直接关掉
+				::printf_s("AddConnection failed\n");
+				::closesocket(s);
+				return;
+			}
+
+			//cout << "OnConnect ip:" << con->GetIPAddress() << " port:" << con->GetPort() << endl;
+			::printf_s("OnConnect ip:%s port:%d\n", con->GetIPAddress().c_str(), con->GetPort());
+			if (m_pProcesser != NULL)
+			{
+				m_pProcesser->OnConnected(con);
 			}
 		}
 
 		void NetServer::OnDisconnect(NetConnection* con)
 		{
-			cout << "OnDisconnect ip:" << con->GetIPAddress() << " port:" << con->GetPort() << endl;
+			//cout << "OnDisconnect ip:" << con->GetIPAddress() << " port:" << con->GetPort() << endl;
+			::printf_s("OnDisconnect ip:%s port:%d\n", con->GetIPAddress().c_str(), con->GetPort());
 			if (m_pProcesser != NULL)
 			{
 				m_pProcesser->OnDisconnected(con);

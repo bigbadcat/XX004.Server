@@ -10,8 +10,9 @@
 
 #include "NetConnectionManager.h"
 #include "NetServer.h"
-#include "NetConnectionSet.h"
+//#include "NetConnectionSet.h"
 #include <assert.h>
+using namespace std;
 
 namespace XX004
 {
@@ -34,119 +35,126 @@ namespace XX004
 
 		void NetConnectionManager::Release()
 		{
-			m_ConnectionIndex.clear();
-			m_InternalConnections.clear();
-			m_ClientConnections.clear();
-			for (ConnectionVector::iterator itr = m_ConnectionSets.begin(); itr != m_ConnectionSets.end(); ++itr)
-			{
-				delete (*itr);
-			}
-			m_ConnectionSets.clear();
+			m_UIDToConnection.clear();
+			m_RemoteKeyToConnection.clear();
+			SAFE_DELETE_MAP(m_Connections);
 		}
 
 		void NetConnectionManager::SelectSocket()
 		{
-			for (ConnectionVector::iterator itr = m_ConnectionSets.begin(); itr != m_ConnectionSets.end(); ++itr)
+			if (m_Connections.size() <= 0)
 			{
-				(*itr)->SelectSocket();
+				return;
+			}
+
+			fd_set readfds;
+			fd_set writefds;
+			fd_set exceptfds;
+			FD_ZERO(&readfds);
+			FD_ZERO(&writefds);
+			FD_ZERO(&exceptfds);
+			for (NetConnectionMap::iterator itr = m_Connections.begin(); itr != m_Connections.end(); ++itr)
+			{
+				NetConnection *con = itr->second;
+				SOCKET s = con->GetSocket();
+				if (con->IsNeedRead()) { FD_SET(s, &readfds); }
+				if (con->IsNeedWrite()) { FD_SET(s, &writefds); }
+				FD_SET(s, &exceptfds);
+			}
+
+			//处理
+			timeval timeout;
+			timeout.tv_sec = 0;
+			timeout.tv_usec = 0;
+			int ret = ::select(0, &readfds, &writefds, &exceptfds, &timeout);		//windows下nfds参数无用，可传入0
+			if (ret > 0)
+			{
+				vector<SOCKET> needremove;
+				for (NetConnectionMap::iterator itr = m_Connections.begin(); itr != m_Connections.end(); ++itr)
+				{
+					SOCKET s = itr->second->GetSocket();
+
+					//先判断是否有异常
+					if (FD_ISSET(s, &exceptfds) != 0)
+					{
+						needremove.push_back(s);
+						continue;
+					}
+					if (FD_ISSET(s, &readfds) != 0)
+					{
+						if (OnSocketRead(s) != 0)
+						{
+							needremove.push_back(s);
+							continue;
+						}
+					}
+					if (FD_ISSET(s, &writefds) != 0)
+					{
+						if (OnSocketWrite(s) != 0)
+						{
+							needremove.push_back(s);
+							continue;
+						}
+					}
+				}
+
+				//移除错误的SOKECT
+				for (vector<SOCKET>::iterator itr = needremove.begin(); itr != needremove.end(); ++itr)
+				{
+					OnSocketClose(*itr);
+				}
+			}
+			else if (ret == SOCKET_ERROR)
+			{
+				cout << "select socket err:" << WSAGetLastError() << endl;
 			}
 		}
 
 		NetConnection* NetConnectionManager::AddConnection(SOCKET s)
 		{
-			//找一个集合加入连接
-			NetConnection *ret = NULL;
-			for (ConnectionVector::iterator itr = m_ConnectionSets.begin(); ret == NULL && itr != m_ConnectionSets.end(); ++itr)
-			{
-				ret = (*itr)->AddConnection(s);
-			}
+			assert(m_Connections.find(s) == m_Connections.end());
 
-			//没有线程可以加入集合了，创建新的线程
-			if (ret == NULL)
-			{
-				NetConnectionSet *connection_set = new NetConnectionSet();
-				m_ConnectionSets.push_back(connection_set);
-				connection_set->SetManager(this);
-				ret = connection_set->AddConnection(s);
-			}
-			m_ConnectionIndex.insert(NetConnectionMap::value_type(ret->GetUniqueID(), ret));
-
-			return ret;
+			static UInt64 cur_uid = 0;
+			NetConnection *pcon = new NetConnection();
+			pcon->SetUniqueID(++cur_uid);
+			pcon->SetSocket(s);
+			m_Connections.insert(NetConnectionMap::value_type(s, pcon));
+			m_UIDToConnection.insert(UIDToConnectionMap::value_type(pcon->GetUniqueID(), pcon));
+			return pcon;
 		}
 
 		void NetConnectionManager::RemoveConnection(NetConnection* con)
 		{
-			SOCKET s = con->GetSocket();
-			m_ConnectionIndex.erase(con->GetUniqueID());
-			for (ConnectionVector::iterator itr = m_ConnectionSets.begin(); itr != m_ConnectionSets.end(); ++itr)
-			{
-				NetConnectionSet *pset = *itr;
-				if (pset->IsContain(s) != NULL)
-				{
-					pset->CloseConnection(con);
-				}
-			}
-		}
-
-		void NetConnectionManager::OnRemoveConnection(NetConnection* con)
-		{
-			int type = con->GetRomoteType();
-			if (type == RemoteType::RT_CLIENT)
-			{
-				m_ClientConnections.erase(con->GetRoleID());
-			}
-			else
-			{
-				m_InternalConnections.erase(type);
-			}
-
-			if (m_pServer != NULL)
-			{
-				m_pServer->OnDisconnect(con);
-			}
+			assert(con != NULL);
+			SOCKET s = con->GetSocket();			
+			OnSocketClose(con->GetSocket());
 		}
 
 		NetConnection* NetConnectionManager::GetConnection(UInt64 uid)const
 		{
-			NetConnectionMap::const_iterator itr = m_ConnectionIndex.find(uid);
-			return itr == m_ConnectionIndex.cend() ? NULL : itr->second;
+			NetConnectionMap::const_iterator itr = m_UIDToConnection.find(uid);
+			return itr == m_UIDToConnection.cend() ? NULL : itr->second;
 		}
 
 		NetConnection* NetConnectionManager::GetConnection(const RemoteKey &key)const
 		{
 			assert(key.first != RemoteType::RT_UNKNOW);
-			if (key.first == RemoteType::RT_CLIENT)
-			{
-				//客户端连接
-				ClientConnectionMap::const_iterator itr = m_ClientConnections.find(key.second);
-				return itr == m_ClientConnections.cend() ? NULL : itr->second;
-			}
-			else
-			{
-				//内部连接
-				InternalConnectionMap::const_iterator itr = m_InternalConnections.find(key.first);
-				return itr == m_InternalConnections.cend() ? NULL : itr->second;
-			}
-			return NULL;
+			RemoteKeyToConnectionMap::const_iterator itr = m_RemoteKeyToConnection.find(key);
+			return itr == m_RemoteKeyToConnection.cend() ? NULL : itr->second;
 		}
 
 		void NetConnectionManager::SetRemote(UInt64 uid, const RemoteKey &key)
 		{
 			NetConnection *con = GetConnection(uid);
+			assert(con != NULL);
 			assert(con->GetRomoteType() == RemoteType::RT_UNKNOW || con->GetRomoteType() == key.first);			//必须是小白连接或同类型
 			assert(key.first != RemoteType::RT_UNKNOW);		//参数合法
 			con->SetRemote(key);
-			if (key.first == RemoteType::RT_CLIENT)
+
+			//还没有设定RoleID的客户端连接先不建立key映射
+			if (key.first != RemoteType::RT_CLIENT || key.second != 0)
 			{
-				if (con->GetRomoteType() == RemoteType::RT_CLIENT)
-				{
-					m_ClientConnections.erase(con->GetRoleID());
-				}
-				m_ClientConnections[key.second] = con;
-			}
-			else
-			{
-				m_InternalConnections[key.first] = con;
+				m_RemoteKeyToConnection[key] = con;
 			}
 		}
 
@@ -154,6 +162,93 @@ namespace XX004
 		{
 			assert(con != NULL && m_pServer != NULL);
 			m_pServer->OnRecvData(con);
+		}
+
+		NetConnection* NetConnectionManager::GetConnectionFromSocket(SOCKET s)const
+		{
+			NetConnectionMap::const_iterator itr = m_Connections.find(s);
+			return itr != m_Connections.end() ? itr->second : NULL;
+		}
+
+		int NetConnectionManager::OnSocketRead(SOCKET s)
+		{
+			static Byte buff[1024];
+			NetConnection *pcon = GetConnectionFromSocket(s);
+			if (pcon == NULL)
+			{
+				return 0;
+			}
+
+			int len = ::recv(pcon->GetSocket(), (char*)buff, 1024, 0);
+			if (len > 0)
+			{
+				if (!pcon->AddRecvData(buff, len))
+				{
+					return 3;
+				}
+
+				do
+				{
+					int ret = pcon->CheckRecvPackage();
+					if (ret == 0)
+					{
+						break;
+					}
+					else if (ret == 1)
+					{
+						OnRecvPackage(pcon);
+					}
+					else
+					{
+						return 4;
+					}
+				} while (true);
+			}
+			else if (len == 0)
+			{
+				//客户端关闭了连接
+				return 1;
+			}
+			else
+			{
+				cout << "recv socket err:" << WSAGetLastError() << endl;
+				return 2;
+			}
+
+			return 0;
+		}
+
+		int NetConnectionManager::OnSocketWrite(SOCKET s)
+		{
+			NetConnection *pcon = GetConnectionFromSocket(s);
+			if (pcon == NULL)
+			{
+				return 0;
+			}
+			return pcon->DoSend();
+		}
+
+		void NetConnectionManager::OnSocketClose(SOCKET s)
+		{
+			//连接断开
+			NetConnection *pcon = GetConnectionFromSocket(s);
+			if (pcon == NULL)
+			{
+				return;
+			}
+
+			//先通知，再销毁
+			if (m_pServer != NULL)
+			{
+				m_pServer->OnDisconnect(pcon);
+			}
+
+			m_Connections.erase(s);
+			m_UIDToConnection.erase(pcon->GetUniqueID());
+			m_RemoteKeyToConnection.erase(pcon->GetRemote());
+			::closesocket(pcon->GetSocket());
+			pcon->SetSocket(SOCKET_ERROR);
+			SAFE_DELETE(pcon);
 		}
 	}
 }

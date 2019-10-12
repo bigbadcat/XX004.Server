@@ -184,6 +184,7 @@ namespace XX004
 
 	void NetManagerBase::Send(UInt64 uid, int command, NetMessage *msg)
 	{
+		assert(uid != 0);
 		NetDataItem *item = GetNetDataItem();
 		item->op = NetOperateType::NOT_DATA;
 		item->uid = uid;
@@ -194,6 +195,7 @@ namespace XX004
 
 	void NetManagerBase::Send(const RemoteKey& key, int command, Byte *buffer, int len)
 	{
+		assert(key.first != RemoteType::RT_UNKNOW && (key.first != RemoteType::RT_CLIENT || key.second != 0));
 		NetDataItem *item = GetNetDataItem();
 		item->op = NetOperateType::NOT_DATA;
 		item->key = key;

@@ -172,7 +172,7 @@ namespace XX004
 		{
 			SCLoginResponse res;
 			res.Result = 1;
-			SendNet(0, NetMsgID::SC_LOGIN_RES, &res);
+			MainBase::GetCurMain()->GetNetManager()->Send(item->uid, NetMsgID::SC_LOGIN_RES, &res);
 			return;
 		}
 		AddUserInfo(user_time[0], item->uid);
@@ -362,7 +362,7 @@ namespace XX004
 		SCLoginResponse res2;
 		res2.RoleCount = res.RoleCount;
 		res2.RoleList.assign(res.RoleList.begin(), res.RoleList.end());
-		SendNet(0, NetMsgID::SC_LOGIN_RES, &res2);
+		MainBase::GetCurMain()->GetNetManager()->Send(info->GetUID(), NetMsgID::SC_LOGIN_RES, &res2);
 	}
 
 	void LoginModule::OnRoleAddRequest(NetDataItem *item)

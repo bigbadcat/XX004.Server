@@ -67,9 +67,6 @@
     </ClInclude>
     <ClInclude Include="MainBase.h" />
     <ClInclude Include="NetManagerBase.h" />
-    <ClInclude Include="Net\NetConnectionSet.h">
-      <Filter>Net</Filter>
-    </ClInclude>
     <ClInclude Include="Util\ByteBuffer.h">
       <Filter>Util</Filter>
     </ClInclude>
@@ -170,9 +167,6 @@
     </ClCompile>
     <ClCompile Include="MainBase.cpp" />
     <ClCompile Include="NetManagerBase.cpp" />
-    <ClCompile Include="Net\NetConnectionSet.cpp">
-      <Filter>Net</Filter>
-    </ClCompile>
     <ClCompile Include="Util\ByteBuffer.cpp">
       <Filter>Util</Filter>
     </ClCompile>

@@ -21,15 +21,17 @@ namespace XX004
 	namespace Net
 	{
 		class NetServer;
-		class NetConnectionSet;
+		//class NetConnectionSet;
 
 		//网络连接管理，通过管理多个连接线程实现
 		class NetConnectionManager
 		{
-			typedef std::vector<NetConnectionSet*> ConnectionVector;
-			typedef std::map<UInt64, NetConnection*> NetConnectionMap;
-			typedef std::map<int, NetConnection*> InternalConnectionMap;
-			typedef std::map<Int64, NetConnection*> ClientConnectionMap;
+			//typedef std::vector<NetConnectionSet*> ConnectionVector;
+			typedef std::map<SOCKET, NetConnection*> NetConnectionMap;
+			typedef std::map<UInt64, NetConnection*> UIDToConnectionMap;
+			typedef std::map<RemoteKey, NetConnection*> RemoteKeyToConnectionMap;
+			//typedef std::map<int, NetConnection*> InternalConnectionMap;
+			//typedef std::map<Int64, NetConnection*> ClientConnectionMap;
 
 		public:
 			//构造析构函数
@@ -54,11 +56,8 @@ namespace XX004
 			//添加连接
 			NetConnection* AddConnection(SOCKET s);
 
-			//移除连接
+			//移除并关闭连接
 			void RemoveConnection(NetConnection* con);
-
-			//有连接被移除
-			void OnRemoveConnection(NetConnection* con);
 
 			//获取连接
 			NetConnection* GetConnection(UInt64 uid)const;
@@ -73,23 +72,42 @@ namespace XX004
 			void OnRecvPackage(NetConnection *con);
 
 		private:
+
+			//获取连接
+			NetConnection* GetConnectionFromSocket(SOCKET s)const;
+
+			//Socket可以读取数据了
+			int OnSocketRead(SOCKET s);
+
+			//Socket可以写入数据了
+			int OnSocketWrite(SOCKET s);
+
+			//Socket关闭
+			void OnSocketClose(SOCKET s);
+
 			//网络服务端
 			NetServer *m_pServer;
 
-			//连接线程
-			ConnectionVector m_ConnectionSets;
+			////连接线程
+			//ConnectionVector m_ConnectionSets;
 
-			//连接查询索引
-			NetConnectionMap m_ConnectionIndex;
+			//连接集合
+			NetConnectionMap m_Connections;
 
-			//内部连接
-			InternalConnectionMap m_InternalConnections;
+			//唯一标识到连接(辅助查询)
+			UIDToConnectionMap m_UIDToConnection;
 
-			//客户端连接
-			ClientConnectionMap m_ClientConnections;
+			//远端标识到连接(辅助查找)
+			RemoteKeyToConnectionMap m_RemoteKeyToConnection;
+
+			////内部连接
+			//InternalConnectionMap m_InternalConnections;
+
+			////客户端连接
+			//ClientConnectionMap m_ClientConnections;
 
 		};
 	}
 }
 
-#endif	//__NetConnectionManager_h__
+#endif
