@@ -66,7 +66,7 @@ namespace XX004
 		int index = 0;
 		while (index < str.length())
 		{
-			bool cn = str[index] & 0x80;
+			bool cn = (str[index] & 0x80) != 0;
 			num += cn ? 2 : 1;			//汉字宽度为2
 			index += cn ? 3 : 1;		//汉字UTF-8占三个字节(遇到占两个字节的字符编码会不正确)
 		}

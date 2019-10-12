@@ -96,12 +96,17 @@ namespace XX004
 		return n;
 	}
 
-	HttpServer::HttpServer() : m_Run(false), m_Port(0)
-	{		
+	HttpServer::HttpServer() : m_Run(false), m_Port(0), m_EventBase(NULL)
+	{
 	}
 
 	HttpServer::~HttpServer()
-	{		
+	{
+		if (m_EventBase != NULL)
+		{
+			event_base_free(m_EventBase);
+			m_EventBase = NULL;
+		}
 	}
 
 	void HttpServer::Start(short port)
@@ -111,10 +116,27 @@ namespace XX004
 		m_Thread = thread([](HttpServer *t){t->ThreadProcess(); }, this);
 	}
 
+	void http_request_done(struct evhttp_request *req, void *arg)
+	{
+	}
+
 	void HttpServer::Stop()
 	{
-		m_Run = false;
-		JoinThread(m_Thread);
+		if (m_Run)
+		{
+			m_Run = false;
+			event_base_loopbreak(m_EventBase);		//m_EventBase很大可能处于阻塞状态，没开启多线程模式(VLD检测内存泄漏)是不会唤醒，也就不会退出事件循环
+
+			//手动触发个事件将event_base线程唤醒以退出事件循环
+			struct evhttp_connection *con = evhttp_connection_base_new(m_EventBase, NULL, "127.0.0.1", m_Port);
+			struct evhttp_request *req = evhttp_request_new(http_request_done, m_EventBase);
+			evhttp_make_request(con, req, EVHTTP_REQ_GET, "/empty");
+
+			//等待结束
+			JoinThread(m_Thread);
+			evhttp_connection_free(con);		//释放连接，则连接上的请求也会一并释放
+			con = NULL;
+		}
 	}
 
 	string HttpServer::GetHttpParams(const string &uri, HttpParamMap &params)
@@ -149,31 +171,26 @@ namespace XX004
 
 	void HttpServer::ThreadProcess()
 	{
-		struct event_base *base = event_base_new();
-		printf("Using Libevent with backend method <%s>.\n", event_base_get_method(base));	//获取当前使用了哪种I/O模型，Windows下仅显示win32
+		if (m_EventBase == NULL)
+		{
+			m_EventBase = event_base_new();
+		}
+		printf("Using Libevent with backend method <%s>.\n", event_base_get_method(m_EventBase));	//获取当前使用了哪种I/O模型，Windows下仅显示win32
 		
 		//启动服务
 		char *http_addr = "0.0.0.0";
-		struct evhttp *http_server = evhttp_new(base);
+		struct evhttp *http_server = evhttp_new(m_EventBase);
 		evhttp_bind_socket(http_server, http_addr, m_Port);
 		evhttp_set_gencb(http_server, HttpServer::OnHttpRequest, this);
 		OnRegisterServer();
-		
-		//处理请求1秒钟最多处理10个
+
+		//处理请求
 		OnInit();
-		while (m_Run)
-		{
-			event_base_loop(base, EVLOOP_NONBLOCK);
-			OnLoop();
-			chrono::milliseconds dura(100);
-			this_thread::sleep_for(dura);
-		}
+		event_base_dispatch(m_EventBase);
 		OnRelease();
 		
 		evhttp_free(http_server);
-		http_server = NULL;		
-		event_base_free(base);
-		base = NULL;
+		http_server = NULL;
 	}
 
 	void HttpServer::OnHttpRequest(struct evhttp_request *req, void *arg)

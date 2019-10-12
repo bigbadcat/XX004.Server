@@ -21,6 +21,7 @@ using namespace std;
 
 struct evhttp_request;
 struct evbuffer;
+struct event_base;
 
 namespace XX004
 {
@@ -108,6 +109,10 @@ namespace XX004
 		//服务端口
 		short m_Port;
 
+		//事件基础模块
+		struct event_base *m_EventBase;
+
+		//服务回调
 		HttpServerCallBackMap m_ServerCallBack;
 	};
 }

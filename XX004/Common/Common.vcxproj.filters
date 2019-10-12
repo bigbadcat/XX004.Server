@@ -138,6 +138,9 @@
       <Filter>Http</Filter>
     </ClInclude>
     <ClInclude Include="StorageManager.h" />
+    <ClInclude Include="Core\pipe.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Net\NetServer.cpp">
@@ -232,5 +235,8 @@
       <Filter>Http</Filter>
     </ClCompile>
     <ClCompile Include="StorageManager.cpp" />
+    <ClCompile Include="Core\pipe.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

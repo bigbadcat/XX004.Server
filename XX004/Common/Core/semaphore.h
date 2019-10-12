@@ -40,4 +40,4 @@ namespace xxstd
 	};
 }
 
-#endif	//__semaphore_h__
+#endif

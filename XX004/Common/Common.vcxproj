@@ -25,6 +25,7 @@
     <ClInclude Include="Config\LuaWrap\CharacterWrap.h" />
     <ClInclude Include="Config\LuaWrap\ProfWrap.h" />
     <ClInclude Include="Config\ModuleConfig.h" />
+    <ClInclude Include="Core\pipe.h" />
     <ClInclude Include="Core\semaphore.h" />
     <ClInclude Include="Http\HttpServer.h" />
     <ClInclude Include="Macro.h" />
@@ -66,6 +67,7 @@
     <ClCompile Include="Config\LuaWrap\CharacterWrap.cpp" />
     <ClCompile Include="Config\LuaWrap\ProfWrap.cpp" />
     <ClCompile Include="Config\ModuleConfig.cpp" />
+    <ClCompile Include="Core\pipe.cpp" />
     <ClCompile Include="Core\semaphore.cpp" />
     <ClCompile Include="Http\HttpServer.cpp" />
     <ClCompile Include="MySQL\MySQLResult.cpp" />
@@ -168,7 +170,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
