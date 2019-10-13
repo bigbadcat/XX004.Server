@@ -322,7 +322,7 @@ namespace XX004
 		while (m_IsRunning)
 		{
 			OnPostSend();
-			OnSocketSelect();
+			m_Server.SelectSocket();
 			UpdateInternalConnection();
 			std::this_thread::sleep_for(dura);
 		}
@@ -349,11 +349,6 @@ namespace XX004
 			OnPost(item);
 			CacheNetDataItem(item);
 		}
-	}
-
-	void NetManagerBase::OnSocketSelect()
-	{
-		m_Server.SelectSocket();
 	}
 
 	void NetManagerBase::OnPost(NetDataItem *item)

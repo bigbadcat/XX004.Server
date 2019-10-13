@@ -184,9 +184,6 @@ namespace XX004
 		//提交发送的数据给Net
 		void OnPostSend();
 
-		//处理Socket
-		virtual void OnSocketSelect();
-
 		//提交数据到Net
 		void OnPost(NetDataItem *item);
 
