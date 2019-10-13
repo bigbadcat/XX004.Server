@@ -113,6 +113,10 @@ namespace XX004
 		NetConnection* NetConnectionManager::AddConnection(SOCKET s)
 		{
 			assert(m_Connections.find(s) == m_Connections.end());
+			if (m_Connections.size() >= 60)		//Win下默认是能处理64个SOCKET，一个Listener，三个预留
+			{
+				return NULL;
+			}
 
 			static UInt64 cur_uid = 0;
 			NetConnection *pcon = new NetConnection();
