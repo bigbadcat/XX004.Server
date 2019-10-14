@@ -78,6 +78,12 @@ namespace XX004
 		SAFE_DELETE_MAP(m_ServerGroups);
 	}
 
+	void ServerMaster::SetServerDirty()
+	{
+		::printf_s("ServerMaster::SetServerDirty\n");
+		m_IsServerDirty = true;		
+	}
+
 	void ServerMaster::OnRegisterServer()
 	{
 		HTTP_SERVER_REGISTER("/login", OnLoginRequest);

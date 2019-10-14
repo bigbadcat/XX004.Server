@@ -66,7 +66,7 @@ namespace XX004
 		virtual ~ServerMaster();
 
 		//设置服务器数据需要刷新
-		inline void SetServerDirty() { m_IsServerDirty = true; }
+		void SetServerDirty();
 
 		//服务器信息失效间隔
 		static const UInt64 SERVER_DIRTY_GAP;
