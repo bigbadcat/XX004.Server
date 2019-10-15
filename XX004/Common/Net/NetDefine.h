@@ -11,6 +11,8 @@
 #ifndef __NetDefine_h__
 #define __NetDefine_h__
 
+#include "../Macro.h"
+
 namespace XX004
 {
 	namespace Net
@@ -33,6 +35,9 @@ namespace XX004
 			//跨服
 			RT_REGION = 4,
 		};
+
+		//远端唯一标识。
+		typedef std::pair<int, Int64> RemoteKey;
 
 #define SAFE_CLOSE_SOCKET(s) if (s!=SOCKET_ERROR){::closesocket(s); s=SOCKET_ERROR;}
 

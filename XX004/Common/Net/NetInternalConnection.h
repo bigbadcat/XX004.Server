@@ -160,4 +160,4 @@ namespace XX004
 	}
 }
 
-#endif	//__NetInternalConnection_h__
+#endif

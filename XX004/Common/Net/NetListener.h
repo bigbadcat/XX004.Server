@@ -17,7 +17,7 @@ namespace XX004
 {
 	namespace Net
 	{
-		class NetServer;
+		class NetConnectionManager;
 
 		//服务端的网络连接监听者		
 		class NetListener
@@ -35,21 +35,24 @@ namespace XX004
 			void Stop();
 
 			//设置服务端
-			inline void SetServer(NetServer *p) { m_pServer = p; }
+			inline void SetManager(NetConnectionManager *p) { m_pManager = p; }
 
 			//获取服务端
-			inline NetServer* GetServer()const { return m_pServer; }
+			inline NetConnectionManager* GetManager()const { return m_pManager; }
 
-			//选择Socket处理
-			void Select();
+			//获取套接字
+			inline SOCKET GetSocket()const { return m_Socket; }
+
+			//Socket可以读取数据了
+			int OnSocketRead();
+
+			//Socket关闭
+			void OnSocketClose();
 
 		private:
 
 			//创建监听Socket
 			SOCKET CreateListenSocket();
-
-			//Socket可以读取数据了
-			int OnSocketRead();
 
 			//Socket句柄
 			SOCKET m_Socket;
@@ -58,9 +61,9 @@ namespace XX004
 			int m_Port;
 
 			//网络服务端
-			NetServer *m_pServer;
+			NetConnectionManager *m_pManager;
 		};
 	}
 }
 
-#endif	//__NetListener_h__
+#endif

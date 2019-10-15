@@ -10,7 +10,8 @@
 
 #include "NetConnectionManager.h"
 #include "NetServer.h"
-//#include "NetConnectionSet.h"
+#include "NetListener.h"
+#include "NetConnection.h"
 #include <assert.h>
 using namespace std;
 
@@ -18,41 +19,46 @@ namespace XX004
 {
 	namespace Net
 	{
-		NetConnectionManager::NetConnectionManager() : m_pServer(NULL)
+		NetConnectionManager::NetConnectionManager() : m_pServer(NULL), m_pListener(NULL)
 		{
-
+			m_pListener = new NetListener();
+			m_pListener->SetManager(this);
 		}
 
 		NetConnectionManager::~NetConnectionManager()
 		{
 			Release();
+			SAFE_DELETE(m_pListener)
 		}
 
-		void NetConnectionManager::Init()
+		void NetConnectionManager::Init(int port)
 		{
-
+			m_pListener->Start(port);
 		}
 
 		void NetConnectionManager::Release()
 		{
+			m_pListener->Stop();
 			m_UIDToConnection.clear();
 			m_RemoteKeyToConnection.clear();
 			SAFE_DELETE_MAP(m_Connections);
 		}
 
-		void NetConnectionManager::SelectSocket()
+		void NetConnectionManager::SelectSocket(int msec)
 		{
-			if (m_Connections.size() <= 0)
-			{
-				return;
-			}
-
+			//准备文件集合
 			fd_set readfds;
 			fd_set writefds;
 			fd_set exceptfds;
 			FD_ZERO(&readfds);
 			FD_ZERO(&writefds);
 			FD_ZERO(&exceptfds);
+			if (m_pListener->GetSocket() != SOCKET_ERROR)
+			{
+				SOCKET s = m_pListener->GetSocket();
+				FD_SET(s, &readfds);
+				FD_SET(s, &exceptfds);
+			}
 			for (NetConnectionMap::iterator itr = m_Connections.begin(); itr != m_Connections.end(); ++itr)
 			{
 				NetConnection *con = itr->second;
@@ -64,37 +70,42 @@ namespace XX004
 
 			//处理
 			timeval timeout;
-			timeout.tv_sec = 0;
-			timeout.tv_usec = 0;
+			timeout.tv_sec = msec / 1000;				//秒
+			timeout.tv_usec = (msec % 1000) * 1000;		//毫秒=1000微秒
 			int ret = ::select(0, &readfds, &writefds, &exceptfds, &timeout);		//windows下nfds参数无用，可传入0
 			if (ret > 0)
 			{
 				vector<SOCKET> needremove;
+				if (m_pListener->GetSocket() != SOCKET_ERROR)
+				{
+					SOCKET s = m_pListener->GetSocket();
+					if (FD_ISSET(s, &exceptfds) != 0)
+					{
+						needremove.push_back(s);
+					}
+					else if (FD_ISSET(s, &readfds) != 0 && OnSocketRead(s) != 0)
+					{
+						needremove.push_back(s);
+					}
+				}
 				for (NetConnectionMap::iterator itr = m_Connections.begin(); itr != m_Connections.end(); ++itr)
 				{
+					//先判断是否有异常，再判断读写
 					SOCKET s = itr->second->GetSocket();
-
-					//先判断是否有异常
 					if (FD_ISSET(s, &exceptfds) != 0)
 					{
 						needremove.push_back(s);
 						continue;
 					}
-					if (FD_ISSET(s, &readfds) != 0)
+					if (FD_ISSET(s, &readfds) != 0 && OnSocketRead(s) != 0)
 					{
-						if (OnSocketRead(s) != 0)
-						{
-							needremove.push_back(s);
-							continue;
-						}
+						needremove.push_back(s);
+						continue;
 					}
-					if (FD_ISSET(s, &writefds) != 0)
+					if (FD_ISSET(s, &writefds) != 0 && OnSocketWrite(s) != 0)
 					{
-						if (OnSocketWrite(s) != 0)
-						{
-							needremove.push_back(s);
-							continue;
-						}
+						needremove.push_back(s);
+						continue;
 					}
 				}
 
@@ -110,12 +121,14 @@ namespace XX004
 			}
 		}
 
-		NetConnection* NetConnectionManager::AddConnection(SOCKET s)
+		void NetConnectionManager::AddConnection(SOCKET s)
 		{
 			assert(m_Connections.find(s) == m_Connections.end());
 			if (m_Connections.size() >= 60)		//Win下默认是能处理64个SOCKET，一个Listener，三个预留
 			{
-				return NULL;
+				::printf_s("AddConnection failed\n");
+				SAFE_CLOSE_SOCKET(s);
+				return;
 			}
 
 			static UInt64 cur_uid = 0;
@@ -124,7 +137,12 @@ namespace XX004
 			pcon->SetSocket(s);
 			m_Connections.insert(NetConnectionMap::value_type(s, pcon));
 			m_UIDToConnection.insert(UIDToConnectionMap::value_type(pcon->GetUniqueID(), pcon));
-			return pcon;
+
+			//通知
+			if (m_pServer != NULL)
+			{
+				m_pServer->OnConnect(pcon);
+			}
 		}
 
 		void NetConnectionManager::RemoveConnection(NetConnection* con)
@@ -176,6 +194,11 @@ namespace XX004
 
 		int NetConnectionManager::OnSocketRead(SOCKET s)
 		{
+			if (s == m_pListener->GetSocket())
+			{
+				return m_pListener->OnSocketRead();
+			}
+
 			static Byte buff[1024];
 			NetConnection *pcon = GetConnectionFromSocket(s);
 			if (pcon == NULL)
@@ -234,6 +257,12 @@ namespace XX004
 
 		void NetConnectionManager::OnSocketClose(SOCKET s)
 		{
+			if (s == m_pListener->GetSocket())
+			{
+				m_pListener->OnSocketClose();
+				return;
+			}
+
 			//连接断开
 			NetConnection *pcon = GetConnectionFromSocket(s);
 			if (pcon == NULL)

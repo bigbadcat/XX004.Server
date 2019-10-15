@@ -24,9 +24,6 @@ namespace XX004
 {
 	namespace Net
 	{
-		//远端唯一标识。
-		typedef std::pair<int, Int64> RemoteKey;
-
 		//网络连接对象
 		class NetConnection
 		{
@@ -126,4 +123,4 @@ namespace XX004
 	}
 }
 
-#endif	//__NetConnection_h__
+#endif

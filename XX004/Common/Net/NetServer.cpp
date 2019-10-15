@@ -9,7 +9,7 @@
 *******************************************************/
 
 #include "NetServer.h"
-#include "NetListener.h"
+#include "NetConnection.h"
 #include "NetConnectionManager.h"
 #include "../Macro.h"
 #include <assert.h>
@@ -18,40 +18,32 @@ namespace XX004
 {
 	namespace Net
 	{
-		NetServer::NetServer() : m_pListener(NULL), m_pConnectionManager(NULL), m_pProcesser(NULL)
+		NetServer::NetServer() : m_pConnectionManager(NULL), m_pProcesser(NULL)
 		{
-			m_pListener = new NetListener();
-			m_pListener->SetServer(this);
 			m_pConnectionManager = new NetConnectionManager();
 			m_pConnectionManager->SetServer(this);
 		}
 
 		NetServer::~NetServer()
 		{
-			SAFE_DELETE(m_pListener)
 			SAFE_DELETE(m_pConnectionManager)
 		}
 
 		void NetServer::Start(int port)
 		{
-			//cout << "NetServer::Start port:" << port << endl;
 			::printf_s("NetServer::Start port:%d\n", port);
-			m_pListener->Start(port);
-			m_pConnectionManager->Init();
+			m_pConnectionManager->Init(port);
 		}
 
 		void NetServer::Stop()
 		{
-			//cout << "NetServer::Stop" << endl;
 			::printf_s("NetServer::Stop\n");
-			m_pListener->Stop();
 			m_pConnectionManager->Release();
 		}
 
-		void NetServer::SelectSocket()
+		void NetServer::SelectSocket(int msec)
 		{
-			m_pListener->Select();
-			m_pConnectionManager->SelectSocket();
+			m_pConnectionManager->SelectSocket(msec);
 		}
 
 		NetConnection* NetServer::GetConnection(UInt64 uid)
@@ -74,24 +66,8 @@ namespace XX004
 			m_pConnectionManager->RemoveConnection(con);
 		}
 
-		void NetServer::OnConnect(SOCKET s)
+		void NetServer::OnConnect(NetConnection* con)
 		{
-			//添加到连接管理器
-			if (m_pConnectionManager == NULL)
-			{
-				return;
-			}
-
-			NetConnection* con = m_pConnectionManager->AddConnection(s);
-			if (con == NULL)
-			{
-				//无法再接受连接，直接关掉
-				::printf_s("AddConnection failed\n");
-				SAFE_CLOSE_SOCKET(s);
-				return;
-			}
-
-			//cout << "OnConnect ip:" << con->GetIPAddress() << " port:" << con->GetPort() << endl;
 			::printf_s("OnConnect ip:%s port:%d\n", con->GetIPAddress().c_str(), con->GetPort());
 			if (m_pProcesser != NULL)
 			{
@@ -101,7 +77,6 @@ namespace XX004
 
 		void NetServer::OnDisconnect(NetConnection* con)
 		{
-			//cout << "OnDisconnect ip:" << con->GetIPAddress() << " port:" << con->GetPort() << endl;
 			::printf_s("OnDisconnect ip:%s port:%d\n", con->GetIPAddress().c_str(), con->GetPort());
 			if (m_pProcesser != NULL)
 			{

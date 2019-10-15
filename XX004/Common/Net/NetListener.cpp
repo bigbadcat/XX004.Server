@@ -9,7 +9,7 @@
 *******************************************************/
 
 #include "NetListener.h"
-#include "NetServer.h"
+#include "NetConnectionManager.h"
 #include "NetDefine.h"
 #include <assert.h>
 #include <iostream>
@@ -19,7 +19,7 @@ namespace XX004
 {
 	namespace Net
 	{
-		NetListener::NetListener() : m_Socket(SOCKET_ERROR), m_Port(0), m_pServer(NULL)
+		NetListener::NetListener() : m_Socket(SOCKET_ERROR), m_Port(0), m_pManager(NULL)
 		{
 		}
 
@@ -42,49 +42,6 @@ namespace XX004
 		{
 			cout << "NetListener::Stop"<< endl;
 			SAFE_CLOSE_SOCKET(m_Socket)
-		}
-
-		void NetListener::Select()
-		{
-			if (m_Socket == SOCKET_ERROR)
-			{
-				return;
-			}
-
-			fd_set readfds;
-			fd_set writefds;
-			fd_set exceptfds;
-			FD_ZERO(&readfds);
-			FD_ZERO(&writefds);
-			FD_ZERO(&exceptfds);
-			FD_SET(m_Socket, &readfds);
-			FD_SET(m_Socket, &exceptfds);
-			timeval timeout;
-			timeout.tv_sec = 0;
-			timeout.tv_usec = 0;
-			int ret = ::select(0, &readfds, &writefds, &exceptfds, &timeout);		//windows下nfds参数无用，可传入0
-			if (ret > 0)
-			{
-				//先判断是否有异常
-				if (FD_ISSET(m_Socket, &exceptfds) != 0)
-				{
-					cout << "listener socket exception" << endl;
-					SAFE_CLOSE_SOCKET(m_Socket)
-				}
-				if (FD_ISSET(m_Socket, &readfds) != 0)
-				{
-					if (OnSocketRead() != 0)
-					{
-						cout << "listener socket read error" << endl;
-						SAFE_CLOSE_SOCKET(m_Socket)
-					}
-				}
-			}
-			else if (ret == SOCKET_ERROR)
-			{
-				cout << "select listener socket err:" << WSAGetLastError() << endl;
-				SAFE_CLOSE_SOCKET(m_Socket)
-			}
 		}
 
 		SOCKET NetListener::CreateListenSocket()
@@ -167,12 +124,17 @@ namespace XX004
 				return 3;
 			}
 
-			if (m_pServer != NULL)
+			if (m_pManager != NULL)
 			{
-				m_pServer->OnConnect(rs);
+				m_pManager->AddConnection(rs);
 			}
 
 			return 0;
+		}
+
+		void NetListener::OnSocketClose()
+		{
+			SAFE_CLOSE_SOCKET(m_Socket)
 		}
 	}
 }

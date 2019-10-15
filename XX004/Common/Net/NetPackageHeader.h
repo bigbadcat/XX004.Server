@@ -81,4 +81,4 @@ namespace XX004
 	}
 }
 
-#endif	//__NetPackageHeader_h__
+#endif

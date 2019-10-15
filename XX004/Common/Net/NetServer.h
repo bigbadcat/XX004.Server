@@ -14,8 +14,7 @@
 #include <iostream>
 #include <string>
 #include <WinSock2.h>
-#include "NetConnection.h"
-#include"../Macro.h"
+#include "NetDefine.h"
 
 using namespace std;
 
@@ -24,6 +23,7 @@ namespace XX004
 	namespace Net
 	{
 		class NetConnection;
+		struct NetPackageHeader;
 
 		//网络处理接口
 		class INetProcesser
@@ -42,7 +42,6 @@ namespace XX004
 		//服务端网络管理。		
 		class NetServer
 		{
-			friend class NetListener;
 			friend class NetConnectionManager;
 
 		public:
@@ -57,7 +56,7 @@ namespace XX004
 			void Stop();
 
 			//选择Socket处理
-			void SelectSocket();
+			void SelectSocket(int msec);
 
 			//获取连接
 			NetConnection* GetConnection(UInt64 uid);
@@ -79,16 +78,13 @@ namespace XX004
 
 		private:
 			//有新的连接。
-			void OnConnect(SOCKET s);
+			void OnConnect(NetConnection* con);
 
 			//有连接断开。
 			void OnDisconnect(NetConnection* con);
 
 			//有连接接收到数据包
 			void OnRecvData(NetConnection* con);
-			
-			//监听者
-			NetListener *m_pListener;
 
 			//连接管理
 			NetConnectionManager *m_pConnectionManager;
@@ -99,4 +95,4 @@ namespace XX004
 	}
 }
 
-#endif	//__NetServer_h__
+#endif

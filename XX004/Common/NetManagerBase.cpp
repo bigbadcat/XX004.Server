@@ -318,13 +318,11 @@ namespace XX004
 		}
 
 		//网络循环
-		std::chrono::milliseconds dura(100);
 		while (m_IsRunning)
 		{
 			OnPostSend();
-			m_Server.SelectSocket();
+			m_Server.SelectSocket(100);		//阻塞等待时最多等100毫秒
 			UpdateInternalConnection();
-			std::this_thread::sleep_for(dura);
 		}
 		m_Server.Stop();
 	}

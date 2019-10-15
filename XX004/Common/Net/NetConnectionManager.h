@@ -14,24 +14,22 @@
 #include <WinSock2.h>
 #include <vector>
 #include <map>
-#include "NetConnection.h"
+#include "NetDefine.h"
 
 namespace XX004
 {
 	namespace Net
 	{
 		class NetServer;
-		//class NetConnectionSet;
+		class NetListener;
+		class NetConnection;
 
 		//网络连接管理，通过管理多个连接线程实现
 		class NetConnectionManager
 		{
-			//typedef std::vector<NetConnectionSet*> ConnectionVector;
 			typedef std::map<SOCKET, NetConnection*> NetConnectionMap;
 			typedef std::map<UInt64, NetConnection*> UIDToConnectionMap;
 			typedef std::map<RemoteKey, NetConnection*> RemoteKeyToConnectionMap;
-			//typedef std::map<int, NetConnection*> InternalConnectionMap;
-			//typedef std::map<Int64, NetConnection*> ClientConnectionMap;
 
 		public:
 			//构造析构函数
@@ -39,13 +37,13 @@ namespace XX004
 			virtual ~NetConnectionManager();
 
 			//初始化
-			void Init();
+			void Init(int port);
 			
 			//释放
 			void Release();
 
 			//选择Socket处理
-			void SelectSocket();
+			void SelectSocket(int msec);
 
 			//设置服务端
 			inline void SetServer(NetServer *p) { m_pServer = p; }
@@ -54,7 +52,7 @@ namespace XX004
 			inline NetServer* GetServer()const { return m_pServer; }
 
 			//添加连接
-			NetConnection* AddConnection(SOCKET s);
+			void AddConnection(SOCKET s);
 
 			//移除并关闭连接
 			void RemoveConnection(NetConnection* con);
@@ -88,8 +86,8 @@ namespace XX004
 			//网络服务端
 			NetServer *m_pServer;
 
-			////连接线程
-			//ConnectionVector m_ConnectionSets;
+			//监听者
+			NetListener *m_pListener;
 
 			//连接集合
 			NetConnectionMap m_Connections;
@@ -99,13 +97,6 @@ namespace XX004
 
 			//远端标识到连接(辅助查找)
 			RemoteKeyToConnectionMap m_RemoteKeyToConnection;
-
-			////内部连接
-			//InternalConnectionMap m_InternalConnections;
-
-			////客户端连接
-			//ClientConnectionMap m_ClientConnections;
-
 		};
 	}
 }
