@@ -22,6 +22,6 @@ namespace XX004
 
 	void NetManagerGame::OnCreateInternalInfo(std::vector<int> &infos)
 	{
-		//infos.push_back(RemoteType::RT_CROSS);
+		//infos.push_back(RemoteType::RT_REGION);
 	}
 }

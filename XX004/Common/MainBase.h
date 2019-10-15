@@ -29,8 +29,11 @@ namespace XX004
 		MainBase();
 		virtual ~MainBase();
 
+		//解析服务器ID
+		static int ParseServerID(int argc, char *argv[]);
+
 		//启动
-		int Run(int type);
+		int Run(int type, int sid);
 
 		//获取服务类型
 		inline int GetType()const { return m_Type; }

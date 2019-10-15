@@ -107,7 +107,7 @@ namespace XX004
 			if (ret != 0)
 			{
 				cout << "bind socket err:" << WSAGetLastError() << endl;
-				::closesocket(s);
+				SAFE_CLOSE_SOCKET(s);
 				return SOCKET_ERROR;
 			}
 
@@ -116,7 +116,7 @@ namespace XX004
 			if (ret != 0)
 			{
 				cout << "listen socket err:" << WSAGetLastError() << endl;
-				::closesocket(s);
+				SAFE_CLOSE_SOCKET(s);
 				return SOCKET_ERROR;
 			}
 
@@ -127,7 +127,7 @@ namespace XX004
 			if (ret != 0)
 			{
 				cout << "set listen socket noblocking err:" << WSAGetLastError() << endl;
-				::closesocket(s);
+				SAFE_CLOSE_SOCKET(s);
 				return SOCKET_ERROR;
 			}
 			return s;
@@ -152,7 +152,7 @@ namespace XX004
 			if (ret != 0)
 			{
 				cout << "set remote socket noblocking err:" << WSAGetLastError() << endl;
-				::closesocket(rs);
+				SAFE_CLOSE_SOCKET(rs);
 				return 2;
 			}
 
@@ -163,7 +163,7 @@ namespace XX004
 			if (ret != 0)
 			{
 				cout << "setsockopt err:" << WSAGetLastError() << endl;
-				::closesocket(rs);
+				SAFE_CLOSE_SOCKET(rs);
 				return 3;
 			}
 

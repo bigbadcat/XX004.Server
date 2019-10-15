@@ -32,7 +32,7 @@ namespace XX004
 		virtual ~StorageManager();
 
 		//启动
-		void Start();
+		void Start(int type, int sid);
 
 		//停止
 		void Stop();

@@ -87,7 +87,7 @@ namespace XX004
 			{
 				//无法再接受连接，直接关掉
 				::printf_s("AddConnection failed\n");
-				::closesocket(s);
+				SAFE_CLOSE_SOCKET(s);
 				return;
 			}
 

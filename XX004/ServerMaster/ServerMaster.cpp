@@ -9,6 +9,7 @@
 *******************************************************/
 
 #include "ServerMaster.h"
+#include <StartSetting.h>
 #include <Util/TimeUtil.h>
 #include <Util/StringUtil.h>
 #include <iostream>
@@ -91,7 +92,8 @@ namespace XX004
 
 	void ServerMaster::OnInit()
 	{
-		m_MySQL.Init("localhost", "root", "1234", "xx004", 3306);
+		const DataBaseSetting* db = StartSetting::GetInstance()->GetDataBase();
+		m_MySQL.Init(db->GetHost().c_str(), db->GetUser().c_str(), db->GetPassword().c_str(), db->GetName().c_str(), db->GetPort());
 		LoadServerInfo();
 	}
 
@@ -197,7 +199,7 @@ namespace XX004
 			}
 			create_time = ret->GetInt64("create_time");
 			Int64 freetime = ret->GetInt64("free_time");
-			if (freetime > TimeUtil::GetCurrentSecond())
+			if (freetime > (Int64)TimeUtil::GetCurrentSecond())
 			{
 				res.BeginLuaTable();
 				res.AddLuaKeyValue("Result", 3);
@@ -213,7 +215,7 @@ namespace XX004
 			create_time = TimeUtil::GetCurrentSecond();
 
 			char sql[128];
-			sprintf_s(sql, "call sp_insert_update_user('%s','%s',%I64d,%I64d);", user.c_str(), pwd.c_str(), create_time, 0);
+			sprintf_s(sql, "call sp_insert_update_user('%s','%s',%I64d,%I64d);", user.c_str(), pwd.c_str(), create_time, (Int64)0);
 			m_MySQL.Execute(sql);
 		}
 		return true;

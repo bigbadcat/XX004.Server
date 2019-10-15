@@ -18,8 +18,16 @@ int main(int argc, char *argv[])
 {
 	int ret = 0;
 	{
-		XX004::MainGame server;
-		ret = server.Run(XX004::Net::RemoteType::RT_GAME);
+		int sid = XX004::MainBase::ParseServerID(argc, argv);
+		if (sid > 0)
+		{
+			XX004::MainGame server;
+			ret = server.Run(XX004::Net::RemoteType::RT_GAME, sid);
+		}
+		else
+		{
+			::printf_s("bad server id(%d).\n", sid);
+		}
 	}
 
  	system("pause");

@@ -18,21 +18,60 @@ using namespace std;
 
 namespace XX004
 {
-	//启动设置信息
-	class StartSettingInfo
+	class MySQLWrap;
+
+	//数据库信息
+	class DataBaseSetting
 	{
 	public:
-		StartSettingInfo();
-		virtual ~StartSettingInfo();
+		DataBaseSetting();
+		~DataBaseSetting();
 
 		//初始化
-		virtual void Init(tinyxml2::XMLNode *node);
+		void Init(tinyxml2::XMLNode *node);
+
+		//数据库地址
+		inline const string& GetHost()const { return m_Host; }
+
+		//数据库地址
+		inline const string& GetUser()const { return m_User; }
+
+		//数据库地址
+		inline const string& GetPassword()const { return m_Password; }
+
+		//数据库地址
+		inline const string& GetName()const { return m_Name; }
+
+		//连接端口
+		inline int GetPort()const { return m_Port; }
+
+	private:
+
+		//数据库地址
+		string m_Host;
+
+		//用户名
+		string m_User;
+
+		//密码
+		string m_Password;
+
+		//数据库名
+		string m_Name;
+
+		//连接端口
+		unsigned int m_Port;
+	};
+
+	//服务器信息
+	class ServerSetting
+	{
+	public:
+		ServerSetting(int t, const char* ip, int port, int http_port);
+		~ServerSetting();
 
 		//获取类型
 		inline int GetType()const { return m_Type; }
-
-		//获取名称
-		inline const string& GetName()const { return m_Name; }
 
 		//获取地址
 		inline const string& GetIPAddress()const { return m_IPAddress; }
@@ -40,47 +79,50 @@ namespace XX004
 		//获取端口
 		inline int GetPort()const { return m_Port; }
 
-		//获取节点值
-		static string GetValue(tinyxml2::XMLNode *node, const string &key);
-
 	private:
+
+		//服务器类型
 		int m_Type;
-		string m_Name;
+
+		//地址
 		string m_IPAddress;
+
+		//端口
 		int m_Port;
+
+		//Http服务器端口
+		int m_HttpPort;
 	};
 
 	//启动设置
 	class StartSetting
 	{
-		typedef map<int, StartSettingInfo*> SettingInfoMap;
+		typedef map<int, ServerSetting*> ServerSettingMap;
 	public:
 		//获取配置
 		static StartSetting* GetInstance();
 
-		//获取服务器分组
-		inline int GetGroup()const { return m_Group; }
+		//获取数据库配置
+		inline const DataBaseSetting* GetDataBase()const { return &m_Database; }
 
-		//获取服务器id
-		inline int GetID()const { return m_ID; }
+		//加载服务器信息
+		void LoadServerInfo(int type, int sid, MySQLWrap *mysql);
 
-		//获取配置信息
-		StartSettingInfo* GetSettingInfo(int type)const;
+		//获取服务器信息
+		ServerSetting* GetServerSetting(int type)const;
 
 	private:
 		StartSetting();
-		virtual ~StartSetting();
+		~StartSetting();
 
 		//初始化
 		void Init();
 
-		//服务器组
-		int m_Group;
+		//数据库配置信息
+		DataBaseSetting m_Database;
 
-		//服务器编号
-		int m_ID;
-
-		SettingInfoMap m_Infos;
+		//服务器信息
+		ServerSettingMap m_ServerSettings;
 	};
 }
 

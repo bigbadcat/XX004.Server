@@ -40,7 +40,19 @@ namespace XX004
 		SAFE_DELETE(m_pServer);
 	}
 
-	int MainBase::Run(int type)
+	int MainBase::ParseServerID(int argc, char *argv[])
+	{
+		int sid = 0;
+		if (argc < 2)
+		{
+			return sid;
+		}
+
+		sid = ::atoi(argv[1]);
+		return sid;
+	}
+
+	int MainBase::Run(int type, int sid)
 	{
 		//初始化网络
 		WORD wVersionRequested;
@@ -65,12 +77,11 @@ namespace XX004
 		m_pServer->RegisterNetMessage(m_pNetManager);
 
 		//模块运行
-		int id = 10001;		//通过命令行传入
-		StartSettingInfo* info = StartSetting::GetInstance()->GetSettingInfo(m_Type);
+		m_pStorageManager->Start(type, sid);
+		ServerSetting* info = StartSetting::GetInstance()->GetServerSetting(m_Type);
 		assert(info != NULL);
-		m_pStorageManager->Start();
 		m_pNetManager->Start(info->GetPort());
-		m_pServer->Start(id, true);
+		m_pServer->Start(sid, true);
 		CommandLoop();
 		printf_s("Waitting end ...\n");
 		m_pServer->Stop();

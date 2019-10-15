@@ -11,6 +11,7 @@
 #include "StorageManager.h"
 #include "MainBase.h"
 #include "Macro.h"
+#include "StartSetting.h"
 #include <assert.h>
 #include <iostream>
 
@@ -26,10 +27,12 @@ namespace XX004
 
 	}
 
-	void StorageManager::Start()
+	void StorageManager::Start(int type, int sid)
 	{
+		const DataBaseSetting* db = StartSetting::GetInstance()->GetDataBase();
 		m_IsRunning = true;
-		m_MySQL.Init("localhost", "root", "1234", "xx004", 3306);
+		m_MySQL.Init(db->GetHost().c_str(), db->GetUser().c_str(), db->GetPassword().c_str(), db->GetName().c_str(), db->GetPort());
+		StartSetting::GetInstance()->LoadServerInfo(type, sid, &m_MySQL);
 		m_Thread = thread([](StorageManager *t){t->ThreadProcess(); }, this);
 	}
 

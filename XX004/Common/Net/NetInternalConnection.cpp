@@ -172,7 +172,7 @@ namespace XX004
 			if (ret != 0)
 			{
 				cout << "set listen socket noblocking err:" << WSAGetLastError() << endl;
-				::closesocket(s);
+				SAFE_CLOSE_SOCKET(s);
 				return;
 			}
 			::connect(s, (sockaddr *)&addrSrv, sizeof (sockaddr));

@@ -250,9 +250,9 @@ namespace XX004
 			m_Connections.erase(s);
 			m_UIDToConnection.erase(pcon->GetUniqueID());
 			m_RemoteKeyToConnection.erase(pcon->GetRemote());
-			::closesocket(pcon->GetSocket());
 			pcon->SetSocket(SOCKET_ERROR);
 			SAFE_DELETE(pcon);
+			SAFE_CLOSE_SOCKET(s);
 		}
 	}
 }

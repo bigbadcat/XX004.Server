@@ -311,9 +311,9 @@ namespace XX004
 		OnCreateInternalInfo(infos);
 		for (vector<int>::iterator itr = infos.begin(); itr != infos.end(); ++itr)
 		{
-			StartSettingInfo *info = StartSetting::GetInstance()->GetSettingInfo(*itr);
+			ServerSetting *setting = StartSetting::GetInstance()->GetServerSetting(*itr);
 			NetInternalConnection *con = new NetInternalConnection();
-			con->Init(info->GetType(), info->GetIPAddress(), info->GetPort());
+			con->Init(setting->GetType(), setting->GetIPAddress(), setting->GetPort());
 			m_InternalConnections.insert(InternalConnectionMap::value_type(con->GetRomoteType(), con));
 		}
 

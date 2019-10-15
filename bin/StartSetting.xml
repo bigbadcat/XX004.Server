@@ -1,21 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<StartSetting group="1" id="1">
-	<Setting>
-		<type>2</type>
-		<name>Master</name>
-		<ip>127.0.0.1</ip>
-		<port>9000</port>
-	</Setting>
-	<Setting>
-		<type>3</type>
-		<name>Game</name>
-		<ip>127.0.0.1</ip>
-		<port>9001</port>
-	</Setting>
-	<Setting>
-		<type>4</type>
-		<name>Region</name>
-		<ip>127.0.0.1</ip>
-		<port>9002</port>
-	</Setting>
+<StartSetting>
+	<DataBase>
+		<host>localhost</host>
+		<user>root</user>
+		<pwd>1234</pwd>
+		<name>xx004</name>
+		<port>3306</port>
+	</DataBase>
 </StartSetting>
