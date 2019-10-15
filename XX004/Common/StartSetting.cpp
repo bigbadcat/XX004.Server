@@ -136,7 +136,7 @@ namespace XX004
 		return citr == m_ServerSettings.cend() ? NULL : citr->second;
 	}
 
-	StartSetting::StartSetting()
+	StartSetting::StartSetting() : m_MasterPort(0)
 	{
 	}
 
@@ -158,6 +158,10 @@ namespace XX004
 			if (name.compare("DataBase") == 0)
 			{
 				m_Database.Init(node);
+			}
+			else if (name.compare("Master") == 0)
+			{
+				m_MasterPort = (short)::atoi(get_xml_value(node, "port").c_str());
 			}
 		}
 	}

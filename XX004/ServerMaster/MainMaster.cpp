@@ -10,6 +10,7 @@
 
 #include "MainMaster.h"
 #include "ServerMaster.h"
+#include "StartSetting.h"
 #include <WinSock2.h>
 #include <iostream>
 using namespace std;
@@ -67,7 +68,8 @@ namespace XX004
 		}
 
 		ServerMaster server;
-		server.Start(8081);
+		short port = StartSetting::GetInstance()->GetMasterPort();
+		server.Start(port);
 		wait_quit(server);
 		server.Stop();
 

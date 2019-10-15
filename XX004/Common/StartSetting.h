@@ -111,6 +111,9 @@ namespace XX004
 		//获取服务器信息
 		ServerSetting* GetServerSetting(int type)const;
 
+		//获取中控端口
+		inline short GetMasterPort()const { return m_MasterPort; }
+
 	private:
 		StartSetting();
 		~StartSetting();
@@ -123,6 +126,9 @@ namespace XX004
 
 		//服务器信息
 		ServerSettingMap m_ServerSettings;
+
+		//中控服务端口
+		short m_MasterPort;
 	};
 }
 

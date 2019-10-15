@@ -7,4 +7,7 @@
 		<name>xx004</name>
 		<port>3306</port>
 	</DataBase>
+	<Master>
+		<port>8081</port>
+	</Master>
 </StartSetting>
