@@ -64,7 +64,7 @@ namespace XX004
 
 
 		//当前Main对象
-		static MainBase* pCurMain;
+		static MainBase *pCurMain;
 
 		//每一帧的间隔毫秒
 		static const Int64 FRAME_GAP;
@@ -76,14 +76,14 @@ namespace XX004
 		int m_Type;
 
 		//网络管理
-		NetManagerBase* m_pNetManager;
+		NetManagerBase *m_pNetManager;
 
 		//存储管理
-		StorageManager* m_pStorageManager;
+		StorageManager *m_pStorageManager;
 
 		//服务对象
-		ServerBase* m_pServer;		
+		ServerBase *m_pServer;
 	};
 }
 
-#endif	//__MainBase_h__
+#endif

@@ -152,4 +152,4 @@ namespace XX004
 	};
 }
 
-#endif	//__ServerBase_h__
+#endif

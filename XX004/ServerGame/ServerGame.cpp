@@ -9,13 +9,15 @@
 *******************************************************/
 
 #include "ServerGame.h"
+#include "HttpGame.h"
 #include "Module/Login/LoginModule.h"
 #include <NetManagerBase.h>
+#include <StartSetting.h>
 using namespace XX004::Net;
 
 namespace XX004
 {
-	ServerGame::ServerGame() : m_LoginModule(NULL)
+	ServerGame::ServerGame() : m_LoginModule(NULL), m_HttpGame(NULL)
 	{
 		InitModules();
 		m_LoginModule = GetModule<LoginModule>();
@@ -23,6 +25,7 @@ namespace XX004
 
 	ServerGame::~ServerGame()
 	{
+		SAFE_DELETE(m_HttpGame);
 		m_LoginModule = NULL;
 		SAFE_DELETE_VECTOR(m_Modules);
 	}
@@ -55,9 +58,18 @@ namespace XX004
 
 	bool ServerGame::OnInitStep(int step)
 	{
-		int i = step - 1;
-		m_Modules[i]->Init();
-		return (i + 1) >= m_Modules.size();
+		//先初始化模块
+		if (step <= m_Modules.size())
+		{
+			m_Modules[step - 1]->Init();
+			return false;
+		}
+
+		//启动Http服务
+		ServerSetting* info = StartSetting::GetInstance()->GetServerSetting(Net::RemoteType::RT_GAME);
+		m_HttpGame = new HttpGame();
+		m_HttpGame->Start(info->GetHttpPort());		
+		return true;
 	}
 
 	void ServerGame::OnUpdate()
@@ -66,6 +78,11 @@ namespace XX004
 
 	void ServerGame::OnUpdatePerSecond()
 	{
+		//HTTP服务每秒派发一次的频率即可
+		if (m_HttpGame != NULL)
+		{
+			m_HttpGame->Dispatch();
+		}
 	}
 
 	void ServerGame::OnCommand(const std::string& cmd, const std::vector<std::string> &param)
@@ -79,9 +96,18 @@ namespace XX004
 
 	bool ServerGame::OnReleaseStep(int step)
 	{
-		int i = step - 1;
+		//停止Http服务
+		if (step == 1)
+		{
+			m_HttpGame->Stop();
+			SAFE_DELETE(m_HttpGame);
+			return false;
+		}
+
+		//释放顺序应该逆着来
+		int i = m_Modules.size() - (step - 1);		//减1是因为step1已经用于释放Http服务了
 		m_Modules[i]->Release();
-		return (i + 1) >= m_Modules.size();
+		return i == 0;
 	}
 
 	void ServerGame::OnConnect(NetDataItem *item)
@@ -93,26 +119,4 @@ namespace XX004
 	{
 		m_LoginModule->OnDisconnect(item);
 	}
-
-	//void ServerGame::OnRoleEnter(NetDataItem *item)
-	//{
-	//	WSRoleEnter req;
-	//	req.Unpack(item->data, 0);
-
-	//	//创建玩家角色到场景里
-
-	//	//通知进场
-	//	WCSceneEnterNotify notify;
-	//	notify.Map = req.Map;
-	//	notify.PositionX = req.PositionX;
-	//	notify.PositionY = req.PositionY;
-	//	notify.Direction = req.Direction;
-	//	MainBase::GetCurMain()->GetNetManager()->Send(RemoteKey(RemoteType::RT_GATE, req.RoleID), NetMsgID::WC_SCENE_ENTER, &notify);
-	//}
-
-	//void ServerGame::OnMoveRequest(NetDataItem *item)
-	//{
-	//	CSMoveRequest req;
-	//	req.Unpack(item->data, 0);
-	//}
 }

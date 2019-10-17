@@ -14,6 +14,7 @@
     <ClCompile Include="Module\Login\UserInfo.cpp">
       <Filter>Module\Login</Filter>
     </ClCompile>
+    <ClCompile Include="HttpGame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetManagerGame.h" />
@@ -28,6 +29,7 @@
     <ClInclude Include="Module\Login\UserInfo.h">
       <Filter>Module\Login</Filter>
     </ClInclude>
+    <ClInclude Include="HttpGame.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Module">

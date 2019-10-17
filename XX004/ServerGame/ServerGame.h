@@ -21,6 +21,7 @@ namespace XX004
 {
 	typedef vector<ModuleBase*> ModuleVector;
 	class LoginModule;
+	class HttpGame;
 
 	class ServerGame : public ServerBase
 	{
@@ -66,7 +67,11 @@ namespace XX004
 		//模块列表
 		ModuleVector m_Modules;
 
+		//登陆模块
 		LoginModule *m_LoginModule;
+
+		//HTTP服务
+		HttpGame *m_HttpGame;
 	};
 
 	template<class T>

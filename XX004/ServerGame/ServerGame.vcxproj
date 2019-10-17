@@ -151,6 +151,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="HttpGame.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="Module\Login\LoginModule.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="ServerGame.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HttpGame.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Module\Login\LoginModule.h" />
     <ClInclude Include="Module\Login\UserInfo.h" />

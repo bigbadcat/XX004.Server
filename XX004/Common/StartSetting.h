@@ -79,6 +79,9 @@ namespace XX004
 		//获取端口
 		inline int GetPort()const { return m_Port; }
 
+		//获取Http服务端口
+		inline int GetHttpPort()const { return m_HttpPort; }
+
 	private:
 
 		//服务器类型

@@ -77,9 +77,6 @@ namespace XX004
 		//初始化
 		virtual void OnInit();
 
-		//每次循环调用
-		virtual void OnLoop();
-
 		//释放
 		virtual void OnRelease();
 

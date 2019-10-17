@@ -50,4 +50,4 @@ namespace XX004
 	}
 }
 
-#endif	//__Macro_h__
+#endif

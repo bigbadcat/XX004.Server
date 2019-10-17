@@ -54,7 +54,6 @@ namespace XX004
 
 	void NetManagerBase::OnConnected(NetConnection *connection)
 	{
-		//cout << "NetManagerBase::OnConnected ip:" << connection->GetIPAddress() << " port:" << connection->GetPort() << endl;
 		NetDataItem *item = GetNetDataItem();
 		item->op = NetOperateType::NOT_CONNECT;
 		item->uid = connection->GetUniqueID();
@@ -64,7 +63,6 @@ namespace XX004
 
 	void NetManagerBase::OnDisconnected(NetConnection *connection)
 	{
-		//cout << "NetManagerBase::OnDisconnected ip:" << connection->GetIPAddress() << " port:" << connection->GetPort() << endl;
 		NetDataItem *item = GetNetDataItem();
 		item->op = NetOperateType::NOT_DISCONNECT;
 		item->uid = connection->GetUniqueID();
@@ -74,10 +72,6 @@ namespace XX004
 
 	void NetManagerBase::OnRecvData(NetConnection *connection, const NetPackageHeader& header, Byte *buffer)
 	{
-		////解析网络消息并添加到队列中
-		//cout << "NetManagerBase::OnRecvData ip:" << connection->GetIPAddress() << " port:" << connection->GetPort();
-		//cout << " cmd:" << header.Command << " len:" << header.BodySize << endl;
-
 		//包头相关处理
 		
 		//数据处理

@@ -85,14 +85,14 @@ namespace XX004
 		//初始化
 		virtual void OnInit() = 0;
 
-		//每次循环调用
-		virtual void OnLoop() = 0;
-
 		//释放
 		virtual void OnRelease() = 0;
 
 		//注册服务
 		void RegisterServer(string path, HttpServerCallBack call);
+
+		//设置默认服务
+		inline void RegisterDefaultServer(HttpServerCallBack call) { m_DefaultCallBack = call; }
 
 	private:
 		//线程过程
@@ -114,6 +114,9 @@ namespace XX004
 
 		//服务回调
 		HttpServerCallBackMap m_ServerCallBack;
+
+		//默认回掉
+		HttpServerCallBack m_DefaultCallBack;
 	};
 }
 

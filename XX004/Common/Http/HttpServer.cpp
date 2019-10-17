@@ -203,19 +203,29 @@ namespace XX004
 
 		//分派服务
 		HttpServerCallBackMap::iterator itr = pserver->m_ServerCallBack.find(path);
-		if (itr == pserver->m_ServerCallBack.end())
+		if (itr != pserver->m_ServerCallBack.end())
 		{
-			struct evbuffer *retbuff = evbuffer_new();
-			evbuffer_add_printf(retbuff, "The requested URL %s was not found on this server.", uri.c_str());
-			evhttp_send_reply(req, HTTP_NOTFOUND, "Not Found", retbuff);
-			evbuffer_free(retbuff);
-			retbuff = NULL;
+			//处理服务，回复结果
+			HttpResponse res;
+			itr->second(path, params_set, res);
+			res.SendReply(req);
 			return;
 		}
 
-		//处理服务，回复结果
-		HttpResponse res;
-		itr->second(path, params_set, res);
-		res.SendReply(req);
+		//默认回掉
+		if (pserver->m_DefaultCallBack != NULL)
+		{
+			HttpResponse res;
+			pserver->m_DefaultCallBack(path, params_set, res);
+			res.SendReply(req);
+			return;
+		}
+
+		//回复错误
+		struct evbuffer *retbuff = evbuffer_new();
+		evbuffer_add_printf(retbuff, "The requested URL %s was not found on this server.", uri.c_str());
+		evhttp_send_reply(req, HTTP_NOTFOUND, "Not Found", retbuff);
+		evbuffer_free(retbuff);
+		retbuff = NULL;
 	}
 }

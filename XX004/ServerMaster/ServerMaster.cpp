@@ -97,10 +97,6 @@ namespace XX004
 		LoadServerInfo();
 	}
 
-	void ServerMaster::OnLoop()
-	{		
-	}
-
 	void ServerMaster::OnRelease()
 	{
 		m_MySQL.Release();
