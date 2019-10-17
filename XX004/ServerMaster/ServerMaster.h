@@ -48,9 +48,14 @@ namespace XX004
 		ServerGroupInfo();
 		~ServerGroupInfo();
 
+		//初始化服务器组
 		void Init(MySQLResult *result);
 
+		//添加服务器信息
 		void AddServerInfo(ServerInfo *info);
+
+		//获取服务器信息
+		const ServerInfo* GetServerInfo(int sid);
 
 		int id;
 		vector<int> sub_channel;
@@ -81,6 +86,12 @@ namespace XX004
 		virtual void OnRelease();
 
 	private:
+
+		//获取服务器信息
+		const ServerInfo* GetServerInfo(int sid)const;
+
+		//转发Http请求到游戏服
+		void RelayHttpRequest(const string &path, HttpParamMap &params, HttpResponse &res);
 
 		//加载服务器信息
 		void LoadServerInfo();

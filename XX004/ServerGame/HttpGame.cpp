@@ -37,6 +37,10 @@ namespace XX004
 			{
 				itr->second(item->path, item->params);
 			}
+			else
+			{
+				::printf_s("Unknow http req path:%s\n", item->path.c_str());
+			}
 			SAFE_DELETE(item);
 		}
 	}
@@ -86,5 +90,6 @@ namespace XX004
 			::printf_s("OnKickRequest roleid:%I64d\n", roleid);
 			return;
 		}
+		::printf_s("OnKickRequest not found user or roleid.\n");
 	}
 }

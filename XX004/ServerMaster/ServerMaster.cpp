@@ -68,6 +68,18 @@ namespace XX004
 		servers.push_back(info);
 	}
 
+	const ServerInfo* ServerGroupInfo::GetServerInfo(int sid)
+	{
+		for (ServerInfoVector::const_iterator itr = servers.cbegin(); itr != servers.cend(); ++itr)
+		{
+			if ((*itr)->id == sid)
+			{
+				return *itr;
+			}
+		}
+		return NULL;
+	}
+
 	const UInt64 ServerMaster::SERVER_DIRTY_GAP = 60 * 5;		//5分钟失效
 
 	ServerMaster::ServerMaster() : m_IsServerDirty(false), m_ServerTimeStamp(0)
@@ -87,6 +99,7 @@ namespace XX004
 
 	void ServerMaster::OnRegisterServer()
 	{
+		RegisterDefaultServer([this](const string &p, HttpParamMap &params, HttpResponse &res){this->RelayHttpRequest(p, params, res); });
 		HTTP_SERVER_REGISTER("/login", OnLoginRequest);
 	}
 
@@ -100,6 +113,47 @@ namespace XX004
 	void ServerMaster::OnRelease()
 	{
 		m_MySQL.Release();
+	}
+
+	const ServerInfo* ServerMaster::GetServerInfo(int sid)const
+	{
+		int gid = sid / 10000;
+		ServerGroupInfoMap::const_iterator itr = m_ServerGroups.find(gid);
+		if (itr == m_ServerGroups.cend())
+		{
+			return NULL;
+		}
+		return itr->second->GetServerInfo(sid);
+	}
+
+	void ServerMaster::RelayHttpRequest(const string &path, HttpParamMap &params, HttpResponse &res)
+	{
+		HttpParamMap::iterator itr = params.find("sid");
+		if (itr == params.end())
+		{
+			res.AddText("RelayHttpRequest need \"sid\" param.");
+			return;
+		}
+
+		int sid = ::atoi(itr->second.c_str());
+		if (sid <= 0)
+		{
+			res.AddText("RelayHttpRequest bad sid(%s).", itr->second.c_str());
+			return;
+		}
+
+		const ServerInfo *info = GetServerInfo(sid);
+		if (info == NULL)
+		{
+			res.AddText("RelayHttpRequest server(%d) not found.", sid);
+			return;
+		}
+
+		//回复并转发请求
+		HttpParamMap new_param(params);
+		new_param.erase("sid");		
+		SendHttpRequest(info->ip, info->http_port, path, new_param);
+		res.AddText("Relay to %d. Time:%I64d", sid, TimeUtil::GetCurrentSecond());
 	}
 
 	void ServerMaster::LoadServerInfo()

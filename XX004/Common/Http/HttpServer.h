@@ -20,6 +20,7 @@
 using namespace std;
 
 struct evhttp_request;
+struct evhttp_connection;
 struct evbuffer;
 struct event_base;
 
@@ -64,6 +65,8 @@ namespace XX004
 #define HTTP_SERVER_REGISTER(path, fun) \
 	RegisterServer(path, [this](const string &p, HttpParamMap &params, HttpResponse &res){this->fun(p, params, res); })
 
+	typedef map<struct evhttp_request*, struct evhttp_connection*> HttpRequestMap;
+
 	class HttpServer
 	{
 	public:
@@ -76,7 +79,14 @@ namespace XX004
 		//停止服务
 		void Stop();
 
+		//从uri中获取参数 ret:请求路径
 		static string GetHttpParams(const string &uri, HttpParamMap &params);
+
+		//获取uri
+		static string GetHttpURI(const string &path, HttpParamMap &params);
+
+		//发送HTTP请求
+		void SendHttpRequest(const string& ip, int port, const string& path, HttpParamMap &params);
 
 	protected:
 		//开始注册服务
@@ -101,6 +111,9 @@ namespace XX004
 		//收到Http请求
 		static void OnHttpRequest(struct evhttp_request *req, void *arg);
 
+		//Http请求完成
+		static void OnHttpRequestDone(struct evhttp_request *req, void *arg);
+
 		bool m_Run;
 
 		//逻辑处理线程
@@ -117,6 +130,9 @@ namespace XX004
 
 		//默认回掉
 		HttpServerCallBack m_DefaultCallBack;
+
+		//请求集合
+		HttpRequestMap m_HttpRequest;
 	};
 }
 

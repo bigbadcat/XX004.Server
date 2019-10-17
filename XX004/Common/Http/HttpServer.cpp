@@ -102,6 +102,13 @@ namespace XX004
 
 	HttpServer::~HttpServer()
 	{
+		for (HttpRequestMap::iterator itr = m_HttpRequest.begin(); itr != m_HttpRequest.end(); ++itr)
+		{
+			evhttp_connection_free(itr->second);
+			itr->second = NULL;
+		}
+		m_HttpRequest.clear();
+
 		if (m_EventBase != NULL)
 		{
 			event_base_free(m_EventBase);
@@ -116,26 +123,18 @@ namespace XX004
 		m_Thread = thread([](HttpServer *t){t->ThreadProcess(); }, this);
 	}
 
-	void http_request_done(struct evhttp_request *req, void *arg)
-	{
-	}
-
 	void HttpServer::Stop()
 	{
 		if (m_Run)
 		{
-			m_Run = false;
-			event_base_loopbreak(m_EventBase);		//m_EventBase很大可能处于阻塞状态，没开启多线程模式(VLD检测内存泄漏)是不会唤醒，也就不会退出事件循环
-
+			//m_EventBase很大可能处于阻塞状态，没开启多线程模式(VLD检测内存泄漏)是不会唤醒，也就不会退出事件循环
 			//手动触发个事件将event_base线程唤醒以退出事件循环
-			struct evhttp_connection *con = evhttp_connection_base_new(m_EventBase, NULL, "127.0.0.1", m_Port);
-			struct evhttp_request *req = evhttp_request_new(http_request_done, m_EventBase);
-			evhttp_make_request(con, req, EVHTTP_REQ_GET, "/empty");
+			m_Run = false;
+			event_base_loopbreak(m_EventBase);
+			SendHttpRequest("127.0.0.1", m_Port, "/empty", HttpParamMap());
 
 			//等待结束
 			JoinThread(m_Thread);
-			evhttp_connection_free(con);		//释放连接，则连接上的请求也会一并释放
-			con = NULL;
 		}
 	}
 
@@ -162,6 +161,43 @@ namespace XX004
 			params[key] = value;
 		}
 		return path;
+	}
+
+	string HttpServer::GetHttpURI(const string &path, HttpParamMap &params)
+	{
+		string uri(path);
+		if (params.size () > 0)
+		{
+			int n = 0;
+			uri.append("?");
+			for (HttpParamMap::iterator itr = params.begin(); itr != params.end(); ++itr)
+			{
+				if (n > 0)
+				{
+					uri.append("&");
+				}
+				++n;
+				uri.append(itr->first);
+				uri.append("=");
+				uri.append(itr->second);
+			}
+		}
+		return uri;
+	}
+
+	void HttpServer::SendHttpRequest(const string& ip, int port, const string& path, HttpParamMap &params)
+	{
+		if (m_EventBase == NULL)
+		{
+			return;
+		}
+
+		string uri = GetHttpURI(path, params);
+		struct evhttp_connection *con = evhttp_connection_base_new(m_EventBase, NULL, ip.c_str(), port);
+		struct evhttp_request *req = evhttp_request_new(OnHttpRequestDone, this);
+		m_HttpRequest.insert(HttpRequestMap::value_type(req, con));
+		evhttp_connection_set_timeout(con, 10);
+		evhttp_make_request(con, req, EVHTTP_REQ_GET, uri.c_str());
 	}
 
 	void HttpServer::RegisterServer(string path, HttpServerCallBack call)
@@ -227,5 +263,19 @@ namespace XX004
 		evhttp_send_reply(req, HTTP_NOTFOUND, "Not Found", retbuff);
 		evbuffer_free(retbuff);
 		retbuff = NULL;
+	}
+
+	void HttpServer::OnHttpRequestDone(struct evhttp_request *req, void *arg)
+	{
+		//将请求相关的连接释放
+		XX004::HttpServer *pserver = (XX004::HttpServer*)arg;
+		HttpRequestMap::iterator itr = pserver->m_HttpRequest.find(req);
+		if (itr == pserver->m_HttpRequest.end())
+		{
+			return;
+		}
+		evhttp_connection_free(itr->second);		//释放连接，则连接上的请求也会一并释放
+		itr->second = NULL;
+		itr = pserver->m_HttpRequest.erase(itr);
 	}
 }
