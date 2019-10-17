@@ -55,6 +55,9 @@ namespace XX004
 		//通过链接标识获取用户名
 		UserInfo* GetUser(Int64 uid);
 
+		//踢用户下线
+		void KickUser(const string& username);
+
 		void OnConnect(NetDataItem *item);
 		void OnDisconnect(NetDataItem *item);
 

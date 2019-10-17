@@ -97,6 +97,18 @@ namespace XX004
 		return GetUser(itr->second);
 	}
 
+	void LoginModule::KickUser(const string& username)
+	{
+		//断掉连接，退出角色
+		UserInfo *info = GetUser(username);
+		if (info != NULL)
+		{
+			MainBase::GetCurMain()->GetNetManager()->Close(info->GetUID());
+			OnUserQuit(username);
+			info = NULL;
+		}		
+	}
+
 	void LoginModule::OnConnect(NetDataItem *item)
 	{
 	}

@@ -10,6 +10,9 @@
 
 #include "HttpGame.h"
 #include <Util/TimeUtil.h>
+#include <MainBase.h>
+#include "ServerGame.h"
+#include "Module/Login/LoginModule.h"
 
 namespace XX004
 {
@@ -76,16 +79,19 @@ namespace XX004
 
 	void HttpGame::OnKickRequest(const string &path, HttpParamMap &params)
 	{
+		ServerGame *pserver = dynamic_cast<ServerGame*>(MainBase::GetCurMain()->GetServer());
 		HttpParamMap::iterator itr = params.find("user");
 		if (itr != params.end())
 		{
 			::printf_s("OnKickRequest user:%s\n", itr->second.c_str());
+			pserver->GetModule<LoginModule>()->KickUser(itr->second);
 			return;
 		}
 
 		itr = params.find("roleid");
 		if (itr != params.end())
 		{
+			//角色模块通过roleid得到username
 			Int64 roleid = ::_atoi64(itr->second.c_str());
 			::printf_s("OnKickRequest roleid:%I64d\n", roleid);
 			return;
