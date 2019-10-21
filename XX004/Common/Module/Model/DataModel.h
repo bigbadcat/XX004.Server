@@ -21,7 +21,7 @@ namespace XX004
 	{
 		typedef vector<DataModel*> DataModelVector;
 	public:
-		DataModel();
+		DataModel(int mid);
 		virtual ~DataModel();
 
 		//设置自身属性需要重新计算标记
@@ -43,7 +43,7 @@ namespace XX004
 		inline int GetModelID()const { return m_ModelID; }
 
 		//添加模型
-		void AddModel(DataModel *model);
+		virtual void AddModel(DataModel *model);
 
 		//获取数据模型 model_id:模型编号 only_top:是否只搜索直接子节点
 		DataModel* GetModel(int model_id, bool only_top = false);

@@ -15,7 +15,7 @@
 
 数据公共基类 DataModel
 DataModel可随意添加继承于DataModel的数据对象。
-DataModel保存了两份属性集和技能集。
+DataModel保存了两份属性集。
 一份是自身基础提供的，一份是自身基础和所添加进来的DataModel总和。
 属性和技能集采用Dirty思想，数据变化时只做标记，获取时检测标记是否重新计算。
 Dirty标记也有两个，self_dirty和child_dirty。
@@ -36,12 +36,12 @@ GetAll会检查self_dirty和child_dirty，GetSelf+GetChildren进行重新计算�
 
 玩家模块PlayerModule
 提供PlayerDataModel:DataModel用于扩展玩家数据，保存了玩家标识。
-PlayerBaseData:PlayerDataModel表示在线玩家。
+PlayerBasicData:PlayerDataModel表示在线玩家。
 当创建玩家后，会发送PLAYER_CREATE事件，附带player相关参数。
 
 伙伴模块PartnerModule
 提供PlayerPartenrData:PlayerDataModel
-监听PLAYER_CREATE事件，获取PlayerBaseData，添加PlayerPartenrData对象
-监听PLAYER_CREATE，获取PlayerBaseData，添加PlayerPartenrData，发送读取请求附带相关参数
-收到读取回复，获取PlayerBaseData->PlayerPartenrData初始化，通知客户端
-受到伙伴相关请求时，获取PlayerBaseData->PlayerPartenrData处理，通知客户端
+监听PLAYER_CREATE事件，获取PlayerBasicData，添加PlayerPartenrData对象
+监听PLAYER_CREATE，获取PlayerBasicData，添加PlayerPartenrData，发送读取请求附带相关参数
+收到读取回复，获取PlayerBasicData->PlayerPartenrData初始化，通知客户端
+受到伙伴相关请求时，获取PlayerBasicData->PlayerPartenrData处理，通知客户端

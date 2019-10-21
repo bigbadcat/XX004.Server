@@ -13,7 +13,7 @@
 
 namespace XX004
 {
-	DataModel::DataModel() : m_ModelID(0), m_SelfDirty(false), m_ChildDirty(false), m_Parent(NULL)
+	DataModel::DataModel(int mid) : m_ModelID(mid), m_SelfDirty(false), m_ChildDirty(false), m_Parent(NULL)
 	{
 	}
 
