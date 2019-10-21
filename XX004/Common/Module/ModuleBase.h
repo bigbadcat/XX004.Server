@@ -11,12 +11,12 @@
 #ifndef __ModuleBase_h__
 #define __ModuleBase_h__
 
-#include <Macro.h>
-#include <Config/ModuleConfig.h>
+#include "../Macro.h"
+#include "../Config/ModuleConfig.h"
 
 namespace XX004
 {
-	class ServerGame;
+	class ServerBase;
 	class NetManagerBase;	
 	class StorageManager;
 	class MySQLWrap;
@@ -49,7 +49,7 @@ namespace XX004
 		virtual void Release();
 
 		//获取服务
-		static ServerGame* GetServer();
+		static ServerBase* GetServer();
 
 		//获取数据库
 		static MySQLWrap* GetMySQL();

@@ -105,7 +105,7 @@ namespace XX004
 		}
 
 		//释放顺序应该逆着来
-		int i = m_Modules.size() - (step - 1);		//减1是因为step1已经用于释放Http服务了
+		int i = (int)m_Modules.size() - (step - 1);		//减1是因为step1已经用于释放Http服务了
 		m_Modules[i]->Release();
 		return i == 0;
 	}

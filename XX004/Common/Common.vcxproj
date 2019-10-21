@@ -29,6 +29,9 @@
     <ClInclude Include="Core\semaphore.h" />
     <ClInclude Include="Http\HttpServer.h" />
     <ClInclude Include="Macro.h" />
+    <ClInclude Include="Module\Model\AttrSet.h" />
+    <ClInclude Include="Module\Model\DataModel.h" />
+    <ClInclude Include="Module\ModuleBase.h" />
     <ClInclude Include="MySQL\MySQLResult.h" />
     <ClInclude Include="MySQL\MySQLWrap.h" />
     <ClInclude Include="NetManagerBase.h" />
@@ -69,6 +72,9 @@
     <ClCompile Include="Core\pipe.cpp" />
     <ClCompile Include="Core\semaphore.cpp" />
     <ClCompile Include="Http\HttpServer.cpp" />
+    <ClCompile Include="Module\Model\AttrSet.cpp" />
+    <ClCompile Include="Module\Model\DataModel.cpp" />
+    <ClCompile Include="Module\ModuleBase.cpp" />
     <ClCompile Include="MySQL\MySQLResult.cpp" />
     <ClCompile Include="MySQL\MySQLWrap.cpp" />
     <ClCompile Include="NetManagerBase.cpp" />

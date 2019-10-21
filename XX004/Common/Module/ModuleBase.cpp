@@ -9,9 +9,9 @@
 *******************************************************/
 
 #include "ModuleBase.h"
-#include "../ServerGame.h"
-#include <StorageManager.h>
-#include <MainBase.h>
+#include "../ServerBase.h"
+#include "../StorageManager.h"
+#include "../MainBase.h"
 
 namespace XX004
 {
@@ -31,9 +31,9 @@ namespace XX004
 	{
 	}
 
-	ServerGame* ModuleBase::GetServer()
+	ServerBase* ModuleBase::GetServer()
 	{
-		return dynamic_cast<ServerGame*>(MainBase::GetCurMain()->GetServer());
+		return MainBase::GetCurMain()->GetServer();
 	}
 
 	MySQLWrap* ModuleBase::GetMySQL()

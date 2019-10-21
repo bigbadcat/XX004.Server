@@ -31,6 +31,12 @@
     <Filter Include="Http">
       <UniqueIdentifier>{fa0842f7-1413-47b4-8683-9876de18d5cf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Module">
+      <UniqueIdentifier>{7368b561-9dcb-47e8-9d70-b1ccca6f52ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Module\Model">
+      <UniqueIdentifier>{dbd1eb5b-f8aa-45d9-8aea-49388476f756}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Net\NetServer.h">
@@ -138,6 +144,15 @@
     <ClInclude Include="Core\pipe.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Module\ModuleBase.h">
+      <Filter>Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Module\Model\DataModel.h">
+      <Filter>Module\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Module\Model\AttrSet.h">
+      <Filter>Module\Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Net\NetServer.cpp">
@@ -231,6 +246,15 @@
     <ClCompile Include="StorageManager.cpp" />
     <ClCompile Include="Core\pipe.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Module\ModuleBase.cpp">
+      <Filter>Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Module\Model\DataModel.cpp">
+      <Filter>Module\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Module\Model\AttrSet.cpp">
+      <Filter>Module\Model</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

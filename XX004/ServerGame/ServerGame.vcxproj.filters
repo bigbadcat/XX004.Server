@@ -5,9 +5,6 @@
     <ClCompile Include="NetManagerGame.cpp" />
     <ClCompile Include="ServerGame.cpp" />
     <ClCompile Include="MainGame.cpp" />
-    <ClCompile Include="Module\ModuleBase.cpp">
-      <Filter>Module</Filter>
-    </ClCompile>
     <ClCompile Include="Module\Login\LoginModule.cpp">
       <Filter>Module\Login</Filter>
     </ClCompile>
@@ -20,9 +17,6 @@
     <ClInclude Include="NetManagerGame.h" />
     <ClInclude Include="ServerGame.h" />
     <ClInclude Include="MainGame.h" />
-    <ClInclude Include="Module\ModuleBase.h">
-      <Filter>Module</Filter>
-    </ClInclude>
     <ClInclude Include="Module\Login\LoginModule.h">
       <Filter>Module\Login</Filter>
     </ClInclude>
