@@ -11,7 +11,7 @@
 #ifndef __NetManagerGame_h__
 #define __NetManagerGame_h__
 
-#include "NetManagerBase.h"
+#include <Frame/NetManagerBase.h>
 
 namespace XX004
 {

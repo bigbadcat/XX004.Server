@@ -9,9 +9,9 @@
 *******************************************************/
 
 #include "NetManagerBase.h"
-#include "Util/DataUtil.h"
+#include "../Util/DataUtil.h"
 #include "StartSetting.h"
-#include "Protocol/NetMsgID.h"
+#include "../Protocol/NetMsgID.h"
 #include "MainBase.h"
 #include <iostream>
 #include <assert.h>

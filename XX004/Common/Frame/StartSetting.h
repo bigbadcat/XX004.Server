@@ -11,10 +11,14 @@
 #ifndef __StartSetting_h__
 #define __StartSetting_h__
 
-#include "tinyxml2/tinyxml2.h"
 #include <string>
 #include <map>
 using namespace std;
+
+namespace tinyxml2
+{
+	class XMLNode;
+}
 
 namespace XX004
 {

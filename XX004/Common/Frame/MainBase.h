@@ -11,8 +11,8 @@
 #ifndef __MainBase_h__
 #define __MainBase_h__
 
-#include "Macro.h"
-#include "Net/NetDefine.h"
+#include "../Macro.h"
+#include "../Net/NetDefine.h"
 #include <string>
 using namespace std;
 

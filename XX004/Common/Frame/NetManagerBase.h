@@ -15,12 +15,12 @@
 #include <functional>
 #include <queue>
 #include <string>
-#include "Net/NetServer.h"
-#include "Net/NetMessage.h"
-#include "Net/NetConnection.h"
-#include "Net/NetInternalConnection.h"
-#include "Core/semaphore.h"
-#include "Util/LockQueue.h"
+#include "../Net/NetServer.h"
+#include "../Net/NetMessage.h"
+#include "../Net/NetConnection.h"
+#include "../Net/NetInternalConnection.h"
+#include "../Core/semaphore.h"
+#include "../Util/LockQueue.h"
 using namespace XX004::Net;
 
 namespace XX004

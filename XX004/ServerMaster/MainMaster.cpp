@@ -10,7 +10,7 @@
 
 #include "MainMaster.h"
 #include "ServerMaster.h"
-#include "StartSetting.h"
+#include <Frame/StartSetting.h>
 #include <WinSock2.h>
 #include <iostream>
 using namespace std;

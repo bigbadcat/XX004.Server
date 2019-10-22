@@ -9,7 +9,7 @@
 *******************************************************/
 
 #include "ServerMaster.h"
-#include <StartSetting.h>
+#include <Frame/StartSetting.h>
 #include <Util/TimeUtil.h>
 #include <Util/StringUtil.h>
 #include <iostream>

@@ -10,8 +10,8 @@
 
 #include "PlayerModule.h"
 #include "PlayerBasicData.h"
-#include <NetManagerBase.h>
-#include <StorageManager.h>
+#include <Frame/NetManagerBase.h>
+#include <Frame/StorageManager.h>
 #include <Protocol/NetProtocol.h>
 #include <Util/StringUtil.h>
 #include <Util/TimeUtil.h>

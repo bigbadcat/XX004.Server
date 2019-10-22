@@ -16,9 +16,9 @@
 #include <vector>
 #include "NetManagerBase.h"
 #include "StorageManager.h"
-#include "Core/semaphore.h"
-#include "Util/LockQueue.h"
-#include "Config/ModuleConfig.h"
+#include "../Core/semaphore.h"
+#include "../Util/LockQueue.h"
+#include "../Config/ModuleConfig.h"
 using namespace std;
 
 namespace XX004

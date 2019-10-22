@@ -13,8 +13,8 @@
 
 #include <vector>
 #include <map>
-#include "ServerBase.h"
-#include "Module/ModuleBase.h"
+#include <Frame/ServerBase.h>
+#include <Frame/ModuleBase.h>
 using namespace std;
 
 namespace XX004

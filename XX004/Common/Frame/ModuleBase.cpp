@@ -9,9 +9,9 @@
 *******************************************************/
 
 #include "ModuleBase.h"
-#include "../ServerBase.h"
-#include "../StorageManager.h"
-#include "../MainBase.h"
+#include "../Frame/ServerBase.h"
+#include "../Frame/StorageManager.h"
+#include "../Frame/MainBase.h"
 
 namespace XX004
 {

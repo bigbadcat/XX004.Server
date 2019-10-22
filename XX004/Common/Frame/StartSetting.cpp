@@ -9,9 +9,10 @@
 *******************************************************/
 
 #include "StartSetting.h"
-#include "Macro.h"
-#include "MySQL/MySQLWrap.h"
-#include "Net/NetDefine.h"
+#include "../tinyxml2/tinyxml2.h"
+#include "../Macro.h"
+#include "../MySQL/MySQLWrap.h"
+#include "../Net/NetDefine.h"
 #include <assert.h>
 #include <iostream>
 

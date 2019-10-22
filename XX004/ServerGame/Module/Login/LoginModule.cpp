@@ -10,7 +10,7 @@
 
 #include "LoginModule.h"
 #include "../../ServerGame.h"
-#include <MainBase.h>
+#include <Frame/MainBase.h>
 #include <Protocol/NetProtocol.h>
 #include <Util/StringUtil.h>
 #include <Util/TimeUtil.h>

@@ -12,7 +12,7 @@
 #define __StorageManager_h__
 
 #include "NetManagerBase.h"
-#include "MySQL/MySQLWrap.h"
+#include "../MySQL/MySQLWrap.h"
 #include <thread>
 #include <string>
 #include <map>

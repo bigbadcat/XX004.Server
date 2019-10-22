@@ -10,8 +10,8 @@
 
 #include "UserInfo.h"
 #include <Util/TimeUtil.h>
-#include <MainBase.h>
-#include <ServerBase.h>
+#include <Frame/MainBase.h>
+#include <Frame/ServerBase.h>
 
 namespace XX004
 {

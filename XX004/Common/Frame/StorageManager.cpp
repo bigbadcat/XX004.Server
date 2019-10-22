@@ -10,7 +10,7 @@
 
 #include "StorageManager.h"
 #include "MainBase.h"
-#include "Macro.h"
+#include "../Macro.h"
 #include "StartSetting.h"
 #include <assert.h>
 #include <iostream>

@@ -11,7 +11,7 @@
 #ifndef __PlayerDataModel_h__
 #define __PlayerDataModel_h__
 
-#include <Module/Model/DataModel.h>
+#include <Frame/Model/DataModel.h>
 
 namespace XX004
 {

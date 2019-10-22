@@ -11,7 +11,7 @@
 #ifndef __MainGame_h__
 #define __MainGame_h__
 
-#include "MainBase.h"
+#include <Frame/MainBase.h>
 
 namespace XX004
 {

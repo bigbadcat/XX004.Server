@@ -11,8 +11,8 @@
 #include "ServerBase.h"
 #include "MainBase.h"
 #include <assert.h>
-#include "Util/TimeUtil.h"
-#include "Util/StringUtil.h"
+#include "../Util/TimeUtil.h"
+#include "../Util/StringUtil.h"
 
 namespace XX004
 {
