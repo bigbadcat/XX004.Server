@@ -9,6 +9,7 @@
 *******************************************************/
 
 #include "PlayerModule.h"
+#include "PlayerBasicData.h"
 #include <NetManagerBase.h>
 #include <StorageManager.h>
 #include <Protocol/NetProtocol.h>
@@ -24,6 +25,7 @@ namespace XX004
 
 	PlayerModule::~PlayerModule()
 	{
+		SAFE_DELETE_MAP(m_Players);
 	}
 
 	void PlayerModule::RegisterNetMessage(NetManagerBase *pMgr)

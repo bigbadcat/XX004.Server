@@ -53,11 +53,17 @@ namespace XX004
 
 	protected:
 
-		//需要重建自生属性
+		//需要重建自身属性
 		virtual void OnBuildSelfAttr() {}
+
+		//需要重建所有属性
+		virtual void OnBuildAllAttr();
 
 		//设置父节点
 		inline void SetParent(DataModel *parent) { m_Parent = parent; }
+
+		//添加到了其它模块里
+		virtual void OnAddToModel(DataModel *parent){}
 
 	private:
 

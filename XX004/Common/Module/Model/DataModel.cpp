@@ -48,12 +48,7 @@ namespace XX004
 	{
 		if (m_SelfDirty || m_ChildDirty)
 		{
-			m_AllAttr.Clear();
-			m_AllAttr.AddAttr(GetSelfAttr());
-			for (DataModelVector::const_iterator itr = m_Children.cbegin(); itr != m_Children.cend(); ++itr)
-			{
-				m_AllAttr.AddAttr((*itr)->GetAllAttr());
-			}
+			OnBuildAllAttr();			
 			m_ChildDirty = false;
 		}
 		return m_AllAttr;
@@ -64,6 +59,7 @@ namespace XX004
 		assert(model != NULL);
 		model->SetParent(model);
 		m_Children.push_back(model);
+		model->OnAddToModel(this);
 		SetChildDirty();
 	}
 
@@ -114,5 +110,15 @@ namespace XX004
 			parent = parent->GetParent();
 		}
 		return parent;
+	}
+
+	void DataModel::OnBuildAllAttr()
+	{
+		m_AllAttr.Clear();
+		m_AllAttr.AddAttr(GetSelfAttr());
+		for (DataModelVector::const_iterator itr = m_Children.cbegin(); itr != m_Children.cend(); ++itr)
+		{
+			m_AllAttr.AddAttr((*itr)->GetAllAttr());
+		}
 	}
 }

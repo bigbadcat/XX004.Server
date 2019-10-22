@@ -12,9 +12,14 @@
 #define __PlayerModule_h__
 
 #include <Module/ModuleBase.h>
+#include <map>
+using namespace std;
 
 namespace XX004
 {
+	class PlayerBasicData;
+	typedef map<Int64, PlayerBasicData*> PlayerMap;
+
 	//登陆模块
 	class PlayerModule : public ModuleBase
 	{
@@ -47,6 +52,9 @@ namespace XX004
 
 		//static void OnRoleListRequest(NetDataItem *item);		//请求用户角色数据		
 		//void OnRoleListResponse(NetDataItem *item);				//回复用户角色数据
+
+		//当前在线的玩家
+		PlayerMap m_Players;
 	};
 }
 

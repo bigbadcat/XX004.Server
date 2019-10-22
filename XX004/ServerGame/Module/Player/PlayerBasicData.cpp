@@ -14,7 +14,7 @@ namespace XX004
 {
 	const int PlayerBasicData::MODEL_ID = 1;
 
-	PlayerBasicData::PlayerBasicData() : PlayerDataModel(MODEL_ID)
+	PlayerBasicData::PlayerBasicData() : PlayerDataModel(MODEL_ID), m_ID(0), m_Prof(0), m_Level(0), m_Exp(0), m_Power(0)
 	{
 
 	}
