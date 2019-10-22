@@ -2,7 +2,6 @@ bin/*.ilk
 bin/*.pdb
 XX004/.vs/
 XX004/XX004.VC.*
-XX004/x64/
 XX004/Common/x64/
 XX004/Common/Common.vcxproj.user
 XX004/ServerMaster/x64/

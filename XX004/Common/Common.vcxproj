@@ -155,6 +155,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>..\ThirdPart\lua-5.3.4\include;..\ThirdPart\MySQL5.5\include;..\ThirdPart\libevent-2.1.8\include;$(IncludePath)</IncludePath>
     <LibraryPath>..\ThirdPart\lua-5.3.4\lib;..\ThirdPart\MySQL5.5\lib;..\ThirdPart\libevent-2.1.8\lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
