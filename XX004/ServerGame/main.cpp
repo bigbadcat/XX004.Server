@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 		if (sid > 0)
 		{
 			XX004::MainGame server;
-			ret = server.Run(XX004::Net::RemoteType::RT_GAME, sid);
+			ret = server.Run(sid);
 		}
 		else
 		{

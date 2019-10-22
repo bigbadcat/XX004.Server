@@ -12,7 +12,6 @@
 #define __StorageManager_h__
 
 #include "NetManagerBase.h"
-#include "../MySQL/MySQLWrap.h"
 #include <thread>
 #include <string>
 #include <map>
@@ -21,6 +20,7 @@ using namespace XX004::Net;
 
 namespace XX004
 {
+	class MySQLWrap;
 #define DB_REGISTER(mgr, id, fun) mgr->RegisterMessageCallBack(id, fun)
 
 	//创建独立线程来进行数据库存储
@@ -50,7 +50,7 @@ namespace XX004
 		void Request(Int64 rid, int command, NetMessage *msg);
 
 		//获取数据库
-		inline MySQLWrap* GetMySQL() { return &m_MySQL; }
+		inline MySQLWrap* GetMySQL() { return m_MySQL; }
 
 	private:
 		//分发请求
@@ -85,7 +85,7 @@ namespace XX004
 		NetDataItemLockQueue m_CacheQueue;
 
 		//MySQL
-		MySQLWrap m_MySQL;
+		MySQLWrap *m_MySQL;
 
 	};
 }

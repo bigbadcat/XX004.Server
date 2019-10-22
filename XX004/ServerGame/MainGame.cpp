@@ -11,6 +11,7 @@
 #include "MainGame.h"
 #include "NetManagerGame.h"
 #include "ServerGame.h"
+#include <Net/NetDefine.h>
 
 namespace XX004
 {
@@ -20,6 +21,11 @@ namespace XX004
 
 	MainGame::~MainGame()
 	{
+	}
+
+	int MainGame::Run(int sid)
+	{ 
+		return MainBase::Run(XX004::Net::RemoteType::RT_GAME, sid); 
 	}
 
 	NetManagerBase* MainGame::OnCreateNetManager()

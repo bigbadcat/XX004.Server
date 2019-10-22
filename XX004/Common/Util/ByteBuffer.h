@@ -58,4 +58,4 @@ namespace XX004
 	};
 }
 
-#endif	//__ByteBuffer_h__
+#endif

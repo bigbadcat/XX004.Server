@@ -9,6 +9,7 @@
 *******************************************************/
 
 #include "ServerMaster.h"
+#include <MySQL/MySQLWrap.h>
 #include <Frame/StartSetting.h>
 #include <Util/TimeUtil.h>
 #include <Util/StringUtil.h>
@@ -82,12 +83,13 @@ namespace XX004
 
 	const UInt64 ServerMaster::SERVER_DIRTY_GAP = 60 * 5;		//5分钟失效
 
-	ServerMaster::ServerMaster() : m_IsServerDirty(false), m_ServerTimeStamp(0)
+	ServerMaster::ServerMaster() : m_MySQL(new MySQLWrap()), m_IsServerDirty(false), m_ServerTimeStamp(0)
 	{		
 	}
 
 	ServerMaster::~ServerMaster()
 	{
+		SAFE_DELETE(m_MySQL);
 		SAFE_DELETE_MAP(m_ServerGroups);
 	}
 
@@ -106,13 +108,13 @@ namespace XX004
 	void ServerMaster::OnInit()
 	{
 		const DataBaseSetting* db = StartSetting::GetInstance()->GetDataBase();
-		m_MySQL.Init(db->GetHost().c_str(), db->GetUser().c_str(), db->GetPassword().c_str(), db->GetName().c_str(), db->GetPort());
+		m_MySQL->Init(db->GetHost().c_str(), db->GetUser().c_str(), db->GetPassword().c_str(), db->GetName().c_str(), db->GetPort());
 		LoadServerInfo();
 	}
 
 	void ServerMaster::OnRelease()
 	{
-		m_MySQL.Release();
+		m_MySQL->Release();
 	}
 
 	const ServerInfo* ServerMaster::GetServerInfo(int sid)const
@@ -163,7 +165,7 @@ namespace XX004
 		//读取服务器组
 		char sql[64];
 		sprintf_s(sql, "SELECT * FROM tb_server_group");
-		auto ret = m_MySQL.Query(sql);
+		auto ret = m_MySQL->Query(sql);
 		while (ret->GetRecord())
 		{
 			ServerGroupInfo *info = new ServerGroupInfo();
@@ -174,7 +176,7 @@ namespace XX004
 
 		//读取服务器
 		sprintf_s(sql, "SELECT * FROM tb_server");
-		ret = m_MySQL.Query(sql);
+		ret = m_MySQL->Query(sql);
 		while (ret->GetRecord())
 		{
 			ServerInfo *info = new ServerInfo();
@@ -234,7 +236,7 @@ namespace XX004
 		//查询数据库
 		char sql[64];
 		sprintf_s(sql, "call sp_select_user('%s');", user.c_str());
-		auto ret = m_MySQL.Query(sql);
+		auto ret = m_MySQL->Query(sql);
 		if (ret->GetRecord())
 		{
 			//读取账号信息
@@ -266,7 +268,7 @@ namespace XX004
 
 			char sql[128];
 			sprintf_s(sql, "call sp_insert_update_user('%s','%s',%I64d,%I64d);", user.c_str(), pwd.c_str(), create_time, (Int64)0);
-			m_MySQL.Execute(sql);
+			m_MySQL->Execute(sql);
 		}
 		return true;
 	}

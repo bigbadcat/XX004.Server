@@ -13,6 +13,7 @@
 #include "Module/Login/LoginModule.h"
 #include <Frame/NetManagerBase.h>
 #include <Frame/StartSetting.h>
+#include <Frame/ModuleBase.h>
 using namespace XX004::Net;
 
 namespace XX004

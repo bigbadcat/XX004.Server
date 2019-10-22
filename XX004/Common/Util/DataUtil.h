@@ -151,4 +151,4 @@ namespace XX004
 	};
 }
 
-#endif	//__DataUtil_h__
+#endif

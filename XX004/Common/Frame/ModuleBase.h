@@ -12,7 +12,7 @@
 #define __ModuleBase_h__
 
 #include "../Macro.h"
-#include "../Config/ModuleConfig.h"
+#include <vector>
 
 namespace XX004
 {
@@ -20,6 +20,7 @@ namespace XX004
 	class NetManagerBase;	
 	class StorageManager;
 	class MySQLWrap;
+	class ModuleConfig;
 	struct NetDataItem;
 
 	namespace Net
@@ -40,7 +41,7 @@ namespace XX004
 		virtual void RegisterStorageMessage(StorageManager *pMgr) = 0;
 
 		//初始化配置列表
-		virtual void AddConfig(vector<ModuleConfig*> &cfgs) = 0;
+		virtual void AddConfig(std::vector<ModuleConfig*> &cfgs) = 0;
 
 		//初始化
 		virtual void Init();

@@ -10,9 +10,13 @@
 
 #include "ServerBase.h"
 #include "MainBase.h"
+#include "NetManagerBase.h"
+#include "StorageManager.h"
 #include <assert.h>
+#include <iostream>
 #include "../Util/TimeUtil.h"
 #include "../Util/StringUtil.h"
+#include "../Config/ModuleConfig.h"
 
 namespace XX004
 {

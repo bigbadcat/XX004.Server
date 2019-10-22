@@ -11,9 +11,6 @@
 #ifndef __pipe_h__
 #define __pipe_h__
 
-#include <mutex>
-#include <condition_variable>
-
 namespace xxstd
 {
 	typedef void *fd;

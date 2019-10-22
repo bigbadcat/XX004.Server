@@ -41,4 +41,4 @@ namespace XX004
 	};
 }
 
-#endif	//__TimeUtil_h__
+#endif

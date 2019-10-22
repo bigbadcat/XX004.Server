@@ -8,8 +8,8 @@
 * Date: 2018-12-03 20:13
 *******************************************************/
 
-#ifndef __util_h__
-#define __util_h__
+#ifndef __StringUtil_h__
+#define __StringUtil_h__
 
 #include <string>
 #include <vector>
@@ -59,4 +59,4 @@ namespace XX004
 	};
 }
 
-#endif	//__util_h__
+#endif

@@ -12,8 +12,6 @@
 #define __NetInternalConnection_h__
 
 #include <map>
-#include <mutex>
-#include <iostream>
 #include <WinSock2.h>
 #include "../Macro.h"
 #include "NetDefine.h"

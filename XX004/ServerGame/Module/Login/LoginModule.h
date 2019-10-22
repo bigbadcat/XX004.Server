@@ -18,6 +18,7 @@ using namespace std;
 
 namespace XX004
 {
+	struct NetDataItem;
 	typedef std::map<Int64, std::string> UIDToUserMap;
 
 	//登陆模块

@@ -12,12 +12,12 @@
 #define __MySQLResult_h__
 
 #include <string>
-#include <WinSock2.h>
-#include <mysql.h>
 #include <vector>
 #include <map>
-#include <iostream>
 using namespace std;
+
+typedef struct st_mysql_res MYSQL_RES;
+typedef char **MYSQL_ROW;
 
 namespace XX004
 {

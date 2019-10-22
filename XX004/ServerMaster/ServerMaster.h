@@ -13,13 +13,15 @@
 
 #include <Macro.h>
 #include <Http/HttpServer.h>
-#include <mysql/MySQLWrap.h>
 #include <string>
 #include <vector>
 using namespace std;
 
 namespace XX004
 {
+	class MySQLResult;
+	class MySQLWrap;
+
 	//服务器信息
 	struct ServerInfo
 	{
@@ -105,7 +107,7 @@ namespace XX004
 		void ReplyLogin(const string& user, Int64 create_time, int sub_channel, HttpResponse &res);
 
 		//MySQL接口
-		MySQLWrap m_MySQL;
+		MySQLWrap *m_MySQL;
 
 		//服务器数据是否需要刷新
 		bool m_IsServerDirty;

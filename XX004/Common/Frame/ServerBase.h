@@ -11,18 +11,18 @@
 #ifndef __ServerBase_h__
 #define __ServerBase_h__
 
-#include <iostream>
 #include <string>
 #include <vector>
-#include "NetManagerBase.h"
-#include "StorageManager.h"
 #include "../Core/semaphore.h"
 #include "../Util/LockQueue.h"
-#include "../Config/ModuleConfig.h"
 using namespace std;
 
 namespace XX004
 {
+	class NetManagerBase;
+	class StorageManager;
+	class ModuleConfig;
+
 	enum ServerState
 	{
 		SS_CREATE = 0,

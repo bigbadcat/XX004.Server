@@ -11,6 +11,9 @@
 #include "LoginModule.h"
 #include "../../ServerGame.h"
 #include <Frame/MainBase.h>
+#include <Frame/NetManagerBase.h>
+#include <Frame/StorageManager.h>
+#include <MySQL/MySQLWrap.h>
 #include <Protocol/NetProtocol.h>
 #include <Util/StringUtil.h>
 #include <Util/TimeUtil.h>

@@ -21,6 +21,8 @@ namespace XX004
 		MainGame();
 		virtual ~MainGame();
 
+		int Run(int sid);
+
 	protected:
 		//创建网络管理
 		virtual NetManagerBase* OnCreateNetManager();

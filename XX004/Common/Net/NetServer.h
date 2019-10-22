@@ -11,9 +11,6 @@
 #ifndef __NetServer_h__
 #define __NetServer_h__
 
-#include <iostream>
-#include <string>
-#include <WinSock2.h>
 #include "NetDefine.h"
 
 using namespace std;

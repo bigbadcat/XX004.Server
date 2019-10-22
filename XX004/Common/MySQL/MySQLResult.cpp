@@ -9,7 +9,10 @@
 *******************************************************/
 
 #include "MySQLResult.h"
+#include <WinSock2.h>
+#include <mysql.h>
 #include <assert.h>
+#include <iostream>
 
 namespace XX004
 {

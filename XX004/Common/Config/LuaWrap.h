@@ -13,6 +13,7 @@
 
 #include <string>
 #include <vector>
+#include <assert.h>
 using namespace std;
 
 struct lua_State;
@@ -78,6 +79,7 @@ namespace XX004
 	{
 		T *t = new T();
 		LuaWrap *wrap = dynamic_cast<LuaWrap*>(t);
+		assert(wrap != NULL);
 		return wrap;
 	}
 }

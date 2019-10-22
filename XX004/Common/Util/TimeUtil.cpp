@@ -18,12 +18,14 @@ namespace XX004
 
 	UInt64 TimeUtil::GetCurrentMillisecond()
 	{
+		//当前毫秒=启动时刻秒+(当前tick-启动时刻tick)
 		if (StartSecond == 0)
 		{
 			StartSecond = GetCurrentSecond() * 1000;
 			StartTickCount = GetTickCount();
 		}
 
+		//clock或取的tick只能表示24.8天，到时候会重新开始
 		UInt64 nowtick = GetTickCount();
 		if (nowtick < StartTickCount)
 		{

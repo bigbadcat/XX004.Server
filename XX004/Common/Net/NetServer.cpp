@@ -12,6 +12,8 @@
 #include "NetConnection.h"
 #include "NetConnectionManager.h"
 #include "../Macro.h"
+#include <iostream>
+#include <string>
 #include <assert.h>
 
 namespace XX004

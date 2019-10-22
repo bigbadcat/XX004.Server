@@ -108,4 +108,4 @@ namespace XX004
 	}
 }
 
-#endif	//__LockQueue_h__
+#endif

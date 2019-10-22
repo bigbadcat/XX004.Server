@@ -14,14 +14,15 @@
 #include <vector>
 #include <map>
 #include <Frame/ServerBase.h>
-#include <Frame/ModuleBase.h>
 using namespace std;
 
 namespace XX004
 {
+	class ModuleBase;
 	typedef vector<ModuleBase*> ModuleVector;
 	class LoginModule;
 	class HttpGame;
+	struct NetDataItem;
 
 	class ServerGame : public ServerBase
 	{
