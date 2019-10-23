@@ -42,6 +42,9 @@
     <ClInclude Include="Module\Player\PlayerBasicData.h">
       <Filter>Module\Player</Filter>
     </ClInclude>
+    <ClInclude Include="Module\Login\LoginDefine.h">
+      <Filter>Module\Login</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Module">

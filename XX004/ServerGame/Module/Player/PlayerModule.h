@@ -53,6 +53,8 @@ namespace XX004
 		//static void OnRoleListRequest(NetDataItem *item);		//请求用户角色数据		
 		//void OnRoleListResponse(NetDataItem *item);				//回复用户角色数据
 
+		EVENT_DEFINE(PlayerModule, UserOnline);
+
 		//当前在线的玩家
 		PlayerMap m_Players;
 	};

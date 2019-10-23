@@ -12,6 +12,7 @@
 #define __ModuleBase_h__
 
 #include "../Macro.h"
+#include "EventManager.h"
 #include <vector>
 
 namespace XX004

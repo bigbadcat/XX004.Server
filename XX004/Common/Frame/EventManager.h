@@ -40,18 +40,20 @@ namespace XX004
 
 		void Reset();
 
-		int id;
-		bool bool_value;
-		int int_value1;
-		int int_value2;
-		int int_value3;
-		int int_value4;
-		XX004::Int64 long_value1;
-		XX004::Int64 long_value2;
-		void *ptr_value1;
-		void *ptr_value2;
-		string string_value1;
-		string string_value2;
+		int id;					//事件id 定义事件id时会说明参数含义
+		bool b;					//布尔参数值
+		int i1;					//整形参数值1
+		int i2;					//整形参数值2
+		int i3;					//整形参数值3
+		int i4;					//整形参数值4
+		float f1;				//浮点型形参数值1
+		float f2;				//浮点型形参数值2
+		Int64 l1;				//长整形参数值1
+		Int64 l2;				//长整形参数值2
+		void *p1;				//指针参数值1
+		void *p2;				//指针参数值2
+		string s1;				//字符串参数值1
+		string s2;				//字符串参数值1
 
 	private:
 		EventParam();
@@ -75,6 +77,9 @@ namespace XX004
 
 	typedef std::vector<EventCallBackObject> EventCallBackVector;
 	typedef std::map<Int32, EventCallBackVector> EventCallBackMap;
+
+#define EVENT_DEFINE(T, name) static void OnEvent##name(void *arg, int id, EventParam *ep) { ((T*)(arg))->OnEvent##name(id, ep); }\
+	void OnEvent##name(int id, EventParam *ep);
 
 	class EventManager
 	{

@@ -11,6 +11,7 @@
 #include "ServerGame.h"
 #include "HttpGame.h"
 #include "Module/Login/LoginModule.h"
+#include "Module/Player/PlayerModule.h"
 #include <Frame/NetManagerBase.h>
 #include <Frame/StartSetting.h>
 #include <Frame/ModuleBase.h>
@@ -93,6 +94,7 @@ namespace XX004
 	void ServerGame::InitModules()
 	{
 		m_Modules.push_back(new LoginModule());
+		m_Modules.push_back(new PlayerModule());
 	}
 
 	bool ServerGame::OnReleaseStep(int step)

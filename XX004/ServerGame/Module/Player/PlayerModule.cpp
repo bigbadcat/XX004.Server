@@ -15,6 +15,7 @@
 #include <Protocol/NetProtocol.h>
 #include <Util/StringUtil.h>
 #include <Util/TimeUtil.h>
+#include "../Login/LoginDefine.h"
 
 namespace XX004
 {
@@ -32,6 +33,9 @@ namespace XX004
 	{
 		//NET_REGISTER(pMgr, NetMsgID::CS_LOGIN_REQ, OnLoginRequest);
 		//NET_REGISTER(pMgr, NetMsgID::DS_ROLE_LIST_RES, OnRoleListResponse);
+
+		EventManager *emgr = EventManager::GetInstance();
+		emgr->RegisterCallBack(LoginEvent::EID_USER_ONLINE , OnEventUserOnline, this);
 	}
 
 	void PlayerModule::RegisterStorageMessage(StorageManager *pMgr)
@@ -52,6 +56,11 @@ namespace XX004
 	void PlayerModule::Release()
 	{
 		ModuleBase::Release();
+	}
+
+	void PlayerModule::OnEventUserOnline(int id, EventParam *ep)
+	{
+		::printf_s("PlayerModule::OnEventUserOnline user:%s roleid:%I64d\n", ep->s1.c_str(), ep->l1);
 	}
 
 	//void PlayerModule::OnLoginRequest(NetDataItem *item)

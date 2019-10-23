@@ -165,6 +165,7 @@
   <ItemGroup>
     <ClInclude Include="HttpGame.h" />
     <ClInclude Include="MainGame.h" />
+    <ClInclude Include="Module\Login\LoginDefine.h" />
     <ClInclude Include="Module\Login\LoginModule.h" />
     <ClInclude Include="Module\Login\UserInfo.h" />
     <ClInclude Include="Module\Player\PlayerBasicData.h" />

@@ -9,10 +9,12 @@
 *******************************************************/
 
 #include "LoginModule.h"
+#include "LoginDefine.h"
 #include "../../ServerGame.h"
 #include <Frame/MainBase.h>
 #include <Frame/NetManagerBase.h>
 #include <Frame/StorageManager.h>
+#include <Frame/EventManager.h>
 #include <MySQL/MySQLWrap.h>
 #include <Protocol/NetProtocol.h>
 #include <Util/StringUtil.h>
@@ -283,10 +285,15 @@ namespace XX004
 		}
 
 		//将连接与角色id关联，回复登陆成功
+		info->SetCurRoleID(roleinfo->ID);
 		MainBase::GetCurMain()->GetNetManager()->Update(item->uid, RemoteKey(RemoteType::RT_CLIENT, roleinfo->ID));
 		SendNet(roleinfo->ID, NetMsgID::SC_ENTER_GAME_RES, &res);
 
 		//通知玩家上线，发送初始化数据
+		EventParam *ep = EventParam::Get(LoginEvent::EID_USER_ONLINE);
+		ep->s1 = info->GetName();
+		ep->l1 = info->GetCurRoleID();
+		EventManager::GetInstance()->TriggerEvent(ep);
 
 		//通知进场
 		SCSceneEnterNotify notify;

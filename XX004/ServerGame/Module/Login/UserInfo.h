@@ -76,7 +76,7 @@ namespace XX004
 
 	private:
 
-		//角色名称
+		//用户名称
 		string m_Name;
 
 		//连接标识

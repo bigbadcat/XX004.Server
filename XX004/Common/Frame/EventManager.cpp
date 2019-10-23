@@ -20,8 +20,7 @@ namespace XX004
 
 	stack<EventParam*> EventParam::Caches;
 
-	EventParam::EventParam(): id(0), bool_value(false), int_value1(0), int_value2(0), int_value3(0), int_value4(0)
-		, long_value1(0), long_value2(0), ptr_value1(NULL), ptr_value2(NULL)
+	EventParam::EventParam(): id(0), b(false), i1(0), i2(0), i3(0), i4(0), f1(0), f2(0), l1(0), l2(0), p1(NULL), p2(NULL)
 	{
 	}
 
@@ -73,17 +72,19 @@ namespace XX004
 	void EventParam::Reset()
 	{
 		id = 0;
-		bool_value = false;
-		int_value1 = 0;
-		int_value2 = 0;
-		int_value3 = 0;
-		int_value4 = 0;
-		long_value1 = 0;
-		long_value2 = 0;
-		ptr_value1 = NULL;
-		ptr_value2 = NULL;
-		string_value1.clear();
-		string_value2.clear();
+		b = false;
+		i1 = 0;
+		i2 = 0;
+		i3 = 0;
+		i4 = 0;
+		f1 = 0;
+		f2 = 0;
+		l1 = 0;
+		l2 = 0;
+		p1 = NULL;
+		p2 = NULL;
+		s1.clear();
+		s2.clear();
 	}
 
 	EventCallBackObject::EventCallBackObject(EventCallBack c, void *p): arg(p), call(c)
