@@ -1,1 +1,8 @@
-1024-49151
+应用服务端口使用范围:1024-49151
+
+一整套服务端需要的端口如下：
+MySQL服务需要一个，配置到StartSetting.xml中。服务端使用
+MasterHttp服务需要一个，配置到StartSetting.xml中。客户端、SDK方、后台使用。
+管理后台需要一个。管理员使用。PS:还没开发到。
+ServerGame需要两个，一个给客户端TCP连接用，一个给MasterHttp通知用。配到到MySQL的tb_server表中。
+ServerRegion需要两个，一个给所属区域的ServerGame进行TCP连接用，一个给MasterHttp通知用。配到到MySQL的tb_server_region表中。
