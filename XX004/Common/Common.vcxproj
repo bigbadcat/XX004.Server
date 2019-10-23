@@ -27,6 +27,7 @@
     <ClInclude Include="Config\ModuleConfig.h" />
     <ClInclude Include="Core\pipe.h" />
     <ClInclude Include="Core\semaphore.h" />
+    <ClInclude Include="Frame\EventManager.h" />
     <ClInclude Include="Frame\MainBase.h" />
     <ClInclude Include="Frame\Model\AttrSet.h" />
     <ClInclude Include="Frame\Model\DataModel.h" />
@@ -71,6 +72,7 @@
     <ClCompile Include="Config\ModuleConfig.cpp" />
     <ClCompile Include="Core\pipe.cpp" />
     <ClCompile Include="Core\semaphore.cpp" />
+    <ClCompile Include="Frame\EventManager.cpp" />
     <ClCompile Include="Frame\MainBase.cpp" />
     <ClCompile Include="Frame\Model\AttrSet.cpp" />
     <ClCompile Include="Frame\Model\DataModel.cpp" />

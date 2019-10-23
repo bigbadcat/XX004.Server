@@ -163,6 +163,9 @@
     <ClInclude Include="Frame\Model\DataModel.h">
       <Filter>Frame\Model</Filter>
     </ClInclude>
+    <ClInclude Include="Frame\EventManager.h">
+      <Filter>Frame</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Net\NetServer.cpp">
@@ -275,6 +278,9 @@
     </ClCompile>
     <ClCompile Include="Frame\Model\DataModel.cpp">
       <Filter>Frame\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Frame\EventManager.cpp">
+      <Filter>Frame</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

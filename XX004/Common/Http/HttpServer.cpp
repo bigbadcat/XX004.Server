@@ -248,7 +248,7 @@ namespace XX004
 			return;
 		}
 
-		//默认回掉
+		//默认回调
 		if (pserver->m_DefaultCallBack != NULL)
 		{
 			HttpResponse res;

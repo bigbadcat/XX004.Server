@@ -13,6 +13,7 @@
 #include "ServerBase.h"
 #include "StorageManager.h"
 #include "StartSetting.h"
+#include "EventManager.h"
 #include <iostream>
 #include <assert.h>
 
@@ -91,6 +92,8 @@ namespace XX004
 		//模块销毁
 		m_pNetManager->UnregisterAllCallBack();		//先清掉注册再删除Server
 		m_pStorageManager->UnregisterAllCallBack();
+		EventManager::GetInstance()->UnregisterAllCallBack();
+		EventParam::ReleaseCaches();
 		SAFE_DELETE(m_pServer);
 		SAFE_DELETE(m_pNetManager);		
 		SAFE_DELETE(m_pStorageManager);
