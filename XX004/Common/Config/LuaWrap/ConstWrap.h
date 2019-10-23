@@ -1,28 +1,32 @@
 /*******************************************************
 * Copyright (c) 2018-2088, By XuXiang all rights reserved.
 *
-* FileName: ProfWrap.h
-* Summary: Wrap for t_prof.lua
+* FileName: ConstWrap.h
+* Summary: Wrap for t_const.lua
 *
 * Author: AutoBuild
 * Date: --/--
 *******************************************************/
 
-#ifndef __ProfWrap_h__
-#define __ProfWrap_h__
+#ifndef __ConstWrap_h__
+#define __ConstWrap_h__
 
 #include "../LuaWrap.h"
 
 namespace XX004
 {
-	class ProfWrap : public LuaWrap
+	class ConstWrap : public LuaWrap
 	{
 	public:
-		ProfWrap();
+		ConstWrap();
 		virtual void Init(lua_State *L);
 
 		int id;								//编号
-		vector<string> init_attr;			//初始属性
+		string name;						//名称
+		string value1;						//整数值1
+		int value2;							//整数值2
+		int value3;							//整数值3
+		string value_str;					//字符串值
 	};
 }
 

@@ -1,28 +1,31 @@
 /*******************************************************
 * Copyright (c) 2018-2088, By XuXiang all rights reserved.
 *
-* FileName: CharacterWrap.cpp
-* Summary: Wrap for t_character.lua
+* FileName: ProfAttrWrap.cpp
+* Summary: Wrap for t_prof_attr.lua
 *
 * Author: AutoBuild
 * Date: --/--
 *******************************************************/
 
-#include "CharacterWrap.h"
+#include "ProfAttrWrap.h"
 
 namespace XX004
 {
-	CharacterWrap::CharacterWrap() : id(0), type(0), hp(0), att(0), def(0)
+	ProfAttrWrap::ProfAttrWrap() : id(0), prof(0), level(0), hp(0), eng(0), att(0), def(0), hpr(0)
 	{
 	}
 
-	void CharacterWrap::Init(lua_State *L)
+	void ProfAttrWrap::Init(lua_State *L)
 	{
 		this->id = LuaWrap::ReadInt(L, "id");
-		this->type = LuaWrap::ReadInt(L, "type");
+		this->prof = LuaWrap::ReadInt(L, "prof");
+		this->level = LuaWrap::ReadInt(L, "level");
 		this->hp = LuaWrap::ReadInt(L, "hp");
+		this->eng = LuaWrap::ReadInt(L, "eng");
 		this->att = LuaWrap::ReadInt(L, "att");
 		this->def = LuaWrap::ReadInt(L, "def");
+		this->hpr = LuaWrap::ReadInt(L, "hpr");
 		OnParse();
 	}
 }

@@ -174,8 +174,11 @@ namespace XX004
 			if (config_index < m_Configs.size())
 			{
 				ModuleConfig *cfg = m_Configs[config_index++];
-				cfg->Init();
-				printf_s("Init %s\n", cfg->GetName());
+				if (!cfg->IsInit())
+				{
+					cfg->Init();
+					printf_s("Init %s\n", cfg->GetName());
+				}				
 			}
 			else
 			{

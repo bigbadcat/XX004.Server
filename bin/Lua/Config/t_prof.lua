@@ -1,12 +1,10 @@
 local t_prof =
 {
-	[1]={1, 500, 200, 50},
-	[2]={2, 400, 150, 50},
-	[3]={3, 300, 100, 20},
-	[4]={4, 400, 200, 30},
+	[1]={1, {"stb*100","hit*700","pry*200","pryd*500","crt*200","crtd*2000","enr*10","stbr*1"}},
+	[2]={2, {"stb*100","hit*650","pry*200","pryd*450","crt*250","crtd*2000","enr*10","stbr*1"}},
 }
 
-local keys = {"id", "hp", "att", "def"}
+local keys = {"id", "init_attr"}
 local mt = Common.GetKeyMetaTable(keys)
 Common.SetConfigMetaTable(t_prof, mt)
 

@@ -16,6 +16,7 @@
 #include <Util/StringUtil.h>
 #include <Util/TimeUtil.h>
 #include "../Login/LoginDefine.h"
+#include <Config/BasicModuleConfig.h>
 
 namespace XX004
 {
@@ -45,7 +46,7 @@ namespace XX004
 
 	void PlayerModule::AddConfig(vector<ModuleConfig*> &cfgs)
 	{
-		//cfgs.push_back(ModuleConfig::GetInstance<PlayerModuleConfig>());
+		cfgs.push_back(ModuleConfig::GetInstance<BasicModuleConfig>());
 	}
 
 	void PlayerModule::Init()

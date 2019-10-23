@@ -26,13 +26,16 @@ namespace XX004
 		virtual ~ModuleConfig();
 
 		//初始化
-		virtual void Init() = 0;
+		void Init();
 
 		//销毁
-		virtual void Release() = 0;
+		void Release();
 
 		//获取名称
 		virtual const char* GetName()const = 0;
+
+		//或去是否已经初始化过了
+		inline bool IsInit()const { return m_Init; }
 
 		//获取实例
 		template<class T>
@@ -45,6 +48,14 @@ namespace XX004
 		template<class T>
 		static void LoadConfig(map<int, T*> &cfgs, lua_State *L, const char *name);
 
+	protected:
+
+		//初始化
+		virtual void OnInit() = 0;
+
+		//销毁
+		virtual void OnRelease() = 0;
+
 	private:
 
 		//准备读取
@@ -52,6 +63,9 @@ namespace XX004
 
 		//读取一条记录
 		static bool ReadRecord(lua_State *L, LuaWrap *wrap, int *key);
+
+		//是否已经初始化了
+		bool m_Init;
 	};
 
 	template<class T>

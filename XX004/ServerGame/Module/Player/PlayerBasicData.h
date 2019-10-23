@@ -45,6 +45,21 @@ namespace XX004
 		//获取战力
 		inline Int64 GetPower()const { return m_Power; }
 
+		//获取所在地图
+		inline Int64 GetPosMap()const { return m_PosMap; }
+
+		//获取X坐标
+		inline Int64 GetPosX()const { return m_PosX; }
+
+		//获取Y坐标
+		inline Int64 GetPosY()const { return m_PosY; }
+
+		//获取朝向
+		inline Int64 GetPosDir()const { return m_PosDir; }
+
+		//更新位置
+		void UpdatePosition(int map, int x, int y, int dir);
+
 	private:
 
 		//用户名
@@ -67,6 +82,18 @@ namespace XX004
 
 		//战力
 		Int64 m_Power;
+
+		//所在地图
+		int m_PosMap;
+
+		//X坐标
+		int m_PosX;
+
+		//Y坐标
+		int m_PosY;
+
+		//朝向
+		int m_PosDir;
 	};
 }
 

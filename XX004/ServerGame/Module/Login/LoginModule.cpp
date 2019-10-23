@@ -19,7 +19,7 @@
 #include <Protocol/NetProtocol.h>
 #include <Util/StringUtil.h>
 #include <Util/TimeUtil.h>
-#include <Config/LoginModuleConfig.h>
+#include <Config/BasicModuleConfig.h>
 
 namespace XX004
 {
@@ -52,7 +52,7 @@ namespace XX004
 
 	void LoginModule::AddConfig(vector<ModuleConfig*> &cfgs)
 	{
-		cfgs.push_back(ModuleConfig::GetInstance<LoginModuleConfig>());
+		cfgs.push_back(ModuleConfig::GetInstance<BasicModuleConfig>());
 	}
 
 	void LoginModule::Init()
@@ -226,7 +226,7 @@ namespace XX004
 		}
 
 		//判断职业是否存在
-		ProfConfig *cfg = ModuleConfig::GetInstance<LoginModuleConfig>()->GetProf(req.Prof);
+		ProfConfig *cfg = ModuleConfig::GetInstance<BasicModuleConfig>()->GetProf(req.Prof);
 		if (cfg == NULL)
 		{
 			res.Result = 2;

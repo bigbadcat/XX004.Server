@@ -1,38 +1,40 @@
 ﻿/*******************************************************
 * Copyright (c) 2018-2088, By XuXiang all rights reserved.
 *
-* FileName: LoginModuleConfig.cpp
+* FileName: BasicModuleConfig.cpp
 * Summary: 登陆模块配置。
 *
 * Author: XuXiang
 * Date: 2019-01-24 20:38
 *******************************************************/
 
-#include "LoginModuleConfig.h"
+#include "BasicModuleConfig.h"
 #include <iostream>
 using namespace std;
 
 namespace XX004
 {
-	LoginModuleConfig::LoginModuleConfig()
+	BasicModuleConfig::BasicModuleConfig()
 	{
 	}
 
-	LoginModuleConfig::~LoginModuleConfig()
+	BasicModuleConfig::~BasicModuleConfig()
 	{
-		Release();
+		OnRelease();
 	}
 
-	void LoginModuleConfig::Init()
+	void BasicModuleConfig::OnInit()
 	{
 		lua_State *L = LuaWrap::GetLuaState();
-		ModuleConfig::LoadConfig<CharacterConfig>(m_Characters, L, "t_character");
+		ModuleConfig::LoadConfig<ConstConfig>(m_Consts, L, "t_const");
 		ModuleConfig::LoadConfig<ProfConfig>(m_Profs, L, "t_prof");
+		ModuleConfig::LoadConfig<ProfAttrConfig>(m_ProfAttrs, L, "t_prof_attr");
 	}
 
-	void LoginModuleConfig::Release()
+	void BasicModuleConfig::OnRelease()
 	{
-		SAFE_DELETE_MAP(m_Characters);
+		SAFE_DELETE_MAP(m_Consts);
 		SAFE_DELETE_MAP(m_Profs);
+		SAFE_DELETE_MAP(m_ProfAttrs);
 	}
 }

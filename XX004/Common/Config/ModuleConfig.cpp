@@ -13,12 +13,32 @@
 
 namespace XX004
 {
-	ModuleConfig::ModuleConfig()
+	ModuleConfig::ModuleConfig() : m_Init(false)
 	{
 	}
 
 	ModuleConfig::~ModuleConfig()
 	{
+	}
+
+	void ModuleConfig::Init()
+	{
+		if (m_Init)
+		{
+			return;
+		}
+		OnInit();
+		m_Init = true;
+	}
+
+	void ModuleConfig::Release()
+	{
+		if (!m_Init)
+		{
+			return;
+		}
+		OnRelease();
+		m_Init = false;
 	}
 
 	bool ModuleConfig::PrepareRead(lua_State *L, const char *name)
