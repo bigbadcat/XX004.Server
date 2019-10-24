@@ -169,6 +169,9 @@
     <ClInclude Include="Config\BasicModuleConfig.h">
       <Filter>Config</Filter>
     </ClInclude>
+    <ClInclude Include="Protocol\NetMsgPlayerBasic.h">
+      <Filter>Protocol</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Net\NetServer.cpp">
@@ -287,6 +290,9 @@
     </ClCompile>
     <ClCompile Include="Config\BasicModuleConfig.cpp">
       <Filter>Config</Filter>
+    </ClCompile>
+    <ClCompile Include="Protocol\NetMsgPlayerBasic.cpp">
+      <Filter>Protocol</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

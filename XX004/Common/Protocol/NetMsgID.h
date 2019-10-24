@@ -36,19 +36,29 @@ namespace XX004
 		static const Int32 SC_CREATE_ROLE_RES = 1402;				//创建角色回复		
 		static const Int32 SC_ENTER_GAME_RES = 1403;				//进入游戏回复		
 		static const Int32 SC_QUIT_GAME_RES = 1404;					//退出游戏回复
-		//----------数据库----------//
+
 		static const Int32 SD_ROLE_LIST_REQ = 1801;					//请求用户信息
 		static const Int32 DS_ROLE_LIST_RES = 1802;					//回复用户信息
 		static const Int32 SD_ROLE_ADD_REQ = 1803;					//请求添加角色信息		
 		static const Int32 DS_ROLE_ADD_RES = 1804;					//回复添加角色信息
 
+		//--------------------玩家模块--------------------//
+		static const Int32 CS_RENAME_REQ = 2001;					//角色改名请求
+		static const Int32 SC_PLAYER_INFO = 2401;					//角色信息通知
+		static const Int32 SC_ATTR_CHANGE = 2402;					//属性变化通知
+		static const Int32 SC_LEVEL_EXP = 2403;						//等级经验变化通知
+		static const Int32 SC_RENAME_RES = 2404;					//角色改名回复
+
+		static const Int32 SD_BASIC_INFO_REQ = 2801;				//请求角色基本信息
+		static const Int32 DS_BASIC_INFO_RES = 2802;				//回复角色基本信息
+		static const Int32 SD_BASIC_SAVE_REQ = 2803;				//请求保存角色基本信息
+		static const Int32 SD_RENAME_REQ = 2804;					//请求角色改名
+		static const Int32 DS_RENAME_RES = 2805;					//回复角色改名
+
 		//--------------------场景模块--------------------//
-		static const Int32 CS_MOVE_REQ = 2001;						//移动请求
-		static const Int32 SC_SCENE_ENTER = 2401;					//进入场景
-		static const Int32 SC_POSITION = 2402;						//位置同步		
-		//----------数据库----------//
-		static const Int32 SD_ROLE_BASE_INFO_REQ = 2801;			//请求角色基本信息	
-		static const Int32 DS_ROLE_BASE_INFO_RES = 2802;			//回复角色基本信息	
+		static const Int32 CS_MOVE_REQ = 3001;						//移动请求
+		static const Int32 SC_SCENE_ENTER = 3401;					//进入场景
+		static const Int32 SC_POSITION = 3402;						//位置同步		
 	};
 }
 
