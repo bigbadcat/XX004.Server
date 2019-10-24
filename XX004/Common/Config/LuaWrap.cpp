@@ -39,10 +39,6 @@ namespace XX004
 	{
 	}
 
-	void LuaWrap::OnParse()
-	{
-	}
-
 	lua_State* LuaWrap::GetLuaState()
 	{
 		static bool init = false;

@@ -65,7 +65,6 @@ namespace XX004
 		//添加到了其它模块里
 		virtual void OnAddToModel(DataModel *parent){}
 
-	private:
 
 		//模型标识
 		int m_ModelID;

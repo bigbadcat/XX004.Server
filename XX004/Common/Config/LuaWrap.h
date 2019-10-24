@@ -30,9 +30,6 @@ namespace XX004
 		//L:Lua状态，必须保证栈顶是配置项table，函数调用后保证Lua堆栈不变
 		virtual void Init(lua_State *L) = 0;
 
-		//二次解析
-		virtual void OnParse();
-
 		//创建新对象
 		template<class T>
 		static LuaWrap* OnNew();
@@ -50,6 +47,9 @@ namespace XX004
 		static bool DoLuaFile(lua_State *L, const char *file, bool resetstack=true);
 
 	protected:
+
+		//二次解析
+		virtual void OnParse() {};
 
 		static bool ReadBool(lua_State *L, char *name);
 		static void ReadBoolArray(lua_State *L, char *name, vector<bool> &v);

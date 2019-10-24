@@ -9,6 +9,7 @@
 *******************************************************/
 
 #include "PlayerBasicData.h"
+#include <Config/BasicModuleConfig.h>
 
 namespace XX004
 {
@@ -30,5 +31,12 @@ namespace XX004
 		m_PosX = x;
 		m_PosY = y;
 		m_PosDir = dir;
+	}
+
+	void PlayerBasicData::OnBuildSelfAttr()
+	{
+		BasicModuleConfig *basic_cfg = ModuleConfig::GetInstance<BasicModuleConfig>();
+		m_SelfAttr.Clear();
+		m_SelfAttr.AddAttr(basic_cfg->GetProfAttr(m_Prof, m_Level));
 	}
 }

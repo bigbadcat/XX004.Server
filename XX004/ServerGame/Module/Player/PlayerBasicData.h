@@ -60,6 +60,11 @@ namespace XX004
 		//更新位置
 		void UpdatePosition(int map, int x, int y, int dir);
 
+	protected:
+
+		//需要重建自身属性
+		virtual void OnBuildSelfAttr();
+
 	private:
 
 		//用户名
