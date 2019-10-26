@@ -25,6 +25,10 @@ namespace XX004
 {
 	const int LoginModule::ROLE_ID_STAMP_BIT = 1000000;
 
+	const int LoginModule::OUTLINE_DELAY_NORMAL = 5;
+
+	const int LoginModule::OUTLINE_DELAY_EXCEPTION = 60;
+
 	LoginModule::LoginModule()
 	{
 	}
@@ -75,6 +79,33 @@ namespace XX004
 		ModuleBase::Release();
 	}
 
+	void LoginModule::OnUpdatePerSecond()
+	{
+		Int64 now = TimeUtil::GetCurrentSecond();
+		for (UserInfoVector::iterator itr = m_WantQuitUsers.begin(); itr != m_WantQuitUsers.end(); )
+		{
+			//判断是否已经到了退出时刻
+			if ((*itr)->GetQuitTimeStamp() <= now)
+			{
+				//移除
+				UserInfo *info = *itr;
+				m_Users.erase(info->GetName());
+				itr = m_WantQuitUsers.erase(itr);
+				::printf_s("UserQuit name:%s rid:%I64d\n", info->GetName().c_str(), info->GetCurRoleID());
+
+				//通知下线，销毁
+				EventParam *ep = EventParam::Get(LoginEvent::EID_USER_OUTLINE);
+				ep->l1 = info->GetCurRoleID();
+				EventManager::GetInstance()->TriggerEvent(ep);
+				SAFE_DELETE(info);
+			}
+			else
+			{
+				++itr;
+			}
+		}
+	}
+
 	Int64 LoginModule::GetUID(const string& username)
 	{
 		UserInfo *info = GetUser(username);
@@ -109,8 +140,7 @@ namespace XX004
 		if (info != NULL)
 		{
 			MainBase::GetCurMain()->GetNetManager()->Close(info->GetUID());
-			OnUserQuit(username);
-			info = NULL;
+			OnUserOutline(username, 0);
 		}		
 	}
 
@@ -123,8 +153,7 @@ namespace XX004
 		UserInfo *info = GetUser(item->uid);
 		if (info != NULL)
 		{
-			OnUserOutline(info->GetName());
-			info = NULL;
+			OnUserOutline(info->GetName(), 1);
 		}
 	}
 
@@ -136,36 +165,51 @@ namespace XX004
 			//将原来的踢掉线
 			UserInfo *ori_info = itr->second;
 			MainBase::GetCurMain()->GetNetManager()->Close(ori_info->GetUID());
+			if (!ori_info->IsOnline())
+			{
+				UserInfoVector::iterator ritr = remove(m_WantQuitUsers.begin(), m_WantQuitUsers.end(), ori_info);
+				m_WantQuitUsers.erase(ritr, m_WantQuitUsers.end());
+			}
+			if (ori_info->GetCurRoleID() != 0)
+			{
+				//角色也踢掉线
+				EventParam *ep = EventParam::Get(LoginEvent::EID_USER_OUTLINE);
+				ep->l1 = ori_info->GetCurRoleID();
+				EventManager::GetInstance()->TriggerEvent(ep);
+			}
 			SAFE_DELETE(ori_info);
 			m_Users.erase(username);
 		}
 
 		UserInfo *info = new UserInfo(username);
 		info->SetUID(uid);
+		info->SetOnline();
 		m_Users.insert(UserInfoMap::value_type(username, info));
 		m_UIDToUserName[uid] = username;
 	}
 
-	void LoginModule::OnUserOutline(const string& username)
+	void LoginModule::OnUserOutline(const string& username, int type)
 	{
-		//通知掉线
-		printf_s("OnUserOutline user:%s\n", username.c_str());
-
-		//正常情况下用户掉线应该先做标记，一段时间后没有重连请求再自动退出
-		OnUserQuit(username);
-	}
-
-	void LoginModule::OnUserQuit(const string& username)
-	{
-		//通知退出
-		printf_s("OnUserQuit user:%s\n", username.c_str());
-
-		//删除玩家数据
 		UserInfoMap::iterator itr = m_Users.find(username);
-		if (itr != m_Users.end())
+		if (itr == m_Users.end() || !itr->second->IsOnline())
 		{
-			SAFE_DELETE(itr->second);
+			return;
+		}
+		printf_s("OnUserOutline user:%s type:%d\n", username.c_str(), type);
+
+		UserInfo *info = itr->second;
+		if (info->GetCurRoleID() != 0)
+		{
+			//被动掉线停留时间比较长，且可以重连
+			int gap = type == 0 ? OUTLINE_DELAY_NORMAL : OUTLINE_DELAY_EXCEPTION;
+			info->SetOutline(gap, type == 1);
+			m_WantQuitUsers.push_back(info);
+		}
+		else
+		{
+			//还没选角进游戏，直接删除
 			itr = m_Users.erase(itr);
+			SAFE_DELETE(info);
 		}
 	}
 
@@ -216,9 +260,8 @@ namespace XX004
 			return;
 		}
 
-		//判断名称是否合法		
-		int width = StringUtil::GetStringWidth(req.RoleName);
-		if (width < 4 || width > 12 || !UserInfo::CheckRoleName(req.RoleName))
+		//判断名称是否合法
+		if (!UserInfo::CheckRoleName(req.RoleName))
 		{
 			res.Result = 1;
 			MainBase::GetCurMain()->GetNetManager()->Send(item->uid, NetMsgID::SC_CREATE_ROLE_RES, &res);
@@ -294,14 +337,6 @@ namespace XX004
 		ep->s1 = info->GetName();
 		ep->l1 = info->GetCurRoleID();
 		EventManager::GetInstance()->TriggerEvent(ep);
-
-		//通知进场
-		SCSceneEnterNotify notify;
-		notify.Map = 0;
-		notify.PositionX = 0;
-		notify.PositionY = 0;
-		notify.Direction = 0;
-		SendNet(roleinfo->ID, NetMsgID::SC_SCENE_ENTER, &notify);
 	}
 
 	void LoginModule::OnQuitGameRequest(NetDataItem *item)
@@ -321,8 +356,7 @@ namespace XX004
 		MainBase::GetCurMain()->GetNetManager()->Send(item->uid, NetMsgID::SC_QUIT_GAME_RES, &res);
 
 		//退出
-		OnUserQuit(info->GetName());
-		info = NULL;
+		OnUserOutline(info->GetName(), 0);
 	}
 
 	void LoginModule::OnRoleListRequest(NetDataItem *item)

@@ -30,7 +30,13 @@ namespace XX004
 		//添加模型
 		virtual void AddModel(DataModel *model);
 
+		//将数据发送到客户端
+		void SendToClient();
+
 	protected:
+
+		//同步客户端
+		virtual void OnSendToClient() {}
 
 		//添加到了其它模块里
 		virtual void OnAddToModel(DataModel *parent);

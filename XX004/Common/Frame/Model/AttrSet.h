@@ -43,7 +43,7 @@ namespace XX004
 		inline void AddAttr(const AttrSet& attr_set) { AddAttr(attr_set.m_Attrs); }
 
 		//获取所有属性
-		const AttrMap& GetAllAtrr()const { return m_Attrs; }
+		const AttrMap& GetAttrs()const { return m_Attrs; }
 
 	private:
 

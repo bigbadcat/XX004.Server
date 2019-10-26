@@ -59,7 +59,7 @@ namespace XX004
 		EventParam();
 		~EventParam();
 
-		static stack<EventParam*> Caches;
+		static vector<EventParam*> Caches;
 	};
 
 	typedef void(*EventCallBack)(void*, int, EventParam*);

@@ -170,6 +170,7 @@
     <ClInclude Include="Module\Login\UserInfo.h" />
     <ClInclude Include="Module\Player\PlayerBasicData.h" />
     <ClInclude Include="Module\Player\PlayerDataModel.h" />
+    <ClInclude Include="Module\Player\PlayerDefine.h" />
     <ClInclude Include="Module\Player\PlayerModule.h" />
     <ClInclude Include="NetManagerGame.h" />
     <ClInclude Include="ServerGame.h" />

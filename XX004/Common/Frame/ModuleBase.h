@@ -50,6 +50,15 @@ namespace XX004
 		//销毁
 		virtual void Release();
 
+		//帧更新 需要重写IsEnableUpdate返回true才启用
+		virtual void OnUpdate(){}
+
+		//是否启用帧Update
+		virtual bool IsEnableUpdate() { return false; }
+
+		//秒更新
+		virtual void OnUpdatePerSecond(){}
+
 		//获取服务
 		static ServerBase* GetServer();
 

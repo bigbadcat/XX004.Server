@@ -10,6 +10,7 @@
 
 #include "UserInfo.h"
 #include <Util/TimeUtil.h>
+#include <Util/StringUtil.h>
 #include <Frame/MainBase.h>
 #include <Frame/ServerBase.h>
 
@@ -40,7 +41,7 @@ namespace XX004
 		return uid;
 	}
 
-	UserInfo::UserInfo(const string& name) : m_Name(name), m_UID(0), m_CurRoleID(0)
+	UserInfo::UserInfo(const string& name) : m_Name(name), m_UID(0), m_CurRoleID(0), m_Online(false), m_QuitTimeStamp(0)
 	{
 
 	}
@@ -65,6 +66,14 @@ namespace XX004
 
 	bool UserInfo::CheckRoleName(const std::string& name)
 	{
+		//名称长度
+		int width = StringUtil::GetStringWidth(name);
+		if (width < 4 || width > 12)
+		{
+			return false;
+		}
+
+		//非法字符
 		int index = 0;
 		while (index < name.length())
 		{
@@ -102,5 +111,15 @@ namespace XX004
 			}
 		}
 		return info;
+	}
+
+	void UserInfo::SetOutline(int delay, bool can_recon)
+	{
+		m_Online = false;
+		m_QuitTimeStamp = TimeUtil::GetCurrentSecond() + delay;
+		if (!can_recon)
+		{
+			m_ReconToken.clear();
+		}
 	}
 }

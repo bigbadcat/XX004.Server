@@ -106,34 +106,17 @@ namespace XX004
 
 		//----------------------------------------
 
-		SDBasicInfoRequest::SDBasicInfoRequest() : ID(0)
-		{
-		}
-
-		int SDBasicInfoRequest::Unpack(Byte *buffer, int index)
-		{
-			int i = index;
-			ID = DataUtil::ReadInt64(buffer, i, &i);
-			return i;
-		}
-
-		int SDBasicInfoRequest::Pack(Byte *buffer, int index)
-		{
-			int i = index;
-			i = DataUtil::WriteInt64(buffer, i, ID);
-			return i;
-		}
+		//Empty class - SDBasicInfoRequest
 
 		//----------------------------------------
 
-		DSBasicInfoResponse::DSBasicInfoResponse() : ID(0), Prof(0), Level(0), Exp(0), Map(0), PositionX(0), PositionY(0), Direction(0)
+		DSBasicInfoResponse::DSBasicInfoResponse() : Prof(0), Level(0), Exp(0), Map(0), PositionX(0), PositionY(0), Direction(0)
 		{
 		}
 
 		int DSBasicInfoResponse::Unpack(Byte *buffer, int index)
 		{
 			int i = index;
-			ID = DataUtil::ReadInt64(buffer, i, &i);
 			Prof = DataUtil::ReadInt32(buffer, i, &i);
 			Name = DataUtil::ReadString(buffer, i, &i);
 			Level = DataUtil::ReadInt32(buffer, i, &i);
@@ -148,7 +131,6 @@ namespace XX004
 		int DSBasicInfoResponse::Pack(Byte *buffer, int index)
 		{
 			int i = index;
-			i = DataUtil::WriteInt64(buffer, i, ID);
 			i = DataUtil::WriteInt32(buffer, i, Prof);
 			i = DataUtil::WriteString(buffer, i, Name);
 			i = DataUtil::WriteInt32(buffer, i, Level);
@@ -162,14 +144,13 @@ namespace XX004
 
 		//----------------------------------------
 
-		SDBasicSaveRequest::SDBasicSaveRequest() : ID(0), Level(0), Exp(0), Map(0), PositionX(0), PositionY(0), Direction(0)
+		SDBasicSaveRequest::SDBasicSaveRequest() : Level(0), Exp(0), Map(0), PositionX(0), PositionY(0), Direction(0)
 		{
 		}
 
 		int SDBasicSaveRequest::Unpack(Byte *buffer, int index)
 		{
 			int i = index;
-			ID = DataUtil::ReadInt64(buffer, i, &i);
 			Level = DataUtil::ReadInt32(buffer, i, &i);
 			Exp = DataUtil::ReadInt64(buffer, i, &i);
 			Map = DataUtil::ReadInt32(buffer, i, &i);
@@ -182,7 +163,6 @@ namespace XX004
 		int SDBasicSaveRequest::Pack(Byte *buffer, int index)
 		{
 			int i = index;
-			i = DataUtil::WriteInt64(buffer, i, ID);
 			i = DataUtil::WriteInt32(buffer, i, Level);
 			i = DataUtil::WriteInt64(buffer, i, Exp);
 			i = DataUtil::WriteInt32(buffer, i, Map);
@@ -194,14 +174,9 @@ namespace XX004
 
 		//----------------------------------------
 
-		SDRenameRequest::SDRenameRequest() : ID(0)
-		{
-		}
-
 		int SDRenameRequest::Unpack(Byte *buffer, int index)
 		{
 			int i = index;
-			ID = DataUtil::ReadInt64(buffer, i, &i);
 			Name = DataUtil::ReadString(buffer, i, &i);
 			return i;
 		}
@@ -209,30 +184,27 @@ namespace XX004
 		int SDRenameRequest::Pack(Byte *buffer, int index)
 		{
 			int i = index;
-			i = DataUtil::WriteInt64(buffer, i, ID);
 			i = DataUtil::WriteString(buffer, i, Name);
 			return i;
 		}
 
 		//----------------------------------------
 
-		SDRenameResponse::SDRenameResponse() : ID(0), Result(0)
+		DSRenameResponse::DSRenameResponse() : Result(0)
 		{
 		}
 
-		int SDRenameResponse::Unpack(Byte *buffer, int index)
+		int DSRenameResponse::Unpack(Byte *buffer, int index)
 		{
 			int i = index;
-			ID = DataUtil::ReadInt64(buffer, i, &i);
 			Result = DataUtil::ReadInt32(buffer, i, &i);
 			Name = DataUtil::ReadString(buffer, i, &i);
 			return i;
 		}
 
-		int SDRenameResponse::Pack(Byte *buffer, int index)
+		int DSRenameResponse::Pack(Byte *buffer, int index)
 		{
 			int i = index;
-			i = DataUtil::WriteInt64(buffer, i, ID);
 			i = DataUtil::WriteInt32(buffer, i, Result);
 			i = DataUtil::WriteString(buffer, i, Name);
 			return i;

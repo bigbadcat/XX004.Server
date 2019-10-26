@@ -89,19 +89,13 @@ namespace XX004
 			SCRenameResponse();
 			virtual int Pack(Byte *buffer, int index);
 
-			Int32 Result;							//改名结果(0、成功 1、名称重复 2、道具不足)
+			Int32 Result;							//改名结果(0、成功 1、非法名称 2、名称重复 3、道具不足)
 			string Name;							//角色名称
 		};
 
 		//2801:请求角色基本信息
 		class SDBasicInfoRequest : public NetMessage
 		{
-		public:
-			SDBasicInfoRequest();
-			virtual int Unpack(Byte *buffer, int index);
-			virtual int Pack(Byte *buffer, int index);
-
-			Int64 ID;								//编号
 		};
 
 		//2802:回复角色基本信息
@@ -112,7 +106,6 @@ namespace XX004
 			virtual int Unpack(Byte *buffer, int index);
 			virtual int Pack(Byte *buffer, int index);
 
-			Int64 ID;								//编号
 			Int32 Prof;								//职业
 			string Name;							//名称
 			Int32 Level;							//等级
@@ -131,7 +124,6 @@ namespace XX004
 			virtual int Unpack(Byte *buffer, int index);
 			virtual int Pack(Byte *buffer, int index);
 
-			Int64 ID;								//编号
 			Int32 Level;							//等级
 			Int64 Exp;								//经验
 			Int32 Map;								//地图
@@ -144,24 +136,21 @@ namespace XX004
 		class SDRenameRequest : public NetMessage
 		{
 		public:
-			SDRenameRequest();
 			virtual int Unpack(Byte *buffer, int index);
 			virtual int Pack(Byte *buffer, int index);
 
-			Int64 ID;								//编号
 			string Name;							//角色名称
 		};
 
 		//2805:回复角色改名
-		class SDRenameResponse : public NetMessage
+		class DSRenameResponse : public NetMessage
 		{
 		public:
-			SDRenameResponse();
+			DSRenameResponse();
 			virtual int Unpack(Byte *buffer, int index);
 			virtual int Pack(Byte *buffer, int index);
 
-			Int64 ID;								//编号
-			Int32 Result;							//改名结果(0、成功 1、名称重复)
+			Int32 Result;							//改名结果(0、成功 2、名称重复)
 			string Name;							//角色名称
 		};
 	}

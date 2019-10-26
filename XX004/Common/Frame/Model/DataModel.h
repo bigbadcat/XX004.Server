@@ -28,7 +28,7 @@ namespace XX004
 		void SetSelfDirty();
 
 		//设置子节点属性需要重新计算标记
-		inline void SetChildDirty() { m_ChildDirty = true; }
+		void SetChildDirty();
 
 		//获取父节点
 		inline DataModel* GetParent() { return m_Parent; }

@@ -32,6 +32,16 @@ namespace XX004
 		DataModel::AddModel(model);
 	}
 
+	void PlayerDataModel::SendToClient()
+	{
+		OnSendToClient();
+		for (DataModelVector::const_iterator itr = m_Children.cbegin(); itr != m_Children.cend(); ++itr)
+		{
+			PlayerDataModel *model = dynamic_cast<PlayerDataModel*>(*itr);
+			model->SendToClient();
+		}
+	}
+
 	void PlayerDataModel::OnAddToModel(DataModel *parent)
 	{
 		//如果父节点没有owner，说明父节点自己就是owner

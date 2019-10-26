@@ -15,9 +15,15 @@
 
 namespace XX004
 {
+	namespace Net
+	{
+		class NetMessage;
+	}
+
 	//玩家部分的数据都继承此类
 	class PlayerBasicData: public PlayerDataModel
 	{
+		friend class PlayerModule;
 	public:
 		PlayerBasicData();
 		virtual ~PlayerBasicData();
@@ -27,11 +33,20 @@ namespace XX004
 		//获取用户名
 		inline const string& GetUser()const { return m_User; }
 
+		//设置用户名
+		inline void SetUser(const string& user) { m_User = user; }
+
 		//获取角色名称
 		inline const string& GetName()const { return m_Name; }
 
+		//设置名称
+		inline void SetName(const string& name) { m_Name = name; }
+
 		//获取角色编号
 		inline Int64 GetID()const { return m_ID; }
+
+		//设置角色编号
+		inline void SetID(Int64 id) { m_ID = id; }
 
 		//获取职业
 		inline int GetProf()const { return m_Prof; }
@@ -57,13 +72,31 @@ namespace XX004
 		//获取朝向
 		inline Int64 GetPosDir()const { return m_PosDir; }
 
+		//添加经验
+		void AddExp(Int64 exp);
+
+		//更新等级经验
+		void UpdateLevelExp(int level, Int64 exp);
+
 		//更新位置
 		void UpdatePosition(int map, int x, int y, int dir);
+
+		//设置初始化标记 mid:模块编号 mark:false表示添加，true表示完成
+		void SetInitMark(int mid, bool mark = false);
+
+		//发送网络消息
+		void SendNet(int command, Net::NetMessage *msg);
+
+		//重新生成属性，并将结果同步客户端
+		void RebuildAttr();
 
 	protected:
 
 		//需要重建自身属性
 		virtual void OnBuildSelfAttr();
+
+		//同步客户端
+		virtual void OnSendToClient();
 
 	private:
 
@@ -99,6 +132,12 @@ namespace XX004
 
 		//朝向
 		int m_PosDir;
+
+		//初始化标记 key:模块编号
+		map<int, bool> m_InitMark;
+
+		//最终属性
+		map<int, Int64> m_FinalAttrs;
 	};
 }
 

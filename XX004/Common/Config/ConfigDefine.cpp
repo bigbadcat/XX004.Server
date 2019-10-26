@@ -79,7 +79,7 @@ namespace XX004
 		char szName[16];
 		char szValue[16];
 		char szValueWidth[16];
-		::printf_s("O-----------attr-----------------O\n", attrs.size());
+		::printf_s("O-----------attr-----------------O\n");
 		for (int i = 1; i < AttrType::AT_MAX; ++i)
 		{
 			map<int, Int64>::const_iterator itr = attrs.find(i);			
@@ -91,6 +91,6 @@ namespace XX004
 				::printf_s("|  %s ----  %s |\n", szName, szValueWidth);
 			}
 		}
-		::printf_s("O--------------------------------O\n", attrs.size());
+		::printf_s("O--------------------------------O\n");
 	}
 }

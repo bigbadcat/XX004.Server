@@ -28,6 +28,12 @@ namespace XX004
 		//角色ID序号占位
 		static const int ROLE_ID_STAMP_BIT;
 
+		//正常退出延迟
+		static const int OUTLINE_DELAY_NORMAL;
+		
+		//异常掉线退出延迟
+		static const int OUTLINE_DELAY_EXCEPTION;
+
 		//构造析构函数
 		LoginModule();
 		virtual ~LoginModule();
@@ -46,6 +52,9 @@ namespace XX004
 
 		//销毁
 		virtual void Release();
+
+		//秒更新
+		virtual void OnUpdatePerSecond();
 
 		//通过用户名获取链接标识。
 		Int64 GetUID(const string& username);
@@ -67,13 +76,10 @@ namespace XX004
 		//添加用户信息
 		void AddUserInfo(const string& username, UInt64 uid);
 
-		//用户离线
-		void OnUserOutline(const string& username);
-
-		//用户退出游戏，调用后username对应的UserInfo将无效
-		void OnUserQuit(const string& username);
-
+		//用户离线 username:用户名 type:掉线类型 0主动退出 1异常掉线
+		void OnUserOutline(const string& username, int type);
 		
+
 		void OnLoginRequest(NetDataItem *item);					//登陆请求		
 		void OnCreateRoleRequest(NetDataItem *item);			//角色创建请求
 		void OnEnterGameRequest(NetDataItem *item);				//进入游戏请求
@@ -90,6 +96,9 @@ namespace XX004
 
 		//连接uid到用户名的映射
 		UIDToUserMap m_UIDToUserName;
+
+		//要退出的用户
+		UserInfoVector m_WantQuitUsers;
 	};
 }
 

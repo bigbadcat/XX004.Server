@@ -23,12 +23,20 @@ namespace XX004
 	{
 		InitModules();
 		m_LoginModule = GetModule<LoginModule>();
+		for (ModuleVector::iterator itr = m_Modules.begin(); itr != m_Modules.end(); ++itr)
+		{
+			if ((*itr)->IsEnableUpdate())
+			{
+				m_UpdateModules.push_back(*itr);
+			}			
+		}		
 	}
 
 	ServerGame::~ServerGame()
 	{
 		SAFE_DELETE(m_HttpGame);
 		m_LoginModule = NULL;
+		m_UpdateModules.clear();
 		SAFE_DELETE_VECTOR(m_Modules);
 	}
 
@@ -76,6 +84,10 @@ namespace XX004
 
 	void ServerGame::OnUpdate()
 	{
+		for (ModuleVector::iterator itr = m_UpdateModules.begin(); itr != m_UpdateModules.end(); ++itr)
+		{
+			(*itr)->OnUpdate();
+		}
 	}
 
 	void ServerGame::OnUpdatePerSecond()
@@ -84,6 +96,11 @@ namespace XX004
 		if (m_HttpGame != NULL)
 		{
 			m_HttpGame->Dispatch();
+		}
+
+		for (ModuleVector::iterator itr = m_Modules.begin(); itr != m_Modules.end(); ++itr)
+		{
+			(*itr)->OnUpdatePerSecond();
 		}
 	}
 

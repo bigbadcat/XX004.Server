@@ -13,17 +13,14 @@
 
 namespace XX004
 {
-	//登陆事件0-99
+	//登陆事件1-99
 	enum LoginEvent
 	{
-		//玩家上线 s1:username l1:roleid
+		//玩家上线 s1:用户名 l1:角色编号
 		EID_USER_ONLINE = 1,
 
-		//玩家下线 s1:username l1:roleid
+		//玩家退出 l1:角色编号
 		EID_USER_OUTLINE = 2,
-
-		//玩家退出 s1:username l1:roleid
-		EID_USER_QUIT = 3,
 	};
 }
 

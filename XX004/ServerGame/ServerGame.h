@@ -68,6 +68,9 @@ namespace XX004
 		//模块列表
 		ModuleVector m_Modules;
 
+		//需要帧更新的模块
+		ModuleVector m_UpdateModules;
+
 		//登陆模块
 		LoginModule *m_LoginModule;
 

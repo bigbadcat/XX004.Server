@@ -18,7 +18,7 @@ namespace XX004
 {
 	const int EventParam::MAX_CACHE_NUMBER = 20;
 
-	stack<EventParam*> EventParam::Caches;
+	vector<EventParam*> EventParam::Caches;
 
 	EventParam::EventParam(): id(0), b(false), i1(0), i2(0), i3(0), i4(0), f1(0), f2(0), l1(0), l2(0), p1(NULL), p2(NULL)
 	{
@@ -33,8 +33,8 @@ namespace XX004
 		EventParam *ep = NULL;
 		if (Caches.size() > 0)
 		{
-			ep = Caches.top();
-			Caches.pop();
+			ep = *Caches.rbegin();
+			Caches.pop_back();
 			ep->Reset();
 		}
 		else
@@ -47,10 +47,11 @@ namespace XX004
 
 	void EventParam::Recycle(EventParam *ep)
 	{
+		assert(find(Caches.begin(), Caches.end(), ep) == Caches.end());		//重复回收会引发错误
 		if (Caches.size() < MAX_CACHE_NUMBER)
 		{
 			ep->Reset();
-			Caches.push(ep);
+			Caches.push_back(ep);
 		}
 		else
 		{
@@ -61,12 +62,7 @@ namespace XX004
 
 	void EventParam::ReleaseCaches()
 	{
-		while (Caches.size() > 0)
-		{
-			EventParam *ep = Caches.top();
-			Caches.pop();
-			SAFE_DELETE(ep);
-		}
+		SAFE_DELETE_VECTOR(Caches);
 	}
 
 	void EventParam::Reset()

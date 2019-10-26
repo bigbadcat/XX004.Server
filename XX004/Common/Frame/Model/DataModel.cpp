@@ -26,10 +26,19 @@ namespace XX004
 	void DataModel::SetSelfDirty()
 	{
 		m_SelfDirty = true;
+		if (m_Parent != NULL)
+		{
+			m_Parent->SetChildDirty();
+		}
+	}
+
+	void DataModel::SetChildDirty()
+	{
+		m_ChildDirty = true;
 		DataModel* parent = m_Parent;
 		while (parent != NULL)
 		{
-			parent->SetChildDirty();
+			parent->m_ChildDirty = true;
 			parent = parent->GetParent();
 		}
 	}

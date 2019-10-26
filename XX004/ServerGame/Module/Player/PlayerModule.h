@@ -46,14 +46,21 @@ namespace XX004
 		//销毁
 		virtual void Release();
 
+		//获取角色
+		PlayerBasicData* GetPlayer(Int64 rid);
+
 	private:
 
-		//void OnLoginRequest(NetDataItem *item);					//登陆请求
+		void OnRenameRequest(NetDataItem *item);					//改名请求
 
-		//static void OnRoleListRequest(NetDataItem *item);		//请求用户角色数据		
-		//void OnRoleListResponse(NetDataItem *item);				//回复用户角色数据
+		static void OnDBBasicInfoRequest(NetDataItem *item);		//请求角色基本信息
+		void OnDBBasicInfoResponse(NetDataItem *item);				//回复角色基本信息
+		static void OnDBBasicSaveRequest(NetDataItem *item);		//请求保存角色基本信息
+		static void OnDBRenameRequest(NetDataItem *item);			//请求角色改名
+		void OnDBRenameResponse(NetDataItem *item);					//回复角色改名
 
-		EVENT_DEFINE(PlayerModule, UserOnline);
+		EVENT_DEFINE(PlayerModule, UserOnline);						//玩家上线
+		EVENT_DEFINE(PlayerModule, UserOutline);					//玩家掉线
 
 		//当前在线的玩家
 		PlayerMap m_Players;

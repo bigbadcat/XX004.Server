@@ -74,6 +74,24 @@ namespace XX004
 		//获取角色信息(外部不要缓存返回结果)
 		RoleInfo* GetRoleInfo(Int64 id);
 
+		//设置在线
+		inline void SetOnline() { m_Online = true, m_QuitTimeStamp = 0; }
+
+		//设置离线 delay:销毁延迟 can_recon:是否可重连
+		void SetOutline(int delay, bool can_recon);
+
+		//获取是否在线
+		inline bool IsOnline()const { return m_Online; }
+
+		//获取退出时间戳
+		inline Int64 GetQuitTimeStamp()const { return m_QuitTimeStamp; }
+
+		//设置重连token
+		inline void SetReconToken(const string& token) { m_ReconToken = token; }
+
+		//获取重连token
+		inline const string& GetReconToken()const { return m_ReconToken; }
+
 	private:
 
 		//用户名称
@@ -85,10 +103,20 @@ namespace XX004
 		//当前登录的角色ID
 		Int64 m_CurRoleID;
 
+		//是否在线
+		bool m_Online;
+
+		//退出的时间
+		Int64 m_QuitTimeStamp;
+
+		//重连Token
+		string m_ReconToken;
+
 		//角色信息
 		vector<RoleInfo> m_RoleInfos;
 	};
 	typedef map<string, UserInfo*> UserInfoMap;
+	typedef vector<UserInfo*> UserInfoVector;
 }
 
 #endif
