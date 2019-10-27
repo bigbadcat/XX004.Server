@@ -144,7 +144,7 @@ namespace XX004
 			int m_Port;
 
 			//下次重试时间
-			UInt64 m_RetryTimestamp;
+			Int64 m_RetryTimestamp;
 
 			//收发缓冲区
 			ByteBuffer m_SendBuffer;

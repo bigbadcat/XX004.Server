@@ -23,21 +23,21 @@ namespace XX004
 	public:
 
 		//获取程序启动后经过毫秒数
-		inline static UInt64 GetTickCount() {return clock() / (CLOCKS_PER_SEC / 1000);}
+		inline static Int64 GetTickCount() {return clock() / (CLOCKS_PER_SEC / 1000);}
 
 		//获取当前的秒时间。
-		static UInt64 GetCurrentSecond() { return (UInt64)::time(NULL); }
+		static Int64 GetCurrentSecond() { return (Int64)::time(NULL); }
 
 		//获取当前的毫秒时间。
-		static UInt64 GetCurrentMillisecond();
+		static Int64 GetCurrentMillisecond();
 
 	private:
 
 		//获取毫秒时间参照的起始时间秒
-		static UInt64 StartSecond;
+		static Int64 StartSecond;
 
 		//获取毫秒时间参照的毫秒计数
-		static UInt64 StartTickCount;
+		static Int64 StartTickCount;
 	};
 }
 

@@ -160,7 +160,7 @@ namespace XX004
 			}
 		}
 
-		//移除那些已经为kon的回调
+		//移除那些已经为空的回调
 		for (int i = (int)need_remove.size() - 1; i >= 0; --i)
 		{
 			callback.erase(callback.begin() + need_remove[i]);

@@ -44,11 +44,11 @@ namespace XX004
 		int SCPlayerInfoNotify::Pack(Byte *buffer, int index)
 		{
 			int i = index;
-			i = DataUtil::WriteString(buffer, i, Name);
 			i = DataUtil::WriteInt64(buffer, i, ID);
+			i = DataUtil::WriteString(buffer, i, Name);
 			i = DataUtil::WriteInt32(buffer, i, Prof);
 			i = DataUtil::WriteInt32(buffer, i, Level);
-			i = DataUtil::WriteInt32(buffer, i, Exp);
+			i = DataUtil::WriteInt64(buffer, i, Exp);
 			i = DataUtil::WriteInt64(buffer, i, Power);
 			i = DataUtil::WriteInt32(buffer, i, AttrCount);
 			for (int j = 0; j < AttrCount; ++j)
@@ -86,7 +86,7 @@ namespace XX004
 		{
 			int i = index;
 			i = DataUtil::WriteInt32(buffer, i, Level);
-			i = DataUtil::WriteInt32(buffer, i, Exp);
+			i = DataUtil::WriteInt64(buffer, i, Exp);
 			return i;
 		}
 

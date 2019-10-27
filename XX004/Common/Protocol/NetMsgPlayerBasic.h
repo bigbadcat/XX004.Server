@@ -49,11 +49,11 @@ namespace XX004
 			SCPlayerInfoNotify();
 			virtual int Pack(Byte *buffer, int index);
 
-			string Name;							//名称
 			Int64 ID;								//编号
+			string Name;							//名称
 			Int32 Prof;								//职业
 			Int32 Level;							//等级
-			Int32 Exp;								//经验
+			Int64 Exp;								//经验
 			Int64 Power;							//战力
 			Int32 AttrCount;						//属性数量
 			vector<AttrInfo> AttrList;				//属性列表
@@ -79,7 +79,7 @@ namespace XX004
 			virtual int Pack(Byte *buffer, int index);
 
 			Int32 Level;							//等级
-			Int32 Exp;								//经验
+			Int64 Exp;								//经验
 		};
 
 		//2404:角色改名回复

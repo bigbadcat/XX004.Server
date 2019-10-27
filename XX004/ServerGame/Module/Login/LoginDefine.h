@@ -19,8 +19,11 @@ namespace XX004
 		//玩家上线 s1:用户名 l1:角色编号
 		EID_USER_ONLINE = 1,
 
-		//玩家退出 l1:角色编号
+		//玩家掉线 l1:角色编号
 		EID_USER_OUTLINE = 2,
+
+		//玩家退出 l1:角色编号
+		EID_USER_QUIT = 3,
 	};
 }
 

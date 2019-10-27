@@ -46,6 +46,9 @@ namespace XX004
 		//销毁
 		virtual void Release();
 
+		//秒更新
+		virtual void OnUpdatePerSecond();
+
 		//获取角色
 		PlayerBasicData* GetPlayer(Int64 rid);
 
@@ -61,6 +64,7 @@ namespace XX004
 
 		EVENT_DEFINE(PlayerModule, UserOnline);						//玩家上线
 		EVENT_DEFINE(PlayerModule, UserOutline);					//玩家掉线
+		EVENT_DEFINE(PlayerModule, UserQuit);						//玩家退出
 
 		//当前在线的玩家
 		PlayerMap m_Players;

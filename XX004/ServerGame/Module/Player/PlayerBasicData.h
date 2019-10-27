@@ -28,7 +28,11 @@ namespace XX004
 		PlayerBasicData();
 		virtual ~PlayerBasicData();
 
+		//模型编号
 		static const int MODEL_ID;
+
+		//保存间隔
+		static const int SAVE_GAP;
 
 		//获取用户名
 		inline const string& GetUser()const { return m_User; }
@@ -90,6 +94,12 @@ namespace XX004
 		//重新生成属性，并将结果同步客户端
 		void RebuildAttr();
 
+		//获取保存时间戳
+		inline Int64 GetSaveTimeStamp()const { return m_SaveTimeStamp; }
+
+		//保存玩家数据
+		void SavePlayerData();
+
 	protected:
 
 		//需要重建自身属性
@@ -138,6 +148,12 @@ namespace XX004
 
 		//最终属性
 		map<int, Int64> m_FinalAttrs;
+
+		//是否需要保存
+		bool m_NeedSave;
+
+		//要保存的时间戳
+		Int64 m_SaveTimeStamp;
 	};
 }
 

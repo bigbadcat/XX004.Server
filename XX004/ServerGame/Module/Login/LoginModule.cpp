@@ -94,7 +94,7 @@ namespace XX004
 				::printf_s("UserQuit name:%s rid:%I64d\n", info->GetName().c_str(), info->GetCurRoleID());
 
 				//通知下线，销毁
-				EventParam *ep = EventParam::Get(LoginEvent::EID_USER_OUTLINE);
+				EventParam *ep = EventParam::Get(LoginEvent::EID_USER_QUIT);
 				ep->l1 = info->GetCurRoleID();
 				EventManager::GetInstance()->TriggerEvent(ep);
 				SAFE_DELETE(info);
@@ -173,7 +173,7 @@ namespace XX004
 			if (ori_info->GetCurRoleID() != 0)
 			{
 				//角色也踢掉线
-				EventParam *ep = EventParam::Get(LoginEvent::EID_USER_OUTLINE);
+				EventParam *ep = EventParam::Get(LoginEvent::EID_USER_QUIT);
 				ep->l1 = ori_info->GetCurRoleID();
 				EventManager::GetInstance()->TriggerEvent(ep);
 			}
@@ -200,6 +200,11 @@ namespace XX004
 		UserInfo *info = itr->second;
 		if (info->GetCurRoleID() != 0)
 		{
+			//通知掉线
+			EventParam *ep = EventParam::Get(LoginEvent::EID_USER_OUTLINE);
+			ep->l1 = info->GetCurRoleID();
+			EventManager::GetInstance()->TriggerEvent(ep);
+
 			//被动掉线停留时间比较长，且可以重连
 			int gap = type == 0 ? OUTLINE_DELAY_NORMAL : OUTLINE_DELAY_EXCEPTION;
 			info->SetOutline(gap, type == 1);
@@ -319,7 +324,7 @@ namespace XX004
 		}
 
 		//判断角色是否被冻结
-		if ((UInt64)(roleinfo->FreeTime) > TimeUtil::GetCurrentSecond())
+		if (roleinfo->FreeTime > TimeUtil::GetCurrentSecond())
 		{
 			res.Result = 2;
 			res.FreeTime = roleinfo->FreeTime;

@@ -42,6 +42,7 @@ namespace XX004
 		EventManager *emgr = EventManager::GetInstance();
 		emgr->RegisterCallBack(LoginEvent::EID_USER_ONLINE, OnEventUserOnline, this);
 		emgr->RegisterCallBack(LoginEvent::EID_USER_OUTLINE, OnEventUserOutline, this);
+		emgr->RegisterCallBack(LoginEvent::EID_USER_QUIT, OnEventUserQuit, this);
 	}
 
 	void PlayerModule::RegisterStorageMessage(StorageManager *pMgr)
@@ -64,6 +65,25 @@ namespace XX004
 	void PlayerModule::Release()
 	{
 		ModuleBase::Release();
+	}
+
+	void PlayerModule::OnUpdatePerSecond()
+	{
+		//10秒检测一次全体玩家是否有需要保存的
+		static int count = 0;
+		if (++count >= 10)
+		{
+			Int64 now = TimeUtil::GetCurrentSecond();
+			count = 0;
+			for (PlayerMap::iterator itr = m_Players.begin(); itr != m_Players.end(); ++itr)
+			{
+				PlayerBasicData *player = itr->second;
+				if (player->GetSaveTimeStamp() > 0 && player->GetSaveTimeStamp() <= now)
+				{
+					player->SavePlayerData();
+				}
+			}
+		}
 	}
 
 	PlayerBasicData* PlayerModule::GetPlayer(Int64 rid)
@@ -141,7 +161,14 @@ namespace XX004
 	}
 	void PlayerModule::OnDBBasicSaveRequest(NetDataItem *item)
 	{
+		SDBasicSaveRequest req;
+		req.Unpack(item->data, 0);
 
+		char sql[128];
+		MySQLWrap *mysql = GetMySQL();
+		sprintf_s(sql, "call sp_update_role_basic(%I64d,%d,%I64d,%d,%d,%d,%d);", 
+			item->key.second, req.Level, req.Exp, req.Map, req.PositionX, req.PositionY, req.Direction);
+		mysql->Execute(sql);
 	}
 
 	void PlayerModule::OnDBRenameRequest(NetDataItem *item)
@@ -243,12 +270,26 @@ namespace XX004
 			return;
 		}
 
+		//掉线了就保存一下
+		itr->second->SavePlayerData();
+	}
+
+	void PlayerModule::OnEventUserQuit(int id, EventParam *ep)
+	{
+		::printf_s("PlayerModule::OnEventUserQuit roleid:%I64d\n", ep->l1);
+		PlayerMap::iterator itr = m_Players.find(ep->l1);
+		if (itr == m_Players.end())
+		{
+			return;
+		}
+
 		//发送角色销毁事件
 		EventParam *ep2 = EventParam::Get(PlayerEvent::EID_PLAYER_DESTROY);
 		ep2->p1 = itr->second;
 		EventManager::GetInstance()->TriggerEvent(ep2);
 
-		//销毁角色
+		//保存数据，销毁角色
+		itr->second->SavePlayerData();
 		SAFE_DELETE(itr->second);
 		itr = m_Players.erase(itr);
 	}
