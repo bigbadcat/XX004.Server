@@ -11,7 +11,7 @@
 #ifndef __NetListener_h__
 #define __NetListener_h__
 
-#include <WinSock2.h>
+#include "NetDefine.h"
 
 namespace XX004
 {
@@ -41,7 +41,7 @@ namespace XX004
 			inline NetConnectionManager* GetManager()const { return m_pManager; }
 
 			//获取套接字
-			inline SOCKET GetSocket()const { return m_Socket; }
+			inline socket_t GetSocket()const { return m_Socket; }
 
 			//Socket可以读取数据了
 			int OnSocketRead();
@@ -52,10 +52,10 @@ namespace XX004
 		private:
 
 			//创建监听Socket
-			SOCKET CreateListenSocket();
+			socket_t CreateListenSocket();
 
 			//Socket句柄
-			SOCKET m_Socket;
+			socket_t m_Socket;
 
 			//端口号。
 			int m_Port;

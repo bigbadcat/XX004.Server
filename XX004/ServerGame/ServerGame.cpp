@@ -12,6 +12,7 @@
 #include "HttpGame.h"
 #include "Module/Login/LoginModule.h"
 #include "Module/Player/PlayerModule.h"
+#include "Module/Player/PlayerBasicData.h"
 #include <Frame/NetManagerBase.h>
 #include <Frame/StartSetting.h>
 #include <Frame/ModuleBase.h>
@@ -106,6 +107,20 @@ namespace XX004
 
 	void ServerGame::OnCommand(const std::string& cmd, const std::vector<std::string> &param)
 	{
+		if (cmd.compare("/addlevel") == 0)
+		{
+			PlayerModule *model = GetModule<PlayerModule>();
+			PlayerBasicData *player = model->GetPlayer(10001000001);
+			player->UpdateLevelExp(player->GetLevel() + 1, player->GetExp() + 10);
+			player->RebuildAttr();
+		}
+		else if (cmd.compare("/addexp") == 0)
+		{
+			PlayerModule *model = GetModule<PlayerModule>();
+			PlayerBasicData *player = model->GetPlayer(10001000001);
+			player->AddExp(10);
+			player->RebuildAttr();
+		}
 	}
 
 	void ServerGame::InitModules()

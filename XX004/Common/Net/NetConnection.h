@@ -12,7 +12,6 @@
 #define __NetConnection_h__
 
 #include <map>
-#include <WinSock2.h>
 #include "../Macro.h"
 #include "NetDefine.h"
 #include "NetPackageHeader.h"
@@ -30,13 +29,10 @@ namespace XX004
 			virtual ~NetConnection();
 
 			//获取唯一编号
-			inline UInt64 GetUniqueID()const { return  m_UniqueID; }
-
-			//设置位移编号
-			inline void SetUniqueID(UInt64 uid) { m_UniqueID = uid; }
+			inline Int64 GetUniqueID()const { return  (Int64)GetSocket(); }
 
 			//获取Sokcet ret:Socket
-			inline SOCKET GetSocket()const { return m_Socket; }
+			inline socket_t GetSocket()const { return m_Socket; }
 
 			//判断是否需要读数据
 			inline bool IsNeedRead() { return NET_BUFFER_SIZE - m_RecvBuffer.GetLength() >= NET_PACKAGE_MAX_SIZE; }
@@ -45,7 +41,7 @@ namespace XX004
 			inline bool IsNeedWrite() { return m_SendBuffer.GetLength() > 0;}
 
 			//设置Socket
-			virtual void SetSocket(SOCKET s);
+			virtual void SetSocket(socket_t s);
 
 			//获取远端标识
 			inline RemoteKey GetRemote()const { return RemoteKey(m_RemoteType, m_RoleID); }
@@ -91,17 +87,15 @@ namespace XX004
 			int DoSend();
 
 		private:
-			//连接唯一标识
-			UInt64 m_UniqueID;
+
+			//Socket句柄，连接唯一标识
+			socket_t m_Socket;
 
 			//远端类型
 			int m_RemoteType;
 
 			//角色标识(仅客户端连接有用)
 			Int64 m_RoleID;
-
-			//Socket句柄
-			SOCKET m_Socket;
 
 			//IP地址。
 			std::string m_IPAddress;

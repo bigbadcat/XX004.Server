@@ -44,10 +44,10 @@ namespace XX004
 			SAFE_CLOSE_SOCKET(m_Socket)
 		}
 
-		SOCKET NetListener::CreateListenSocket()
+		socket_t NetListener::CreateListenSocket()
 		{
 			//创建socket开始监听
-			SOCKET s = ::socket(AF_INET, SOCK_STREAM, 0);
+			socket_t s = ::socket(AF_INET, SOCK_STREAM, 0);
 			if (s == SOCKET_ERROR)
 			{
 				cout << "create socket err:" << WSAGetLastError() << endl;
@@ -95,7 +95,7 @@ namespace XX004
 			sockaddr_in r_addr;
 			int addr_size = sizeof(r_addr);
 			::memset(&r_addr, 0, sizeof(r_addr));
-			SOCKET rs = ::accept(m_Socket, (sockaddr*)&r_addr, &addr_size);
+			socket_t rs = ::accept(m_Socket, (sockaddr*)&r_addr, &addr_size);
 			if (rs == SOCKET_ERROR)
 			{
 				cout << "accept socket err:" << WSAGetLastError() << endl;

@@ -12,6 +12,7 @@
 #define __NetDefine_h__
 
 #include "../Macro.h"
+#include <WinSock2.h>
 
 namespace XX004
 {
@@ -38,6 +39,9 @@ namespace XX004
 
 		//远端唯一标识。
 		typedef std::pair<int, Int64> RemoteKey;
+
+		//socket类型
+		typedef SOCKET socket_t;
 
 #define SAFE_CLOSE_SOCKET(s) if (s!=SOCKET_ERROR){::closesocket(s); s=SOCKET_ERROR;}
 

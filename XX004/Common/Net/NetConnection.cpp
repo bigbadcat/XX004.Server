@@ -18,7 +18,7 @@ namespace XX004
 {
 	namespace Net
 	{
-		NetConnection::NetConnection() : m_UniqueID(0), m_RemoteType(RemoteType::RT_UNKNOW), m_RoleID(0), m_Socket(SOCKET_ERROR), m_Port(0),
+		NetConnection::NetConnection() : m_RemoteType(RemoteType::RT_UNKNOW), m_RoleID(0), m_Socket(SOCKET_ERROR), m_Port(0),
 			m_SendBuffer(NET_BUFFER_SIZE), m_RecvBuffer(NET_BUFFER_SIZE)
 		{
 		}
@@ -28,7 +28,7 @@ namespace XX004
 			SAFE_CLOSE_SOCKET(m_Socket);
 		}
 
-		void NetConnection::SetSocket(SOCKET s)
+		void NetConnection::SetSocket(socket_t s)
 		{
 			m_Socket = s;
 			m_IPAddress = "";

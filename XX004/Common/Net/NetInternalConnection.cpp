@@ -153,7 +153,7 @@ namespace XX004
 		{
 			cout << "NetInternalConnection::StartConnect ip:" << m_IPAddress << " port:" << m_Port << endl;
 
-			SOCKET s = ::socket(AF_INET, SOCK_STREAM, 0);
+			socket_t s = ::socket(AF_INET, SOCK_STREAM, 0);
 			if (s == SOCKET_ERROR)
 			{
 				cout << "create socket err:" << WSAGetLastError() << endl;

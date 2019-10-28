@@ -12,7 +12,6 @@
 #define __NetInternalConnection_h__
 
 #include <map>
-#include <WinSock2.h>
 #include "../Macro.h"
 #include "NetDefine.h"
 #include "NetPackageHeader.h"
@@ -56,7 +55,7 @@ namespace XX004
 			inline int GetState()const { return m_State; }
 
 			//获取Sokcet ret:Socket
-			inline SOCKET GetSocket()const { return m_Socket; }
+			inline socket_t GetSocket()const { return m_Socket; }
 
 			//判断是否需要读数据
 			inline bool IsNeedRead() { return NET_BUFFER_SIZE - m_RecvBuffer.GetLength() >= NET_PACKAGE_MAX_SIZE; }
@@ -135,7 +134,7 @@ namespace XX004
 			int m_RemoteType;
 
 			//Socket句柄
-			SOCKET m_Socket;
+			socket_t m_Socket;
 
 			//IP地址。
 			std::string m_IPAddress;

@@ -81,7 +81,7 @@ namespace XX004
 		return NULL;
 	}
 
-	const UInt64 ServerMaster::SERVER_DIRTY_GAP = 60 * 5;		//5分钟失效
+	const Int64 ServerMaster::SERVER_DIRTY_GAP = 60 * 5;		//5分钟失效
 
 	ServerMaster::ServerMaster() : m_MySQL(new MySQLWrap()), m_IsServerDirty(false), m_ServerTimeStamp(0)
 	{		

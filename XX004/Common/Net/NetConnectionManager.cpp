@@ -39,7 +39,6 @@ namespace XX004
 		void NetConnectionManager::Release()
 		{
 			m_pListener->Stop();
-			m_UIDToConnection.clear();
 			m_RemoteKeyToConnection.clear();
 			SAFE_DELETE_MAP(m_Connections);
 		}
@@ -55,14 +54,14 @@ namespace XX004
 			FD_ZERO(&exceptfds);
 			if (m_pListener->GetSocket() != SOCKET_ERROR)
 			{
-				SOCKET s = m_pListener->GetSocket();
+				socket_t s = m_pListener->GetSocket();
 				FD_SET(s, &readfds);
 				FD_SET(s, &exceptfds);
 			}
 			for (NetConnectionMap::iterator itr = m_Connections.begin(); itr != m_Connections.end(); ++itr)
 			{
 				NetConnection *con = itr->second;
-				SOCKET s = con->GetSocket();
+				socket_t s = con->GetSocket();
 				if (con->IsNeedRead()) { FD_SET(s, &readfds); }
 				if (con->IsNeedWrite()) { FD_SET(s, &writefds); }
 				FD_SET(s, &exceptfds);
@@ -75,10 +74,10 @@ namespace XX004
 			int ret = ::select(0, &readfds, &writefds, &exceptfds, &timeout);		//windows下nfds参数无用，可传入0
 			if (ret > 0)
 			{
-				vector<SOCKET> needremove;
+				vector<socket_t> needremove;
 				if (m_pListener->GetSocket() != SOCKET_ERROR)
 				{
-					SOCKET s = m_pListener->GetSocket();
+					socket_t s = m_pListener->GetSocket();
 					if (FD_ISSET(s, &exceptfds) != 0)
 					{
 						needremove.push_back(s);
@@ -91,7 +90,7 @@ namespace XX004
 				for (NetConnectionMap::iterator itr = m_Connections.begin(); itr != m_Connections.end(); ++itr)
 				{
 					//先判断是否有异常，再判断读写
-					SOCKET s = itr->second->GetSocket();
+					socket_t s = itr->second->GetSocket();
 					if (FD_ISSET(s, &exceptfds) != 0)
 					{
 						needremove.push_back(s);
@@ -110,7 +109,7 @@ namespace XX004
 				}
 
 				//移除错误的SOKECT
-				for (vector<SOCKET>::iterator itr = needremove.begin(); itr != needremove.end(); ++itr)
+				for (vector<socket_t>::iterator itr = needremove.begin(); itr != needremove.end(); ++itr)
 				{
 					OnSocketClose(*itr);
 				}
@@ -121,22 +120,19 @@ namespace XX004
 			}
 		}
 
-		void NetConnectionManager::AddConnection(SOCKET s)
+		void NetConnectionManager::AddConnection(socket_t s)
 		{
 			assert(m_Connections.find(s) == m_Connections.end());
-			if (m_Connections.size() >= 60)		//Win下默认是能处理64个SOCKET，一个Listener，三个预留
+			if (m_Connections.size() >= 60)		//Win下默认是能处理64个socket，一个Listener，三个预留
 			{
 				::printf_s("AddConnection failed\n");
 				SAFE_CLOSE_SOCKET(s);
 				return;
 			}
 
-			static UInt64 cur_uid = 0;
 			NetConnection *pcon = new NetConnection();
-			pcon->SetUniqueID(++cur_uid);
 			pcon->SetSocket(s);
 			m_Connections.insert(NetConnectionMap::value_type(s, pcon));
-			m_UIDToConnection.insert(UIDToConnectionMap::value_type(pcon->GetUniqueID(), pcon));
 
 			//通知
 			if (m_pServer != NULL)
@@ -148,14 +144,8 @@ namespace XX004
 		void NetConnectionManager::RemoveConnection(NetConnection* con)
 		{
 			assert(con != NULL);
-			SOCKET s = con->GetSocket();			
+			socket_t s = con->GetSocket();
 			OnSocketClose(con->GetSocket());
-		}
-
-		NetConnection* NetConnectionManager::GetConnection(UInt64 uid)const
-		{
-			NetConnectionMap::const_iterator itr = m_UIDToConnection.find(uid);
-			return itr == m_UIDToConnection.cend() ? NULL : itr->second;
 		}
 
 		NetConnection* NetConnectionManager::GetConnection(const RemoteKey &key)const
@@ -186,13 +176,13 @@ namespace XX004
 			m_pServer->OnRecvData(con);
 		}
 
-		NetConnection* NetConnectionManager::GetConnectionFromSocket(SOCKET s)const
+		NetConnection* NetConnectionManager::GetConnectionFromSocket(socket_t s)const
 		{
 			NetConnectionMap::const_iterator itr = m_Connections.find(s);
 			return itr != m_Connections.end() ? itr->second : NULL;
 		}
 
-		int NetConnectionManager::OnSocketRead(SOCKET s)
+		int NetConnectionManager::OnSocketRead(socket_t s)
 		{
 			if (s == m_pListener->GetSocket())
 			{
@@ -245,7 +235,7 @@ namespace XX004
 			return 0;
 		}
 
-		int NetConnectionManager::OnSocketWrite(SOCKET s)
+		int NetConnectionManager::OnSocketWrite(socket_t s)
 		{
 			NetConnection *pcon = GetConnectionFromSocket(s);
 			if (pcon == NULL)
@@ -255,7 +245,7 @@ namespace XX004
 			return pcon->DoSend();
 		}
 
-		void NetConnectionManager::OnSocketClose(SOCKET s)
+		void NetConnectionManager::OnSocketClose(socket_t s)
 		{
 			if (s == m_pListener->GetSocket())
 			{
@@ -277,7 +267,6 @@ namespace XX004
 			}
 
 			m_Connections.erase(s);
-			m_UIDToConnection.erase(pcon->GetUniqueID());
 			m_RemoteKeyToConnection.erase(pcon->GetRemote());
 			pcon->SetSocket(SOCKET_ERROR);
 			SAFE_DELETE(pcon);

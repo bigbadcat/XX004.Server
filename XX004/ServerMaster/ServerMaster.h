@@ -76,7 +76,7 @@ namespace XX004
 		void SetServerDirty();
 
 		//服务器信息失效间隔
-		static const UInt64 SERVER_DIRTY_GAP;
+		static const Int64 SERVER_DIRTY_GAP;
 
 	protected:
 		virtual void OnRegisterServer();
@@ -113,7 +113,7 @@ namespace XX004
 		bool m_IsServerDirty;
 
 		//服务器数据加载时间
-		UInt64 m_ServerTimeStamp;
+		Int64 m_ServerTimeStamp;
 
 		//服务器组信息
 		ServerGroupInfoMap m_ServerGroups;
