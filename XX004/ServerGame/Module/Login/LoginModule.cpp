@@ -16,7 +16,7 @@
 #include <Frame/StorageManager.h>
 #include <Frame/EventManager.h>
 #include <MySQL/MySQLWrap.h>
-#include <Protocol/NetProtocol.h>
+#include <Protocol/NetMsgLogin.h>
 #include <Util/StringUtil.h>
 #include <Util/TimeUtil.h>
 #include <Config/BasicModuleConfig.h>
@@ -40,18 +40,18 @@ namespace XX004
 
 	void LoginModule::RegisterNetMessage(NetManagerBase *pMgr)
 	{
-		NET_REGISTER(pMgr, NetMsgID::CS_LOGIN_REQ, OnLoginRequest);
-		NET_REGISTER(pMgr, NetMsgID::CS_CREATE_ROLE_REQ, OnCreateRoleRequest);
-		NET_REGISTER(pMgr, NetMsgID::CS_ENTER_GAME_REQ, OnEnterGameRequest);
-		NET_REGISTER(pMgr, NetMsgID::CS_QUIT_GAME_REQ, OnQuitGameRequest);
-		NET_REGISTER(pMgr, NetMsgID::DS_ROLE_LIST_RES, OnRoleListResponse);
-		NET_REGISTER(pMgr, NetMsgID::DS_ROLE_ADD_RES, OnRoleAddResponse);
+		NET_REGISTER(pMgr, MsgID::CS_LOGIN, OnLoginRequest);
+		NET_REGISTER(pMgr, MsgID::CS_CREATE_ROLE, OnCreateRoleRequest);
+		NET_REGISTER(pMgr, MsgID::CS_ENTER_GAME, OnEnterGameRequest);
+		NET_REGISTER(pMgr, MsgID::CS_QUIT_GAME, OnQuitGameRequest);
+		NET_REGISTER(pMgr, MsgID::DS_ROLE_LIST, OnRoleListResponse);
+		NET_REGISTER(pMgr, MsgID::DS_ROLE_ADD, OnRoleAddResponse);
 	}
 
 	void LoginModule::RegisterStorageMessage(StorageManager *pMgr)
 	{
-		DB_REGISTER(pMgr, NetMsgID::SD_ROLE_LIST_REQ, OnRoleListRequest);
-		DB_REGISTER(pMgr, NetMsgID::SD_ROLE_ADD_REQ, OnRoleAddRequest);
+		DB_REGISTER(pMgr, MsgID::SD_ROLE_LIST, OnRoleListRequest);
+		DB_REGISTER(pMgr, MsgID::SD_ROLE_ADD, OnRoleAddRequest);
 	}
 
 	void LoginModule::AddConfig(vector<ModuleConfig*> &cfgs)
@@ -238,7 +238,7 @@ namespace XX004
 		{
 			SCLoginResponse res;
 			res.Result = 1;
-			MainBase::GetCurMain()->GetNetManager()->Send(item->uid, NetMsgID::SC_LOGIN_RES, &res);
+			MainBase::GetCurMain()->GetNetManager()->Send(item->uid, MsgID::SC_LOGIN, &res);
 			return;
 		}
 		AddUserInfo(user_time[0], item->uid);
@@ -246,7 +246,7 @@ namespace XX004
 		//数据请求
 		SDRoleListRequest req2;
 		req2.UserName = user_time[0];
-		RequestStorage(0, NetMsgID::SD_ROLE_LIST_REQ, &req2);
+		RequestStorage(0, MsgID::SD_ROLE_LIST, &req2);
 	}
 
 	void LoginModule::OnCreateRoleRequest(NetDataItem *item)
@@ -261,7 +261,7 @@ namespace XX004
 		if (info == NULL)
 		{
 			res.Result = 4;
-			MainBase::GetCurMain()->GetNetManager()->Send(item->uid, NetMsgID::SC_CREATE_ROLE_RES, &res);
+			MainBase::GetCurMain()->GetNetManager()->Send(item->uid, MsgID::SC_CREATE_ROLE, &res);
 			return;
 		}
 
@@ -269,7 +269,7 @@ namespace XX004
 		if (!UserInfo::CheckRoleName(req.RoleName))
 		{
 			res.Result = 1;
-			MainBase::GetCurMain()->GetNetManager()->Send(item->uid, NetMsgID::SC_CREATE_ROLE_RES, &res);
+			MainBase::GetCurMain()->GetNetManager()->Send(item->uid, MsgID::SC_CREATE_ROLE, &res);
 			return;
 		}
 
@@ -278,7 +278,7 @@ namespace XX004
 		if (cfg == NULL)
 		{
 			res.Result = 2;
-			MainBase::GetCurMain()->GetNetManager()->Send(item->uid, NetMsgID::SC_CREATE_ROLE_RES, &res);
+			MainBase::GetCurMain()->GetNetManager()->Send(item->uid, MsgID::SC_CREATE_ROLE, &res);
 			return;
 		}
 
@@ -286,7 +286,7 @@ namespace XX004
 		if ((int)info->GetRoleInfos().size() >= UserInfo::MAX_ROLE_NUMBER)
 		{
 			res.Result = 3;
-			MainBase::GetCurMain()->GetNetManager()->Send(item->uid, NetMsgID::SC_CREATE_ROLE_RES, &res);
+			MainBase::GetCurMain()->GetNetManager()->Send(item->uid, MsgID::SC_CREATE_ROLE, &res);
 			return;
 		}
 
@@ -295,7 +295,7 @@ namespace XX004
 		req2.UserName = info->GetName();
 		req2.RoleName = req.RoleName;
 		req2.Prof = req.Prof;
-		RequestStorage(0, NetMsgID::SD_ROLE_ADD_REQ, &req2);
+		RequestStorage(0, MsgID::SD_ROLE_ADD, &req2);
 	}
 
 	void LoginModule::OnEnterGameRequest(NetDataItem *item)
@@ -310,7 +310,7 @@ namespace XX004
 		if (info == NULL)
 		{
 			res.Result = 3;
-			MainBase::GetCurMain()->GetNetManager()->Send(item->uid, NetMsgID::SC_ENTER_GAME_RES, &res);
+			MainBase::GetCurMain()->GetNetManager()->Send(item->uid, MsgID::SC_ENTER_GAME, &res);
 			return;
 		}
 
@@ -319,7 +319,7 @@ namespace XX004
 		if (info == NULL)
 		{
 			res.Result = 1;
-			MainBase::GetCurMain()->GetNetManager()->Send(item->uid, NetMsgID::SC_ENTER_GAME_RES, &res);
+			MainBase::GetCurMain()->GetNetManager()->Send(item->uid, MsgID::SC_ENTER_GAME, &res);
 			return;
 		}
 
@@ -328,14 +328,14 @@ namespace XX004
 		{
 			res.Result = 2;
 			res.FreeTime = roleinfo->FreeTime;
-			MainBase::GetCurMain()->GetNetManager()->Send(item->uid, NetMsgID::SC_ENTER_GAME_RES, &res);
+			MainBase::GetCurMain()->GetNetManager()->Send(item->uid, MsgID::SC_ENTER_GAME, &res);
 			return;
 		}
 
 		//将连接与角色id关联，回复登陆成功
 		info->SetCurRoleID(roleinfo->ID);
 		MainBase::GetCurMain()->GetNetManager()->Update(item->uid, RemoteKey(RemoteType::RT_CLIENT, roleinfo->ID));
-		SendNet(roleinfo->ID, NetMsgID::SC_ENTER_GAME_RES, &res);
+		SendNet(roleinfo->ID, MsgID::SC_ENTER_GAME, &res);
 
 		//通知玩家上线，发送初始化数据
 		EventParam *ep = EventParam::Get(LoginEvent::EID_USER_ONLINE);
@@ -358,7 +358,7 @@ namespace XX004
 		}
 
 		SCQuitGameResponse res;
-		MainBase::GetCurMain()->GetNetManager()->Send(item->uid, NetMsgID::SC_QUIT_GAME_RES, &res);
+		MainBase::GetCurMain()->GetNetManager()->Send(item->uid, MsgID::SC_QUIT_GAME, &res);
 
 		//退出
 		OnUserOutline(info->GetName(), 0);
@@ -389,7 +389,7 @@ namespace XX004
 			res.RoleList.push_back(role);
 		}
 		res.RoleCount = (Int32)res.RoleList.size();
-		ResponseStorage(0, NetMsgID::DS_ROLE_LIST_RES, &res);
+		ResponseStorage(0, MsgID::DS_ROLE_LIST, &res);
 	}
 
 	void LoginModule::OnRoleListResponse(NetDataItem *item)
@@ -423,7 +423,7 @@ namespace XX004
 		SCLoginResponse res2;
 		res2.RoleCount = res.RoleCount;
 		res2.RoleList.assign(res.RoleList.begin(), res.RoleList.end());
-		MainBase::GetCurMain()->GetNetManager()->Send(info->GetUID(), NetMsgID::SC_LOGIN_RES, &res2);
+		MainBase::GetCurMain()->GetNetManager()->Send(info->GetUID(), MsgID::SC_LOGIN, &res2);
 	}
 
 	void LoginModule::OnRoleAddRequest(NetDataItem *item)
@@ -446,7 +446,7 @@ namespace XX004
 			if (roleid != 0)
 			{
 				res.Result = 6;
-				ResponseStorage(0, NetMsgID::DS_ROLE_ADD_RES, &res);
+				ResponseStorage(0, MsgID::DS_ROLE_ADD, &res);
 				return;
 			}
 		}
@@ -461,7 +461,7 @@ namespace XX004
 			if (count >= UserInfo::MAX_ROLE_NUMBER)
 			{
 				res.Result = 3;
-				ResponseStorage(0, NetMsgID::DS_ROLE_ADD_RES, &res);
+				ResponseStorage(0, MsgID::DS_ROLE_ADD, &res);
 				return;
 			}
 		}
@@ -471,7 +471,7 @@ namespace XX004
 		if (roleid == 0)
 		{
 			res.Result = 5;
-			ResponseStorage(0, NetMsgID::DS_ROLE_ADD_RES, &res);
+			ResponseStorage(0, MsgID::DS_ROLE_ADD, &res);
 			return;
 		}
 
@@ -493,7 +493,7 @@ namespace XX004
 		mysql->EndTransaction(true);
 
 		//返回
-		ResponseStorage(0, NetMsgID::DS_ROLE_ADD_RES, &res);
+		ResponseStorage(0, MsgID::DS_ROLE_ADD, &res);
 	}
 
 	void LoginModule::OnRoleAddResponse(NetDataItem *item)
@@ -523,6 +523,6 @@ namespace XX004
 			info->AddRoleInfo(role);
 			res2.Role = res.Role;
 		}
-		MainBase::GetCurMain()->GetNetManager()->Send(info->GetUID(), NetMsgID::SC_CREATE_ROLE_RES, &res2);
+		MainBase::GetCurMain()->GetNetManager()->Send(info->GetUID(), MsgID::SC_CREATE_ROLE, &res2);
 	}
 }

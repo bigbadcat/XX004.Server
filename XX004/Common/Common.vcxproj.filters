@@ -91,9 +91,6 @@
     <ClInclude Include="Protocol\NetMsgLogin.h">
       <Filter>Protocol</Filter>
     </ClInclude>
-    <ClInclude Include="Protocol\NetProtocol.h">
-      <Filter>Protocol</Filter>
-    </ClInclude>
     <ClInclude Include="Config\ModuleConfig.h">
       <Filter>Config</Filter>
     </ClInclude>

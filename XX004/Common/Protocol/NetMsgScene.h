@@ -22,6 +22,14 @@ namespace XX004
 {
 	namespace Net
 	{
+		//协议号
+		namespace MsgID
+		{
+			const Int32 CS_MOVE = 3001;							//移动请求
+			const Int32 SC_SCENE_ENTER = 3401;					//进入场景通知
+			const Int32 SC_POSTION = 3402;						//位置同步通知
+		}
+
 		//3001:移动请求
 		class CSMoveRequest : public NetMessage
 		{

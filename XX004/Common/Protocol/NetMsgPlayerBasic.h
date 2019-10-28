@@ -22,6 +22,21 @@ namespace XX004
 {
 	namespace Net
 	{
+		//协议号
+		namespace MsgID
+		{
+			const Int32 CS_RENAME = 2001;						//角色改名请求
+			const Int32 SC_PLAYER_INFO = 2401;					//角色信息通知
+			const Int32 SC_ATTR_CHANGE = 2402;					//属性变化通知
+			const Int32 SC_LEVEL_EXP = 2403;					//等级经验变化通知
+			const Int32 SC_RENAME = 2404;						//角色改名回复
+			const Int32 SD_BASIC_INFO = 2801;					//请求角色基本信息
+			const Int32 DS_BASIC_INFO = 2802;					//回复角色基本信息
+			const Int32 SD_BASIC_SAVE = 2803;					//请求保存角色基本信息
+			const Int32 SD_RENAME = 2804;						//请求角色改名
+			const Int32 DS_RENAME = 2805;						//回复角色改名
+		}
+
 		//2001:角色改名请求
 		class CSRenameRequest : public NetMessage
 		{

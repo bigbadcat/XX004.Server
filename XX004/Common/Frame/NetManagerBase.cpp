@@ -44,7 +44,7 @@ namespace XX004
 
 	NetManagerBase::NetManagerBase() : m_Port(0)
 	{
-		m_InternalCallBack.insert(INTERNAL_CALL(NetMsgID::REMOTE_IDENTIFY, OnMsgRemoteIdentify));
+		m_InternalCallBack.insert(INTERNAL_CALL(MsgID::REMOTE_IDENTIFY, OnMsgRemoteIdentify));
 	}
 
 	NetManagerBase::~NetManagerBase()
@@ -427,7 +427,7 @@ namespace XX004
 					NetMessageInt req;					
 					req.Value = MainBase::GetCurMain()->GetType();
 					int len = req.Pack(data, 0);
-					con->Send(0, NetMsgID::REMOTE_IDENTIFY, data, len);
+					con->Send(0, MsgID::REMOTE_IDENTIFY, data, len);
 				}
 			}
 

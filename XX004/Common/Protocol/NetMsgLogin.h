@@ -22,6 +22,23 @@ namespace XX004
 {
 	namespace Net
 	{
+		//协议号
+		namespace MsgID
+		{
+			const Int32 CS_LOGIN = 1001;						//用户登陆请求
+			const Int32 CS_CREATE_ROLE = 1002;					//创建角色请求
+			const Int32 CS_ENTER_GAME = 1003;					//进入游戏请求
+			const Int32 CS_QUIT_GAME = 1004;					//退出游戏请求
+			const Int32 SC_LOGIN = 1401;						//用户登录回复
+			const Int32 SC_CREATE_ROLE = 1402;					//创建角色回复
+			const Int32 SC_ENTER_GAME = 1403;					//进入游戏回复
+			const Int32 SC_QUIT_GAME = 1404;					//退出游戏回复
+			const Int32 SD_ROLE_LIST = 1801;					//请求角色列表
+			const Int32 DS_ROLE_LIST = 1802;					//回复角色列表
+			const Int32 SD_ROLE_ADD = 1803;						//请求添加角色
+			const Int32 DS_ROLE_ADD = 1804;						//回复添加角色
+		}
+
 		//1001:用户登陆请求
 		class CSLoginRequest : public NetMessage
 		{

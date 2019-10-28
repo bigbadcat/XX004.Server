@@ -13,7 +13,7 @@
 #include "PlayerDefine.h"
 #include <Frame/NetManagerBase.h>
 #include <Frame/StorageManager.h>
-#include <Protocol/NetProtocol.h>
+#include <Protocol/NetMsgPlayerBasic.h>
 #include <MySQL/MySQLWrap.h>
 #include <Util/StringUtil.h>
 #include <Util/TimeUtil.h>
@@ -35,9 +35,9 @@ namespace XX004
 
 	void PlayerModule::RegisterNetMessage(NetManagerBase *pMgr)
 	{
-		NET_REGISTER(pMgr, NetMsgID::CS_RENAME_REQ, OnRenameRequest);
-		NET_REGISTER(pMgr, NetMsgID::DS_BASIC_INFO_RES, OnDBBasicInfoResponse);
-		NET_REGISTER(pMgr, NetMsgID::DS_RENAME_RES, OnDBRenameResponse);
+		NET_REGISTER(pMgr, MsgID::CS_RENAME, OnRenameRequest);
+		NET_REGISTER(pMgr, MsgID::DS_BASIC_INFO, OnDBBasicInfoResponse);
+		NET_REGISTER(pMgr, MsgID::DS_RENAME, OnDBRenameResponse);
 
 		EventManager *emgr = EventManager::GetInstance();
 		emgr->RegisterCallBack(LoginEvent::EID_USER_ONLINE, OnEventUserOnline, this);
@@ -47,9 +47,9 @@ namespace XX004
 
 	void PlayerModule::RegisterStorageMessage(StorageManager *pMgr)
 	{
-		DB_REGISTER(pMgr, NetMsgID::SD_BASIC_INFO_REQ, OnDBBasicInfoRequest);
-		DB_REGISTER(pMgr, NetMsgID::SD_BASIC_SAVE_REQ, OnDBBasicSaveRequest);
-		DB_REGISTER(pMgr, NetMsgID::SD_RENAME_REQ, OnDBRenameRequest);
+		DB_REGISTER(pMgr, MsgID::SD_BASIC_INFO, OnDBBasicInfoRequest);
+		DB_REGISTER(pMgr, MsgID::SD_BASIC_SAVE, OnDBBasicSaveRequest);
+		DB_REGISTER(pMgr, MsgID::SD_RENAME, OnDBRenameRequest);
 	}
 
 	void PlayerModule::AddConfig(vector<ModuleConfig*> &cfgs)
@@ -103,7 +103,7 @@ namespace XX004
 		{
 			SCRenameResponse res;
 			res.Result = 1;
-			SendNet(item->key.second, NetMsgID::SC_RENAME_RES, &res);
+			SendNet(item->key.second, MsgID::SC_RENAME, &res);
 		}
 
 		//判断改名消耗(依赖背包模块)
@@ -111,7 +111,7 @@ namespace XX004
 		//DB请求
 		SDRenameRequest req2;
 		req2.Name = req.Name;
-		RequestStorage(item->key.second, NetMsgID::SD_RENAME_REQ, &req2);
+		RequestStorage(item->key.second, MsgID::SD_RENAME, &req2);
 	}
 
 	void PlayerModule::OnDBBasicInfoRequest(NetDataItem *item)
@@ -135,7 +135,7 @@ namespace XX004
 			res.Direction = ret->GetInt("pos_dir");
 		}
 		ret->Clear();
-		ResponseStorage(rid, NetMsgID::DS_BASIC_INFO_RES, &res);
+		ResponseStorage(rid, MsgID::DS_BASIC_INFO, &res);
 	}
 
 	void PlayerModule::OnDBBasicInfoResponse(NetDataItem *item)
@@ -190,7 +190,7 @@ namespace XX004
 			if (roleid != 0)
 			{
 				res.Result = 2;
-				ResponseStorage(0, NetMsgID::DS_RENAME_RES, &res);
+				ResponseStorage(0, MsgID::DS_RENAME, &res);
 				return;
 			}
 		}
@@ -202,7 +202,7 @@ namespace XX004
 
 		//回复
 		res.Result = 0;
-		ResponseStorage(0, NetMsgID::DS_RENAME_RES, &res);
+		ResponseStorage(0, MsgID::DS_RENAME, &res);
 	}
 
 	void PlayerModule::OnDBRenameResponse(NetDataItem *item)
@@ -225,7 +225,7 @@ namespace XX004
 		SCRenameResponse res2;
 		res2.Result = res.Result;
 		res2.Name = res.Name;
-		SendNet(player->GetID(), NetMsgID::CS_RENAME_REQ, &res2);
+		SendNet(player->GetID(), MsgID::CS_RENAME, &res2);
 	}
 
 	void PlayerModule::OnEventUserOnline(int id, EventParam *ep)
@@ -258,7 +258,7 @@ namespace XX004
 
 		//向DB请求基本信息
 		SDBasicInfoRequest req;
-		RequestStorage(player->GetID(), NetMsgID::SD_BASIC_INFO_REQ, &req);
+		RequestStorage(player->GetID(), MsgID::SD_BASIC_INFO, &req);
 	}
 
 	void PlayerModule::OnEventUserOutline(int id, EventParam *ep)

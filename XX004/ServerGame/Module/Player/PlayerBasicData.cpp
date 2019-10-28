@@ -11,7 +11,8 @@
 #include "PlayerBasicData.h"
 #include "PlayerDefine.h"
 #include <Config/BasicModuleConfig.h>
-#include <Protocol/NetProtocol.h>
+#include <Protocol/NetMsgPlayerBasic.h>
+#include <Protocol/NetMsgScene.h>
 #include <Frame/NetManagerBase.h>
 #include <Frame/MainBase.h>
 #include <Frame/EventManager.h>
@@ -56,7 +57,7 @@ namespace XX004
 		SCLevelExpNotify notify;
 		notify.Level = m_Level;
 		notify.Exp = m_Exp;
-		SendNet(NetMsgID::SC_LEVEL_EXP, &notify);
+		SendNet(MsgID::SC_LEVEL_EXP, &notify);
 	}
 
 	void PlayerBasicData::UpdatePosition(int map, int x, int y, int dir)
@@ -137,7 +138,7 @@ namespace XX004
 		}
 		if (old_power != notify.Power || notify.AttrCount > 0)		//战力和属性必须有一个变化
 		{
-			SendNet(NetMsgID::SC_ATTR_CHANGE, &notify);
+			SendNet(MsgID::SC_ATTR_CHANGE, &notify);
 		}		
 	}
 
@@ -155,7 +156,7 @@ namespace XX004
 		req.PositionX = m_PosX;
 		req.PositionY = m_PosY;
 		req.Direction = m_PosDir;
-		ModuleBase::RequestStorage(this->m_ID, NetMsgID::SD_BASIC_SAVE_REQ, &req);
+		ModuleBase::RequestStorage(this->m_ID, MsgID::SD_BASIC_SAVE, &req);
 		m_NeedSave = false;
 		this->m_SaveTimeStamp = TimeUtil::GetCurrentSecond() + SAVE_GAP;
 		printf_s("PlayerBasicData::SavePlayerData %I64d\n", m_ID);
@@ -192,7 +193,7 @@ namespace XX004
 			info.Value = itr->second;
 			notify.AttrList.push_back(info);
 		}
-		SendNet(NetMsgID::SC_PLAYER_INFO, &notify);
+		SendNet(MsgID::SC_PLAYER_INFO, &notify);
 
 		//通知进场
 		SCSceneEnterNotify notify2;
@@ -200,6 +201,6 @@ namespace XX004
 		notify2.PositionX = 0;
 		notify2.PositionY = 0;
 		notify2.Direction = 0;
-		SendNet(NetMsgID::SC_SCENE_ENTER, &notify2);
+		SendNet(MsgID::SC_SCENE_ENTER, &notify2);
 	}
 }
