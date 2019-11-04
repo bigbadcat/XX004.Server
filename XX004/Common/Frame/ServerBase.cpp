@@ -207,6 +207,7 @@ namespace XX004
 				t_sectick += 1000;
 				OnUpdatePerSecond();
 			}
+			pNetMgr->CheckSendNotify();
 
 			//帧停留
 			UInt64 t_loopend = TimeUtil::GetTickCount();

@@ -78,7 +78,7 @@ namespace XX004
 		m_pServer->RegisterNetMessage(m_pNetManager);
 
 		//模块运行
-		m_pStorageManager->Start(type, sid);
+		m_pStorageManager->Start(m_Type, sid);
 		ServerSetting* info = StartSetting::GetInstance()->GetServerSetting(m_Type);
 		assert(info != NULL);
 		m_pNetManager->Start(info->GetPort());

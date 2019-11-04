@@ -12,13 +12,121 @@
 #include "NetServer.h"
 #include "NetListener.h"
 #include "NetConnection.h"
+#include "../Protocol/NetMsgID.h"
 #include <assert.h>
+#include <WS2tcpip.h>
 using namespace std;
 
 namespace XX004
 {
 	namespace Net
 	{
+		NetAwakeBridge::NetAwakeBridge() : m_Send(SOCKET_ERROR)
+		{
+
+		}
+
+		NetAwakeBridge::~NetAwakeBridge()
+		{
+			SAFE_CLOSE_SOCKET(m_Send);
+		}
+
+		void NetAwakeBridge::Init(int port)
+		{
+			socket_t s = ::socket(AF_INET, SOCK_STREAM, 0);
+			if (s == SOCKET_ERROR)
+			{
+				cout << "create socket err:" << WSAGetLastError() << endl;
+				return;
+			}
+
+			SOCKADDR_IN addrSrv;
+			int pton = inet_pton(AF_INET, "127.0.0.1", &addrSrv.sin_addr.S_un.S_addr);
+			addrSrv.sin_family = AF_INET;
+			addrSrv.sin_port = htons((u_short)port);
+
+			//非阻塞
+			bool noblocking = true;
+			u_long argp = noblocking ? 1 : 0;
+			int ret = ::ioctlsocket(s, FIONBIO, &argp);
+			if (ret != 0)
+			{
+				cout << "set socket noblocking err:" << WSAGetLastError() << endl;
+				SAFE_CLOSE_SOCKET(s);
+				return;
+			}
+			::connect(s, (sockaddr *)&addrSrv, sizeof (sockaddr));
+			m_Send = s;
+		}
+
+		void NetAwakeBridge::Notify()
+		{
+			if (!CheckSend())
+			{
+				return;
+			}
+
+			//发送一个唤醒协议
+			Byte sendbuff[1024];
+			int sendsize = 0;
+			NetPackageHeader sendhead;
+			sendhead.SetSign();
+			sendhead.Command = MsgID::INTERNAL_AWAKE;
+			sendhead.GUID = 0;
+			sendhead.BodySize = 0;
+			sendsize = sendhead.Pack(sendbuff, sendsize);
+
+			int ret = ::send(m_Send, (char*)sendbuff, sendsize, 0);
+			if (ret == SOCKET_ERROR)
+			{
+				cout << "send socket err:" << WSAGetLastError() << endl;
+				SAFE_CLOSE_SOCKET(m_Send)
+			}
+		}
+
+		bool NetAwakeBridge::CheckSend()
+		{
+			if (m_Send == SOCKET_ERROR)
+			{
+				return false;
+			}
+
+			bool ok = false;
+			fd_set readfds;
+			fd_set writefds;
+			fd_set exceptfds;
+			FD_ZERO(&readfds);
+			FD_ZERO(&writefds);
+			FD_ZERO(&exceptfds);
+			FD_SET(m_Send, &writefds);
+			FD_SET(m_Send, &exceptfds);
+			timeval timeout;
+			timeout.tv_sec = 0;
+			timeout.tv_usec = 0;
+			int ret = ::select(0, &readfds, &writefds, &exceptfds, &timeout);		//windows下nfds参数无用，可传入0
+			if (ret > 0)
+			{
+				//先判断是否有异常
+				if (FD_ISSET(m_Send, &exceptfds) != 0)
+				{
+					cout << "NetAwakeBridge error:" << WSAGetLastError() << endl;
+					SAFE_CLOSE_SOCKET(m_Send);
+				}
+				//可以写入了则说明已经准备好了
+				if (FD_ISSET(m_Send, &writefds) != 0)
+				{
+					ok = true;
+				}
+			}
+			else if (ret == SOCKET_ERROR)
+			{
+				cout << "NetAwakeBridge error:" << WSAGetLastError() << endl;
+				SAFE_CLOSE_SOCKET(m_Send)
+			}
+			return ok;
+		}
+
+
 		NetConnectionManager::NetConnectionManager() : m_pServer(NULL), m_pListener(NULL)
 		{
 			m_pListener = new NetListener();
@@ -34,6 +142,7 @@ namespace XX004
 		void NetConnectionManager::Init(int port)
 		{
 			m_pListener->Start(port);
+			m_AwakeBridge.Init(port);
 		}
 
 		void NetConnectionManager::Release()

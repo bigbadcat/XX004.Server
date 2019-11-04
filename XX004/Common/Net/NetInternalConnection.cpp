@@ -171,7 +171,7 @@ namespace XX004
 			int ret = ::ioctlsocket(s, FIONBIO, &argp);
 			if (ret != 0)
 			{
-				cout << "set listen socket noblocking err:" << WSAGetLastError() << endl;
+				cout << "set socket noblocking err:" << WSAGetLastError() << endl;
 				SAFE_CLOSE_SOCKET(s);
 				return;
 			}

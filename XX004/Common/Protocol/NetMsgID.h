@@ -26,6 +26,7 @@ namespace XX004
 		namespace MsgID
 		{
 			const Int32 REMOTE_IDENTIFY = 1;						//远端标识
+			const Int32 INTERNAL_AWAKE = 2;							//内部唤醒
 		}
 	}
 }

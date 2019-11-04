@@ -42,9 +42,10 @@ namespace XX004
 		return out;
 	}
 
-	NetManagerBase::NetManagerBase() : m_Port(0)
+	NetManagerBase::NetManagerBase() : m_Port(0), m_HaveSend(false)
 	{
 		m_InternalCallBack.insert(INTERNAL_CALL(MsgID::REMOTE_IDENTIFY, OnMsgRemoteIdentify));
+		m_InternalCallBack.insert(INTERNAL_CALL(MsgID::INTERNAL_AWAKE, OnMsgInternalAwake));
 	}
 
 	NetManagerBase::~NetManagerBase()
@@ -131,6 +132,7 @@ namespace XX004
 	{
 		cout << "NetManagerBase::Stop" << endl;
 		m_IsRunning = false;
+		m_Server.NotifyAwake();
 		JoinThread(m_Thread);
 	}
 
@@ -156,6 +158,16 @@ namespace XX004
 		}
 	}
 
+	void NetManagerBase::CheckSendNotify()
+	{
+		if (!m_HaveSend)
+		{
+			return;
+		}
+		m_HaveSend = false;
+		m_Server.NotifyAwake();		//内部线程发送数据，以唤醒堵塞的网络线程		
+	}
+
 	void NetManagerBase::Update(UInt64 uid, const RemoteKey& key)
 	{
 		NetDataItem *item = GetNetDataItem();
@@ -174,6 +186,7 @@ namespace XX004
 		::memcpy_s(item->data, NET_PACKAGE_MAX_SIZE, buffer, len);
 		item->len = len;
 		m_SendQueue.Push(item);
+		m_HaveSend = true;
 	}
 
 	void NetManagerBase::Send(UInt64 uid, int command, NetMessage *msg)
@@ -185,6 +198,7 @@ namespace XX004
 		item->cmd = command;
 		item->len = msg->Pack(item->data, 0);
 		m_SendQueue.Push(item);
+		m_HaveSend = true;
 	}
 
 	void NetManagerBase::Send(const RemoteKey& key, int command, Byte *buffer, int len)
@@ -197,6 +211,7 @@ namespace XX004
 		::memcpy_s(item->data, NET_PACKAGE_MAX_SIZE, buffer, len);
 		item->len = len;
 		m_SendQueue.Push(item);
+		m_HaveSend = true;
 	}
 
 	void NetManagerBase::Send(const RemoteKey& key, int command, NetMessage *msg)
@@ -207,6 +222,7 @@ namespace XX004
 		item->cmd = command;
 		item->len = msg->Pack(item->data, 0);
 		m_SendQueue.Push(item);
+		m_HaveSend = true;
 	}
 
 	void NetManagerBase::SendToSelf(const RemoteKey& key, int command, NetMessage *msg)
@@ -315,7 +331,7 @@ namespace XX004
 		while (m_IsRunning)
 		{
 			OnPostSend();
-			m_Server.SelectSocket(100);		//阻塞等待时最多等100毫秒
+			m_Server.SelectSocket(1000);		//阻塞等待时最多等1秒
 			UpdateInternalConnection();
 		}
 		m_Server.Stop();
@@ -474,5 +490,9 @@ namespace XX004
 		int index = msg.Unpack(buffer, 0);
 		m_Server.SetRemote(connection->GetUniqueID(), RemoteKey(msg.Value, 0));
 		cout << "OnMsgRemoteIdentify uid:" << connection->GetUniqueID() << " type:" << connection->GetRomoteType() << endl;
+	}
+
+	void NetManagerBase::OnMsgInternalAwake(NetConnection *connection, Int32 cmd, Byte *buffer, int len)
+	{
 	}
 }

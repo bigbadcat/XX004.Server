@@ -23,6 +23,26 @@ namespace XX004
 		class NetListener;
 		class NetConnection;
 
+		//用于唤醒接收阻塞的线程
+		class NetAwakeBridge
+		{
+		public:
+			NetAwakeBridge();
+			~NetAwakeBridge();
+
+			//初始化
+			void Init(int port);
+
+			//通知唤醒
+			void Notify();
+
+		private:
+
+			bool CheckSend();
+
+			socket_t m_Send;
+		};
+
 		//网络连接管理，通过管理多个连接线程实现
 		class NetConnectionManager
 		{
@@ -67,6 +87,9 @@ namespace XX004
 			//有连接接收到数据包了
 			void OnRecvPackage(NetConnection *con);
 
+			//通知唤醒
+			void NotifyAwake() { m_AwakeBridge.Notify(); }
+
 		private:
 
 			//获取连接
@@ -86,6 +109,9 @@ namespace XX004
 
 			//监听者
 			NetListener *m_pListener;
+
+			//唤醒对象
+			NetAwakeBridge m_AwakeBridge;
 
 			//连接集合
 			NetConnectionMap m_Connections;

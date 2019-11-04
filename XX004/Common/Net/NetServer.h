@@ -73,6 +73,9 @@ namespace XX004
 			//获取网络处理者
 			inline INetProcesser* GetProcesser()const { return m_pProcesser; }
 
+			//通知唤醒，若当前处于select接收阻塞状态则立即结束，否则下一次select将不阻塞
+			void NotifyAwake();
+
 		private:
 			//有新的连接。
 			void OnConnect(NetConnection* con);

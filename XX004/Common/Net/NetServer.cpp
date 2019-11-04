@@ -68,6 +68,11 @@ namespace XX004
 			m_pConnectionManager->RemoveConnection(con);
 		}
 
+		void NetServer::NotifyAwake()
+		{
+			m_pConnectionManager->NotifyAwake();
+		}
+
 		void NetServer::OnConnect(NetConnection* con)
 		{
 			::printf_s("OnConnect ip:%s port:%d\n", con->GetIPAddress().c_str(), con->GetPort());

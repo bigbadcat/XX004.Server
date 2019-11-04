@@ -135,6 +135,9 @@ namespace XX004
 		//分发消息给Server
 		void Dispatch();
 
+		//检查发送通知
+		void CheckSendNotify();
+
 		//更新连接信息
 		void Update(UInt64 uid, const RemoteKey& key);
 
@@ -196,6 +199,9 @@ namespace XX004
 		//身份标识处理
 		void OnMsgRemoteIdentify(NetConnection *connection, Int32 cmd, Byte *buffer, int len);
 
+		//内部唤醒
+		void OnMsgInternalAwake(NetConnection *connection, Int32 cmd, Byte *buffer, int len);
+
 
 		//是否运行
 		bool m_IsRunning;
@@ -208,6 +214,9 @@ namespace XX004
 
 		//网络服务端模块
 		NetServer m_Server;
+
+		//是否有发送消息
+		bool m_HaveSend;
 
 		//启动信号
 		xxstd::semaphore m_InitSemaphore;
