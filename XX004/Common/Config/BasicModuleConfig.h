@@ -15,6 +15,7 @@
 #include "ConfigDefine.h"
 #include "LuaWrap/ConstWrap.h"
 #include "LuaWrap/ProfWrap.h"
+#include "LuaWrap/ProfLevelWrap.h"
 #include "LuaWrap/ProfAttrWrap.h"
 
 namespace XX004
@@ -40,6 +41,10 @@ namespace XX004
 		map<int, Int64> m_InitAttr;
 	};
 	CONFIG_MAP(ProfConfig);
+
+	//职业等级配置
+	class ProfLevelConfig : public ProfLevelWrap {};
+	CONFIG_MAP(ProfLevelConfig);
 
 	//职业等级属性配置
 	class ProfAttrConfig : public ProfAttrWrap
@@ -72,6 +77,18 @@ namespace XX004
 		const ProfConfigMap& GetAllProf()const { return m_Profs; }
 		ProfConfig* GetProf(int id)const { auto itr = m_Profs.find(id); return itr == m_Profs.end() ? NULL : itr->second; }
 
+		//获取职业最大等级
+		inline int GetProfMaxLevel()const { return m_ProfMaxLevel; }
+
+		//获取职业等级配置
+		ProfLevelConfig* GetProfLevel(int level)const { auto itr = m_ProfLevels.find(level); return itr == m_ProfLevels.end() ? NULL : itr->second; }
+
+		//获取新的职业等级 ret:剩余经验
+		Int64 GetNewLevel(int old_level, Int64 old_exp, Int64 add_exp, int &new_level);
+
+		//获取从某个等级提升到另一个等级需要的经验
+		Int64 GetNeedExp(int from_level, int to_level);
+
 		//获取职业对应等级属性
 		const map<int, Int64> GetProfAttr(int prof, int level)const;
 
@@ -96,6 +113,12 @@ namespace XX004
 
 		//职业配置
 		ProfConfigMap m_Profs;
+
+		//职业最大等级
+		int m_ProfMaxLevel;
+
+		//职业等级配置
+		ProfLevelConfigMap m_ProfLevels;
 
 		//职业属性配置
 		ProfAttrConfigMap m_ProfAttrs;

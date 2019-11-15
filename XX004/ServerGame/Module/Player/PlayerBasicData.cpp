@@ -38,7 +38,9 @@ namespace XX004
 
 	void PlayerBasicData::AddExp(Int64 exp)
 	{
-		this->UpdateLevelExp(m_Level, m_Exp + exp);
+		int new_level = 0;
+		Int64 new_exp = ModuleConfig::GetInstance<BasicModuleConfig>()->GetNewLevel(m_Level, m_Exp, exp, new_level);
+		this->UpdateLevelExp(new_level, new_exp);
 	}
 
 	void PlayerBasicData::UpdateLevelExp(int level, Int64 exp)

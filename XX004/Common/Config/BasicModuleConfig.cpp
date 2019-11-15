@@ -10,6 +10,7 @@
 
 #include "BasicModuleConfig.h"
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 namespace XX004
@@ -28,7 +29,7 @@ namespace XX004
 		m_Attr[AttrType::AT_HPRecover] = this->hpr;
 	}
 
-	BasicModuleConfig::BasicModuleConfig()
+	BasicModuleConfig::BasicModuleConfig() : m_ProfMaxLevel(0)
 	{
 	}
 
@@ -37,9 +38,49 @@ namespace XX004
 		OnRelease();
 	}
 
+	Int64 BasicModuleConfig::GetNewLevel(int old_level, Int64 old_exp, Int64 add_exp, int &new_level)
+	{
+		assert(old_level > 0 && old_exp >= 0 && add_exp >= 0);
+		Int64 last_exp = old_exp + add_exp;
+		new_level = old_level;
+		while (new_level < m_ProfMaxLevel)
+		{
+			ProfLevelConfig *cfg = GetProfLevel(new_level + 1);
+			if (last_exp < cfg->exp)
+			{
+				break;
+			}
+			last_exp -= cfg->exp;
+			++new_level;
+		}
+
+		//满级后经验不能超过最后一级需要的经验
+		new_level = std::min(new_level, m_ProfMaxLevel);
+		if (new_level == m_ProfMaxLevel)
+		{
+			ProfLevelConfig *cfg = GetProfLevel(new_level);
+			last_exp = std::min(last_exp, cfg->exp);
+		}
+		return last_exp;
+	}
+
+	Int64 BasicModuleConfig::GetNeedExp(int from_level, int to_level)
+	{
+		assert(from_level > 0 && to_level > 0);
+		Int64 exp = 0;
+		to_level = std::min(to_level, m_ProfMaxLevel);
+		for (int lv = from_level+1; lv <= to_level; ++lv)
+		{
+			ProfLevelConfig *cfg = GetProfLevel(lv);
+			exp += cfg->exp;
+		}
+		return exp;
+	}
+
 	const map<int, Int64> BasicModuleConfig::GetProfAttr(int prof, int level)const
 	{
 		//读取职业配置
+		assert(level > 0);
 		map<int, Int64> attr;
 		ProfConfigMap::const_iterator itr = m_Profs.find(prof);
 		if (itr == m_Profs.cend())
@@ -98,6 +139,7 @@ namespace XX004
 		lua_State *L = LuaWrap::GetLuaState();
 		ModuleConfig::LoadConfig<ConstConfig>(m_Consts, L, "t_const");
 		ModuleConfig::LoadConfig<ProfConfig>(m_Profs, L, "t_prof");
+		ModuleConfig::LoadConfig<ProfLevelConfig>(m_ProfLevels, L, "t_prof_level");
 		ModuleConfig::LoadConfig<ProfAttrConfig>(m_ProfAttrs, L, "t_prof_attr");
 
 		//属性比例类型
@@ -109,6 +151,10 @@ namespace XX004
 		m_AttrRateTypes.push_back(make_pair(AttrType::AT_SpeedRate, AttrType::AT_Speed));
 
 		//二次解析建立缓存
+		for (ProfLevelConfigMap::iterator itr = m_ProfLevels.begin(); itr != m_ProfLevels.end(); ++itr)
+		{
+			m_ProfMaxLevel = std::max(m_ProfMaxLevel, itr->second->level);
+		}
 		for (ProfAttrConfigMap::iterator itr = m_ProfAttrs.begin(); itr != m_ProfAttrs.end(); ++itr)
 		{
 			ProfAttrConfig *cfg = itr->second;
@@ -122,6 +168,8 @@ namespace XX004
 		m_ProfLevelAttrs.clear();
 		SAFE_DELETE_MAP(m_Consts);
 		SAFE_DELETE_MAP(m_Profs);
+		SAFE_DELETE_MAP(m_ProfLevels);
+		m_ProfLevelAttrs.clear();
 		SAFE_DELETE_MAP(m_ProfAttrs);
 	}
 }
