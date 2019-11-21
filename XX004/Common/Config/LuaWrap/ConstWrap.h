@@ -23,7 +23,7 @@ namespace XX004
 
 		int id;								//编号
 		string name;						//名称
-		string value1;						//整数值1
+		int value1;							//整数值1
 		int value2;							//整数值2
 		int value3;							//整数值3
 		string value_str;					//字符串值

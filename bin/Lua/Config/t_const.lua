@@ -1,5 +1,6 @@
 local t_const =
 {
+	[1]={1, "power_rate", 1000, 0, 0, ""},
 }
 
 local keys = {"id", "name", "value1", "value2", "value3", "value_str"}

@@ -30,7 +30,7 @@ namespace XX004
 		m_Attr[AttrType::AT_HPRecover] = this->hpr;
 	}
 
-	BasicModuleConfig::BasicModuleConfig() : m_ProfMaxLevel(0)
+	BasicModuleConfig::BasicModuleConfig() : m_PowerRate(0), m_ProfMaxLevel(0)
 	{
 	}
 
@@ -168,12 +168,6 @@ namespace XX004
 		return attr;
 	}
 
-	inline Int64 try_get_attr(int type, const map<int, Int64>& attrs)
-	{
-		map<int, Int64>::const_iterator itr = attrs.find(type);
-		return itr == attrs.cend() ? 0 : itr->second;
-	}
-
 	map<int, Int64> BasicModuleConfig::CalcFinalAttr(const map<int, Int64>& attrs)const
 	{
 		//将加成类属性则算回去
@@ -186,18 +180,69 @@ namespace XX004
 		return fattrs;
 	}
 
-	Int64 BasicModuleConfig::CalcPower(const map<int, Int64>& attrs)const
+	inline Int64 get_attr_power(int type, const map<int, Int64>& attrs)
 	{
-		Int64 hp = try_get_attr(AttrType::AT_MaxHP, attrs);
-		Int64 att = try_get_attr(AttrType::AT_Attack, attrs);
-		Int64 def = try_get_attr(AttrType::AT_Defense, attrs);
-		return hp / 100 + att + def;
+		map<int, Int64>::const_iterator itr = attrs.find(type);
+		if (itr == attrs.cend())
+		{
+			return 0;
+		}
+
+		AttrConfig *cfg = ModuleConfig::GetInstance<BasicModuleConfig>()->GetAttr(type);
+		if (cfg == NULL)
+		{
+			return 0;
+		}
+
+		Int64 value = itr->second * cfg->power_rate / 1000;
+		return value;
 	}
 
-	void BasicModuleConfig::OnInit()
+	Int64 BasicModuleConfig::CalcPower(const map<int, Int64>& attrs)const
 	{
-		lua_State *L = LuaWrap::GetLuaState();
+		//生命战力
+		Int64 hp = get_attr_power(AttrType::AT_MaxHP, attrs);
+		Int64 hts = get_attr_power(AttrType::AT_HurtSub, attrs);
+		Int64 suck = get_attr_power(AttrType::AT_HPSuckUp, attrs);
+		Int64 hpr = get_attr_power(AttrType::AT_HPRecover, attrs);
+		Int64 att = get_attr_power(AttrType::AT_Attack, attrs);
+		Int64 hp_power = (hp + att*suck / 1000 + hpr) * (1000+ hts) / 1000;
+
+		//攻击战力
+		Int64 hta = get_attr_power(AttrType::AT_HurtAdd, attrs);
+		Int64 hit = get_attr_power(AttrType::AT_Hit, attrs);
+		Int64 crt = get_attr_power(AttrType::AT_CritProb, attrs);
+		Int64 crtd = get_attr_power(AttrType::AT_CritDamge, attrs);
+		Int64 htb = get_attr_power(AttrType::AT_HurtBack, attrs);
+		Int64 eng = get_attr_power(AttrType::AT_MaxEnergy, attrs);
+		Int64 enr = get_attr_power(AttrType::AT_EnergyRecover, attrs);
+		Int64 eng_rate = 1000 + eng + enr;
+		Int64 att_power = (att*eng_rate / 1000)*hit / 1000 * (1000 + crt*crtd / 1000) / 1000 * (1000 + hta) / 1000 + hp*htb / 1000;
+
+		//防御战力
+		Int64 def = get_attr_power(AttrType::AT_Defense, attrs);
+		Int64 pry = get_attr_power(AttrType::AT_Parry, attrs);
+		Int64 pryd = get_attr_power(AttrType::AT_ParryDerate, attrs);
+		Int64 acrt = get_attr_power(AttrType::AT_AntiCritProb, attrs);
+		Int64 acrtd = get_attr_power(AttrType::AT_AntiCritDamge, attrs);
+		Int64 stb = get_attr_power(AttrType::AT_MaxStability, attrs);
+		Int64 stbr = get_attr_power(AttrType::AT_StabilityRecover, attrs);
+		Int64 def_power = def + hp*(stb*pry / 1000 * pryd / 1000 + acrt*acrtd / 1000) / 1000;
+
+		//总和
+		Int64 power = (hp_power + att_power + def_power) * m_PowerRate / 1000;
+		return power;
+	}
+
+	void BasicModuleConfig::OnInit(lua_State *L)
+	{
+		//常量
 		ModuleConfig::LoadConfig<ConstConfig>(m_Consts, L, "t_const");
+		for (ConstConfigMap::iterator itr = m_Consts.begin(); itr != m_Consts.end(); ++itr)
+		{
+			m_NameToConst.insert(make_pair(itr->second->name, itr->second));
+		}
+		m_PowerRate = GetConstValue1("power_rate");
 
 		//属性
 		ModuleConfig::LoadConfig<AttrConfig>(m_Attrs, L, "t_attr");
@@ -233,7 +278,7 @@ namespace XX004
 
 	void BasicModuleConfig::OnRelease()
 	{
-		m_ProfLevelAttrs.clear();
+		m_NameToConst.clear();
 		SAFE_DELETE_MAP(m_Consts);
 		SAFE_DELETE_MAP(m_Attrs);
 		SAFE_DELETE_MAP(m_Profs);

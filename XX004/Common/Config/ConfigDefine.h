@@ -40,9 +40,9 @@ namespace XX004
 		AT_EnergyRecover = 14,		//能量恢复
 		AT_StabilityRecover = 15,	//定力恢复
 		AT_HPSuckUp = 16,			//吸血
-		AT_HurtBack = 17,			//反伤害
+		AT_HurtBack = 17,			//伤害反弹
 		AT_HurtAdd = 18,			//伤害加成
-		AT_HurtSub = 19,			//伤害减少
+		AT_HurtSub = 19,			//伤害减免
 		AT_Speed = 20,				//速度
 		//--------------------------加成类属性--------------------------//
 		AT_MaxHPRate = 21,			//生命加成比例(千分比)

@@ -79,6 +79,24 @@ namespace XX004
 
 		virtual const char* GetName()const { return "BasicModuleConfig"; }
 
+		//获取常量配置
+		inline ConstConfig* GetConstConfig(const string& name) { auto itr = m_NameToConst.find(name); return itr == m_NameToConst.end() ? NULL : itr->second; }
+
+		//获取常量值1
+		inline int GetConstValue1(const string& name) { ConstConfig *cfg = GetConstConfig(name); return cfg == NULL ? 0 : cfg->value1; }
+
+		//获取常量值2
+		inline int GetConstValue2(const string& name) { ConstConfig *cfg = GetConstConfig(name); return cfg == NULL ? 0 : cfg->value2; }
+
+		//获取常量值3
+		inline int GetConstValue3(const string& name) { ConstConfig *cfg = GetConstConfig(name); return cfg == NULL ? 0 : cfg->value3; }
+
+		//获取常量字符串
+		inline string GetConstString(const string& name) { ConstConfig *cfg = GetConstConfig(name); return cfg == NULL ? string() : cfg->value_str; }
+
+		//获取属性配置
+		AttrConfig* GetAttr(int type){ auto itr = m_Attrs.find(type); return itr == m_Attrs.end() ? NULL : itr->second; }
+
 		//获取运行时属性
 		inline const vector<int>& GetRuntimeAttrs()const { return m_RuntimeAttrs; }
 
@@ -120,13 +138,16 @@ namespace XX004
 
 	protected:
 
-		virtual void OnInit();
+		virtual void OnInit(lua_State *L);
 		virtual void OnRelease();
 
 	private:
 
 		//常量配置
 		ConstConfigMap m_Consts;
+
+		//属性名称到类型
+		map<string, ConstConfig*> m_NameToConst;
 
 		//属性配置
 		AttrConfigMap m_Attrs;
@@ -139,6 +160,9 @@ namespace XX004
 
 		//属性名称到类型
 		map<string, int> m_AttrNameToType;
+
+		//战力缩放比例
+		int m_PowerRate;
 
 		//职业配置
 		ProfConfigMap m_Profs;

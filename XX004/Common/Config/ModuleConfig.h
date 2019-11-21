@@ -51,7 +51,7 @@ namespace XX004
 	protected:
 
 		//初始化
-		virtual void OnInit() = 0;
+		virtual void OnInit(lua_State *L) = 0;
 
 		//销毁
 		virtual void OnRelease() = 0;

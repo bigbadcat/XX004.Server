@@ -27,7 +27,7 @@ namespace XX004
 		{
 			return;
 		}
-		OnInit();
+		OnInit(LuaWrap::GetLuaState());
 		m_Init = true;
 	}
 
