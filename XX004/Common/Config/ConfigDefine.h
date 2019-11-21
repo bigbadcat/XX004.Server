@@ -20,7 +20,7 @@ namespace XX004
 {
 #define CONFIG_MAP(cfg) typedef map<int, cfg*> cfg##Map
 
-	//属性类型，值必须连续。如果属性需要持久化用name做标识，ID只运行时做标识，随着功能迭代会变动。
+	//属性类型，值必须与[S_属性.xlsx]中的类型一致。
 	enum AttrType
 	{
 		AT_Unknow = 0,				//未知
@@ -52,32 +52,6 @@ namespace XX004
 		AT_DefenseRate = 25,		//防御加成比例(千分比)
 		AT_SpeedRate = 26,			//速度加成比例(千分比)
 		AT_MAX = 27,				//属性数量
-	};
-
-	//配置相关通用接口
-	class ConfigUtil
-	{
-	public:
-
-		//获取属性名称
-		static const string& GetAttrName(int type);
-
-		//通过属性名获取属性类型
-		static int GetAttrType(const string& name);
-
-		//解析属性 str:name*value,name*value... ret:attrs自身
-		static map<int, Int64>& ParseAttr(const string& str, map<int, Int64>& attrs);
-
-		//解析属性 str:name*value数组 ret:attrs自身
-		static map<int, Int64>& ParseAttr(const vector<string>& str, map<int, Int64>& attrs);
-
-		//打印属性 attrs:属性集合 print_zero:是打印值为0的属性
-		static void PrintAttr(const map<int, Int64>& attrs, bool print_zero = false);
-
-	private:
-
-		//属性名 与AttrType下标对应
-		static string AttrName[AttrType::AT_MAX];
 	};
 }
 

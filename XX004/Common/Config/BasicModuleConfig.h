@@ -14,6 +14,7 @@
 #include "ModuleConfig.h"
 #include "ConfigDefine.h"
 #include "LuaWrap/ConstWrap.h"
+#include "LuaWrap/AttrWrap.h"
 #include "LuaWrap/ProfWrap.h"
 #include "LuaWrap/ProfLevelWrap.h"
 #include "LuaWrap/ProfAttrWrap.h"
@@ -23,6 +24,10 @@ namespace XX004
 	//常量配置
 	class ConstConfig : public ConstWrap {};
 	CONFIG_MAP(ConstConfig);
+
+	//属性配置
+	class AttrConfig : public AttrWrap {};
+	CONFIG_MAP(AttrConfig);
 
 	//职业配置
 	class ProfConfig : public ProfWrap
@@ -74,6 +79,21 @@ namespace XX004
 
 		virtual const char* GetName()const { return "BasicModuleConfig"; }
 
+		//获取运行时属性
+		inline const vector<int>& GetRuntimeAttrs()const { return m_RuntimeAttrs; }
+
+		//通过属性名获取属性类型
+		int GetAttrType(const string& name);
+
+		//解析属性 str:name*value,name*value... ret:attrs自身
+		map<int, Int64>& ParseAttr(const string& str, map<int, Int64>& attrs);
+
+		//解析属性 str:name*value数组 ret:attrs自身
+		map<int, Int64>& ParseAttr(const vector<string>& str, map<int, Int64>& attrs);
+
+		//打印属性 attrs:属性集合 print_zero:是打印值为0的属性
+		void PrintAttr(const map<int, Int64>& attrs, bool print_zero = false);
+
 		const ProfConfigMap& GetAllProf()const { return m_Profs; }
 		ProfConfig* GetProf(int id)const { auto itr = m_Profs.find(id); return itr == m_Profs.end() ? NULL : itr->second; }
 
@@ -108,8 +128,17 @@ namespace XX004
 		//常量配置
 		ConstConfigMap m_Consts;
 
+		//属性配置
+		AttrConfigMap m_Attrs;
+
 		//属性比例类型
 		vector<pair<int, int> > m_AttrRateTypes;
+
+		//运行时属性
+		vector<int> m_RuntimeAttrs;
+
+		//属性名称到类型
+		map<string, int> m_AttrNameToType;
 
 		//职业配置
 		ProfConfigMap m_Profs;

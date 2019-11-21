@@ -172,6 +172,9 @@
     <ClInclude Include="Config\LuaWrap\ProfLevelWrap.h">
       <Filter>Config\LuaWrap</Filter>
     </ClInclude>
+    <ClInclude Include="Config\LuaWrap\AttrWrap.h">
+      <Filter>Config\LuaWrap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Net\NetServer.cpp">
@@ -295,6 +298,9 @@
       <Filter>Protocol</Filter>
     </ClCompile>
     <ClCompile Include="Config\LuaWrap\ProfLevelWrap.cpp">
+      <Filter>Config\LuaWrap</Filter>
+    </ClCompile>
+    <ClCompile Include="Config\LuaWrap\AttrWrap.cpp">
       <Filter>Config\LuaWrap</Filter>
     </ClCompile>
   </ItemGroup>

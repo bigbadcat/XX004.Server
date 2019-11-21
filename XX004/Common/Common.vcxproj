@@ -22,6 +22,7 @@
     <ClInclude Include="Config\ConfigDefine.h" />
     <ClInclude Include="Config\BasicModuleConfig.h" />
     <ClInclude Include="Config\LuaWrap.h" />
+    <ClInclude Include="Config\LuaWrap\AttrWrap.h" />
     <ClInclude Include="Config\LuaWrap\ConstWrap.h" />
     <ClInclude Include="Config\LuaWrap\ProfAttrWrap.h" />
     <ClInclude Include="Config\LuaWrap\ProfLevelWrap.h" />
@@ -69,6 +70,7 @@
     <ClCompile Include="Config\ConfigDefine.cpp" />
     <ClCompile Include="Config\BasicModuleConfig.cpp" />
     <ClCompile Include="Config\LuaWrap.cpp" />
+    <ClCompile Include="Config\LuaWrap\AttrWrap.cpp" />
     <ClCompile Include="Config\LuaWrap\ConstWrap.cpp" />
     <ClCompile Include="Config\LuaWrap\ProfAttrWrap.cpp" />
     <ClCompile Include="Config\LuaWrap\ProfLevelWrap.cpp" />

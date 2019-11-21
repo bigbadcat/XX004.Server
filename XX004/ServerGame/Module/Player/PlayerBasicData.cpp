@@ -175,9 +175,10 @@ namespace XX004
 	{
 		//计算属性
 		const AttrMap& attrs = GetAllAttr().GetAttrs();
-		m_FinalAttrs = ModuleConfig::GetInstance<BasicModuleConfig>()->CalcFinalAttr(attrs);
-		m_Power = ModuleConfig::GetInstance<BasicModuleConfig>()->CalcPower(m_FinalAttrs);
-		ConfigUtil::PrintAttr(m_FinalAttrs);
+		BasicModuleConfig *baseic_config = ModuleConfig::GetInstance<BasicModuleConfig>();
+		m_FinalAttrs = baseic_config->CalcFinalAttr(attrs);
+		m_Power = baseic_config->CalcPower(m_FinalAttrs);
+		baseic_config->PrintAttr(m_FinalAttrs);
 
 		//通知属性
 		SCPlayerInfoNotify notify;

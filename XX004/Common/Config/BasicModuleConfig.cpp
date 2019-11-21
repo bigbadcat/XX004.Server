@@ -9,6 +9,7 @@
 *******************************************************/
 
 #include "BasicModuleConfig.h"
+#include "../Util/StringUtil.h"
 #include <iostream>
 #include <algorithm>
 using namespace std;
@@ -17,7 +18,7 @@ namespace XX004
 {
 	void ProfConfig::OnParse()
 	{
-		ConfigUtil::ParseAttr(init_attr, m_InitAttr);
+		ModuleConfig::GetInstance<BasicModuleConfig>()->ParseAttr(init_attr, m_InitAttr);
 	}
 
 	void ProfAttrConfig::OnParse()
@@ -36,6 +37,65 @@ namespace XX004
 	BasicModuleConfig::~BasicModuleConfig()
 	{
 		OnRelease();
+	}
+
+	int BasicModuleConfig::GetAttrType(const string& name)
+	{
+		map<string, int>::iterator itr = m_AttrNameToType.find(name);
+		return itr == m_AttrNameToType.end() ? AttrType::AT_Unknow : itr->second;
+	}
+
+	map<int, Int64>& BasicModuleConfig::ParseAttr(const string& str, map<int, Int64>& attrs)
+	{
+		vector<string> v;
+		StringUtil::Split(str, ",", v);
+		return ParseAttr(v, attrs);
+	}
+
+	map<int, Int64>& BasicModuleConfig::ParseAttr(const vector<string>& str, map<int, Int64>& attrs)
+	{
+		vector<string> attr_value;
+		attrs.clear();
+		for (vector<string>::const_iterator itr = str.cbegin(); itr != str.cend(); ++itr)
+		{
+			attr_value.clear();
+			StringUtil::Split(*itr, "*", attr_value);
+
+			int key = GetAttrType(attr_value[0]);
+			Int64 value = ::_atoi64(attr_value[1].c_str());
+			attrs.insert(make_pair(key, value));
+		}
+		return attrs;
+	}
+
+	void set_string_width(char *buff, int size, const char *str, int width)
+	{
+		int len = ::sprintf_s(buff, size, str);
+		for (int i = len; i < width; ++i)
+		{
+			buff[i] = ' ';
+		}
+		buff[width] = '\0';
+	}
+
+	void BasicModuleConfig::PrintAttr(const map<int, Int64>& attrs, bool print_zero)
+	{
+		char szName[16];
+		char szValue[16];
+		char szValueWidth[16];
+		::printf_s("O-----------attr-----------------O\n");
+		for (int i = 1; i < AttrType::AT_MAX; ++i)
+		{
+			map<int, Int64>::const_iterator itr = attrs.find(i);
+			if (itr != attrs.end() && (print_zero || itr->second > 0))
+			{
+				set_string_width(szName, sizeof(szName), m_Attrs[itr->first]->key.c_str(), 8);
+				::sprintf_s(szValue, "%I64d", itr->second);
+				set_string_width(szValueWidth, sizeof(szValueWidth), szValue, 14);
+				::printf_s("|  %s ----  %s |\n", szName, szValueWidth);
+			}
+		}
+		::printf_s("O--------------------------------O\n");
 	}
 
 	Int64 BasicModuleConfig::GetNewLevel(int old_level, Int64 old_exp, Int64 add_exp, int &new_level)
@@ -138,19 +198,27 @@ namespace XX004
 	{
 		lua_State *L = LuaWrap::GetLuaState();
 		ModuleConfig::LoadConfig<ConstConfig>(m_Consts, L, "t_const");
+
+		//属性
+		ModuleConfig::LoadConfig<AttrConfig>(m_Attrs, L, "t_attr");
+		for (AttrConfigMap::iterator itr = m_Attrs.begin(); itr != m_Attrs.end(); ++itr)
+		{
+			AttrConfig *cfg = itr->second;
+			if (cfg->add_target != 0)
+			{
+				m_AttrRateTypes.push_back(make_pair(cfg->type, cfg->add_target));
+			}
+			if (cfg->have_runtime)
+			{
+				m_RuntimeAttrs.push_back(cfg->type);
+			}
+			m_AttrNameToType.insert(make_pair(cfg->key, cfg->type));
+		}
+
+		//职业
 		ModuleConfig::LoadConfig<ProfConfig>(m_Profs, L, "t_prof");
 		ModuleConfig::LoadConfig<ProfLevelConfig>(m_ProfLevels, L, "t_prof_level");
 		ModuleConfig::LoadConfig<ProfAttrConfig>(m_ProfAttrs, L, "t_prof_attr");
-
-		//属性比例类型
-		m_AttrRateTypes.push_back(make_pair(AttrType::AT_MaxHPRate, AttrType::AT_MaxHP));
-		m_AttrRateTypes.push_back(make_pair(AttrType::AT_MaxEnergyRate, AttrType::AT_MaxEnergy));
-		m_AttrRateTypes.push_back(make_pair(AttrType::AT_MaxStabilityRate, AttrType::AT_MaxStability));
-		m_AttrRateTypes.push_back(make_pair(AttrType::AT_AttackRate, AttrType::AT_Attack));
-		m_AttrRateTypes.push_back(make_pair(AttrType::AT_DefenseRate, AttrType::AT_Defense));
-		m_AttrRateTypes.push_back(make_pair(AttrType::AT_SpeedRate, AttrType::AT_Speed));
-
-		//二次解析建立缓存
 		for (ProfLevelConfigMap::iterator itr = m_ProfLevels.begin(); itr != m_ProfLevels.end(); ++itr)
 		{
 			m_ProfMaxLevel = std::max(m_ProfMaxLevel, itr->second->level);
@@ -167,6 +235,7 @@ namespace XX004
 	{
 		m_ProfLevelAttrs.clear();
 		SAFE_DELETE_MAP(m_Consts);
+		SAFE_DELETE_MAP(m_Attrs);
 		SAFE_DELETE_MAP(m_Profs);
 		SAFE_DELETE_MAP(m_ProfLevels);
 		m_ProfLevelAttrs.clear();
