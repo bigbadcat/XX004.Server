@@ -24,7 +24,7 @@ namespace XX004
 		int type;							//类型
 		string key;							//缩写
 		bool have_runtime;					//有运行时属性
-		int add_target;						//加成目标
+		string add_target;					//加成目标
 		int power_rate;						//战力系数
 	};
 }

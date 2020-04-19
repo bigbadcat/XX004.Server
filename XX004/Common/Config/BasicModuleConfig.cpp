@@ -249,15 +249,20 @@ namespace XX004
 		for (AttrConfigMap::iterator itr = m_Attrs.begin(); itr != m_Attrs.end(); ++itr)
 		{
 			AttrConfig *cfg = itr->second;
-			if (cfg->add_target != 0)
-			{
-				m_AttrRateTypes.push_back(make_pair(cfg->type, cfg->add_target));
-			}
 			if (cfg->have_runtime)
 			{
 				m_RuntimeAttrs.push_back(cfg->type);
 			}
 			m_AttrNameToType.insert(make_pair(cfg->key, cfg->type));
+		}
+		for (AttrConfigMap::iterator itr = m_Attrs.begin(); itr != m_Attrs.end(); ++itr)
+		{
+			AttrConfig *cfg = itr->second;
+			if (!cfg->add_target.empty())
+			{
+				//必须上一个循环结束了，GetAttrType才能正常使用
+				m_AttrRateTypes.push_back(make_pair(cfg->type, GetAttrType(cfg->add_target)));
+			}
 		}
 
 		//职业
