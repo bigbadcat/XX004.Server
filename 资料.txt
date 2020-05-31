@@ -1,0 +1,26 @@
+﻿金山云
+https://www.ksyun.com/
+xuxiang_study
+0927XuXiang
+
+云服务地址
+110.43.46.109
+
+账号 密码
+root XX20200524
+xuxiang 0297Stone
+
+
+vim /etc/vsftpd/vsftpd.conf
+restart vsftpd.service
+systemctl status httpd
+service httpd start
+systemctl status httpd.service -l
+
+/var/www/html
+cd /etc/httpd/conf
+vim /etc/httpd/conf/httpd.conf
+
+
+
+http://110.43.46.109/xx004/release/FixProjectVersion.cs
