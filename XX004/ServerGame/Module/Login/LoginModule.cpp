@@ -91,7 +91,7 @@ namespace XX004
 				UserInfo *info = *itr;
 				m_Users.erase(info->GetName());
 				itr = m_WantQuitUsers.erase(itr);
-				::printf_s("UserQuit name:%s rid:%I64d\n", info->GetName().c_str(), info->GetCurRoleID());
+				::printf("UserQuit name:%s rid:%I64d\n", info->GetName().c_str(), info->GetCurRoleID());
 
 				//通知下线，销毁
 				EventParam *ep = EventParam::Get(LoginEvent::EID_USER_QUIT);
@@ -140,7 +140,7 @@ namespace XX004
 		if (info != NULL)
 		{
 			MainBase::GetCurMain()->GetNetManager()->Close(info->GetUID());
-			OnUserOutline(username, 0);
+			OnUserOutline(username, 0, true);
 		}		
 	}
 
@@ -153,7 +153,7 @@ namespace XX004
 		UserInfo *info = GetUser(item->uid);
 		if (info != NULL)
 		{
-			OnUserOutline(info->GetName(), 1);
+			OnUserOutline(info->GetName(), 1, true);
 		}
 	}
 
@@ -188,7 +188,7 @@ namespace XX004
 		m_UIDToUserName[uid] = username;
 	}
 
-	void LoginModule::OnUserOutline(const string& username, int type)
+	void LoginModule::OnUserOutline(const string& username, int type, bool quit)
 	{
 		UserInfoMap::iterator itr = m_Users.find(username);
 		if (itr == m_Users.end() || !itr->second->IsOnline())
@@ -208,7 +208,10 @@ namespace XX004
 			//被动掉线停留时间比较长，且可以重连
 			int gap = type == 0 ? OUTLINE_DELAY_NORMAL : OUTLINE_DELAY_EXCEPTION;
 			info->SetOutline(gap, type == 1);
-			m_WantQuitUsers.push_back(info);
+			if (quit)
+			{
+				m_WantQuitUsers.push_back(info);
+			}			
 		}
 		else
 		{
@@ -358,10 +361,11 @@ namespace XX004
 		}
 
 		SCQuitGameResponse res;
+		res.Type = req.Type;
 		MainBase::GetCurMain()->GetNetManager()->Send(item->uid, MsgID::SC_QUIT_GAME, &res);
 
 		//退出
-		OnUserOutline(info->GetName(), 0);
+		OnUserOutline(info->GetName(), 0, req.Type != 2);
 	}
 
 	void LoginModule::OnRoleListRequest(NetDataItem *item)

@@ -50,7 +50,16 @@ namespace XX004
 
 		//----------------------------------------
 
-		//Empty class - CSQuitGameRequest
+		CSQuitGameRequest::CSQuitGameRequest() : Type(0)
+		{
+		}
+
+		int CSQuitGameRequest::Unpack(Byte *buffer, int index)
+		{
+			int i = index;
+			Type = DataUtil::ReadInt32(buffer, i, &i);
+			return i;
+		}
 
 		//----------------------------------------
 
@@ -130,7 +139,16 @@ namespace XX004
 
 		//----------------------------------------
 
-		//Empty class - SCQuitGameResponse
+		SCQuitGameResponse::SCQuitGameResponse() : Type(0)
+		{
+		}
+
+		int SCQuitGameResponse::Pack(Byte *buffer, int index)
+		{
+			int i = index;
+			i = DataUtil::WriteInt32(buffer, i, Type);
+			return i;
+		}
 
 		//----------------------------------------
 

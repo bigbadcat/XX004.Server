@@ -72,6 +72,11 @@ namespace XX004
 		//1004:退出游戏请求
 		class CSQuitGameRequest : public NetMessage
 		{
+		public:
+			CSQuitGameRequest();
+			virtual int Unpack(Byte *buffer, int index);
+
+			Int32 Type;								//退出类型(0、关闭游戏 1、返回登陆 2、选择角色)
 		};
 
 		//登陆的角色信息
@@ -127,6 +132,11 @@ namespace XX004
 		//1404:退出游戏回复
 		class SCQuitGameResponse : public NetMessage
 		{
+		public:
+			SCQuitGameResponse();
+			virtual int Pack(Byte *buffer, int index);
+
+			Int32 Type;								//退出类型(0、关闭游戏 1、返回登陆 2、选择角色)
 		};
 
 		//1801:请求角色列表

@@ -76,8 +76,8 @@ namespace XX004
 		//添加用户信息
 		void AddUserInfo(const string& username, UInt64 uid);
 
-		//用户离线 username:用户名 type:掉线类型 0主动退出 1异常掉线
-		void OnUserOutline(const string& username, int type);
+		//用户离线 username:用户名 type:掉线类型 0主动退出 1异常掉线 quit:是否退出
+		void OnUserOutline(const string& username, int type, bool quit);
 		
 
 		void OnLoginRequest(NetDataItem *item);					//登陆请求		
