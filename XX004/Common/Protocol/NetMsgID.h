@@ -27,6 +27,8 @@ namespace XX004
 		{
 			const Int32 REMOTE_IDENTIFY = 1;						//远端标识
 			const Int32 INTERNAL_AWAKE = 2;							//内部唤醒
+			const Int32 CS_HEART_BEAT = 3;							//心跳请求
+			const Int32 SC_HEART_BEAT = 4;							//心跳回复
 		}
 	}
 }

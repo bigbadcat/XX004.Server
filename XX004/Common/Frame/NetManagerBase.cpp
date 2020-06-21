@@ -10,6 +10,7 @@
 
 #include "NetManagerBase.h"
 #include "../Util/DataUtil.h"
+#include "../Util/TimeUtil.h"
 #include "StartSetting.h"
 #include "../Protocol/NetMsgID.h"
 #include "MainBase.h"
@@ -42,10 +43,11 @@ namespace XX004
 		return out;
 	}
 
-	NetManagerBase::NetManagerBase() : m_Port(0), m_HaveSend(false)
+	NetManagerBase::NetManagerBase(): m_Port(0), m_HaveSend(false)
 	{
 		m_InternalCallBack.insert(INTERNAL_CALL(MsgID::REMOTE_IDENTIFY, OnMsgRemoteIdentify));
 		m_InternalCallBack.insert(INTERNAL_CALL(MsgID::INTERNAL_AWAKE, OnMsgInternalAwake));
+		m_InternalCallBack.insert(INTERNAL_CALL(MsgID::CS_HEART_BEAT, OnMsgHeartBeat));
 	}
 
 	NetManagerBase::~NetManagerBase()
@@ -74,13 +76,13 @@ namespace XX004
 	void NetManagerBase::OnRecvData(NetConnection *connection, const NetPackageHeader& header, Byte *buffer)
 	{
 		//包头相关处理
-		
+
 		//数据处理
 		NetMessageInternalCallBackMap::iterator itr = m_InternalCallBack.find(header.Command);
 		if (itr != m_InternalCallBack.end())
 		{
 			//内部处理
-			itr->second(connection, header.Command, buffer, header.BodySize);			
+			itr->second(connection, header.Command, buffer, header.BodySize);
 		}
 		else
 		{
@@ -94,7 +96,7 @@ namespace XX004
 			item->len = header.BodySize;
 			::memcpy_s(item->data, NET_PACKAGE_MAX_SIZE, buffer, item->len);
 			OnAddRecvData(item);
-		}	
+		}
 	}
 
 	void NetManagerBase::RegisterMessageCallBack(Int32 cmd, NetMessageCallBack call)
@@ -440,7 +442,7 @@ namespace XX004
 				{
 					//连上了发送身份识别
 					static Byte data[NET_PACKAGE_MAX_SIZE];
-					NetMessageInt req;					
+					NetMessageInt req;
 					req.Value = MainBase::GetCurMain()->GetType();
 					int len = req.Pack(data, 0);
 					con->Send(0, MsgID::REMOTE_IDENTIFY, data, len);
@@ -494,5 +496,16 @@ namespace XX004
 
 	void NetManagerBase::OnMsgInternalAwake(NetConnection *connection, Int32 cmd, Byte *buffer, int len)
 	{
+	}
+
+	void NetManagerBase::OnMsgHeartBeat(NetConnection *connection, Int32 cmd, Byte *buffer, int len)
+	{
+		NetMessageInt req;
+		req.Unpack(buffer, 0);
+
+		NetMessageIntInt64 res;
+		res.Value1 = req.Value;
+		res.Value2 = TimeUtil::GetCurrentMillisecond();
+		Send(connection->GetUniqueID(), MsgID::SC_HEART_BEAT, &res);
 	}
 }

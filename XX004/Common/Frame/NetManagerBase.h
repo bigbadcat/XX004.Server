@@ -202,6 +202,9 @@ namespace XX004
 		//内部唤醒
 		void OnMsgInternalAwake(NetConnection *connection, Int32 cmd, Byte *buffer, int len);
 
+		//心跳检测
+		void OnMsgHeartBeat(NetConnection *connection, Int32 cmd, Byte *buffer, int len);
+
 
 		//是否运行
 		bool m_IsRunning;
