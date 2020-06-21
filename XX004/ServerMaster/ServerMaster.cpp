@@ -112,6 +112,17 @@ namespace XX004
 		LoadServerInfo();
 	}
 
+	void ServerMaster::OnUpdate()
+	{
+		//定时触发心跳，此函数1秒调用10次，设定60秒1次心跳
+		static int mysql_heartbeat_count = 0;
+		if (++mysql_heartbeat_count >= 10 * 60)
+		{
+			mysql_heartbeat_count = 0;
+			m_MySQL->DoHeartBeat();
+		}
+	}
+
 	void ServerMaster::OnRelease()
 	{
 		m_MySQL->Release();

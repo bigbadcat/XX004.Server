@@ -71,6 +71,14 @@ namespace XX004
 
 	void StorageManager::Dispatch()
 	{
+		//定时触发心跳，此函数1秒调用10次，设定60秒1次心跳
+		static int mysql_heartbeat_count = 0;
+		if (++mysql_heartbeat_count >= 10 * 60)
+		{
+			mysql_heartbeat_count = 0;
+			m_MySQL->DoHeartBeat();
+		}
+
 		//先进行非线程安全的只读判断
 		if (m_RequestQueue.GetSize() <= 0)
 		{

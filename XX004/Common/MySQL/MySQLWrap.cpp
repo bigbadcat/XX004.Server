@@ -57,6 +57,12 @@ namespace XX004
 		return StartMySQLQuery(sql);
 	}
 
+	void MySQLWrap::DoHeartBeat()
+	{
+		//printf("MySQLWrap::DoHeartBeat\n");
+		Execute("call sp_update_heart_beat");
+	}
+
 	void MySQLWrap::StartTransaction()
 	{
 		ClearResult();

@@ -59,6 +59,10 @@ namespace XX004
 	{
 	}
 
+	void HttpGame::OnUpdate()
+	{
+	}
+
 	void HttpGame::OnRelease()
 	{
 	}

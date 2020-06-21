@@ -131,7 +131,7 @@ namespace XX004
 			//手动触发个事件将event_base线程唤醒以退出事件循环
 			m_Run = false;
 			event_base_loopbreak(m_EventBase);
-			SendHttpRequest("127.0.0.1", m_Port, "/empty", HttpParamMap());
+			//SendHttpRequest("127.0.0.1", m_Port, "/empty", HttpParamMap());
 
 			//等待结束
 			JoinThread(m_Thread);
@@ -222,7 +222,14 @@ namespace XX004
 
 		//处理请求
 		OnInit();
-		event_base_dispatch(m_EventBase);
+		std::chrono::milliseconds dura(100);
+		while (m_Run)
+		{
+			event_base_loop(m_EventBase, EVLOOP_NONBLOCK);
+			OnUpdate();
+			std::this_thread::sleep_for(dura);
+		}
+		//event_base_dispatch(m_EventBase);
 		OnRelease();
 		
 		evhttp_free(http_server);

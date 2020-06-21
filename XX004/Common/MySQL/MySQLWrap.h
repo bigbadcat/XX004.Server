@@ -39,6 +39,9 @@ namespace XX004
 		//执行 sql:执行语句 ret:是否执行成功
 		bool Execute(const char *sql);
 
+		//心跳 保持MySQL连接活动状态
+		void DoHeartBeat();
+
 		//开始事务
 		void StartTransaction();
 

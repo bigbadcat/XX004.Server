@@ -84,6 +84,9 @@ namespace XX004
 		//初始化
 		virtual void OnInit();
 
+		//更新
+		virtual void OnUpdate();
+
 		//释放
 		virtual void OnRelease();
 
