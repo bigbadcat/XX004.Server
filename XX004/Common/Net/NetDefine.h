@@ -12,7 +12,29 @@
 #define __NetDefine_h__
 
 #include "../Macro.h"
+#if defined(WIN)
 #include <WinSock2.h>
+#else
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
+#include <sys/epoll.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <errno.h>
+#include <execinfo.h>
+#include <netdb.h>
+#include <signal.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <dirent.h>
+#include <netinet/tcp.h>
+#include <arpa/inet.h>
+#include <sys/un.h>
+#endif
 
 namespace XX004
 {
