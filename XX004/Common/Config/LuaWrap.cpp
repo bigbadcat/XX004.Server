@@ -83,7 +83,7 @@ namespace XX004
 		return err == LUA_OK;
 	}
 
-	bool LuaWrap::ReadBool(lua_State *L, char *name)
+	bool LuaWrap::ReadBool(lua_State *L, const char *name)
 	{
 		lua_pushstring(L, name);
 		lua_gettable(L, -2);
@@ -92,7 +92,7 @@ namespace XX004
 		return ret;
 	}
 
-	void LuaWrap::ReadBoolArray(lua_State *L, char *name, vector<bool> &v)
+	void LuaWrap::ReadBoolArray(lua_State *L, const char *name, vector<bool> &v)
 	{
 		v.clear();
 		lua_pushstring(L, name);
@@ -108,12 +108,12 @@ namespace XX004
 		lua_pop(L, 1);
 	}
 
-	int LuaWrap::ReadInt(lua_State *L, char *name)
+	int LuaWrap::ReadInt(lua_State *L, const char *name)
 	{
 		return (int)ReadDouble(L, name);
 	}
 
-	void LuaWrap::ReadIntArray(lua_State *L, char *name, vector<int> &v)
+	void LuaWrap::ReadIntArray(lua_State *L, const char *name, vector<int> &v)
 	{
 		v.clear();
 		lua_pushstring(L, name);
@@ -129,12 +129,12 @@ namespace XX004
 		lua_pop(L, 1);
 	}
 
-	Int64 LuaWrap::ReadLong(lua_State *L, char *name)
+	Int64 LuaWrap::ReadLong(lua_State *L, const char *name)
 	{
 		return (Int64)ReadDouble(L, name);
 	}
 
-	void LuaWrap::ReadLongArray(lua_State *L, char *name, vector<Int64> &v)
+	void LuaWrap::ReadLongArray(lua_State *L, const char *name, vector<Int64> &v)
 	{
 		v.clear();
 		lua_pushstring(L, name);
@@ -150,12 +150,12 @@ namespace XX004
 		lua_pop(L, 1);
 	}
 
-	float LuaWrap::ReadFloat(lua_State *L, char *name)
+	float LuaWrap::ReadFloat(lua_State *L, const char *name)
 	{
 		return (float)ReadDouble(L, name);
 	}
 
-	void LuaWrap::ReadFloatArray(lua_State *L, char *name, vector<float> &v)
+	void LuaWrap::ReadFloatArray(lua_State *L, const char *name, vector<float> &v)
 	{
 		v.clear();
 		lua_pushstring(L, name);
@@ -171,7 +171,7 @@ namespace XX004
 		lua_pop(L, 1);
 	}
 
-	double LuaWrap::ReadDouble(lua_State *L, char *name)
+	double LuaWrap::ReadDouble(lua_State *L, const char *name)
 	{
 		lua_pushstring(L, name);
 		lua_gettable(L, -2);
@@ -180,7 +180,7 @@ namespace XX004
 		return ret;
 	}
 
-	void LuaWrap::ReadDoubleArray(lua_State *L, char *name, vector<double> &v)
+	void LuaWrap::ReadDoubleArray(lua_State *L, const char *name, vector<double> &v)
 	{
 		v.clear();
 		lua_pushstring(L, name);
@@ -196,14 +196,14 @@ namespace XX004
 		lua_pop(L, 1);
 	}
 
-	string LuaWrap::ReadString(lua_State *L, char *name)
+	string LuaWrap::ReadString(lua_State *L, const char *name)
 	{
 		string str;
 		ReadString(L, name, str);
 		return str;
 	}
 
-	void LuaWrap::ReadString(lua_State *L, char *name, string &str)
+	void LuaWrap::ReadString(lua_State *L, const char *name, string &str)
 	{
 		lua_pushstring(L, name);
 		lua_gettable(L, -2);
@@ -212,7 +212,7 @@ namespace XX004
 		str.assign(ret);
 	}
 
-	void LuaWrap::ReadStringArray(lua_State *L, char *name, vector<string> &v)
+	void LuaWrap::ReadStringArray(lua_State *L, const char *name, vector<string> &v)
 	{
 		v.clear();
 		lua_pushstring(L, name);
