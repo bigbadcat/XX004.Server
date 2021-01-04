@@ -55,6 +55,7 @@ namespace XX004
 
 	int MainBase::Run(int type, int sid)
 	{
+#if defined(WIN)
 		//初始化网络
 		WORD wVersionRequested;
 		WSADATA wsaData;
@@ -63,9 +64,11 @@ namespace XX004
 		err = ::WSAStartup(wVersionRequested, &wsaData);
 		if (err != 0)
 		{
-			printf("WSAStartup err:%d\n", err);
+			printf_s("WSAStartup err:%d\n", err);
 			return 1;
 		}
+
+#endif
 
 		//模块创建		
 		m_Type = type;
@@ -97,7 +100,10 @@ namespace XX004
 		SAFE_DELETE(m_pServer);
 		SAFE_DELETE(m_pNetManager);		
 		SAFE_DELETE(m_pStorageManager);
+
+#if defined(WIN)
 		::WSACleanup();
+#endif
 
 		return 0;
 	}
