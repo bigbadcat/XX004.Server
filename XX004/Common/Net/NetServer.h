@@ -20,6 +20,7 @@ namespace XX004
 	namespace Net
 	{
 		class NetConnection;
+		class NetConnectionManager;
 		struct NetPackageHeader;
 
 		//网络处理接口
