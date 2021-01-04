@@ -65,7 +65,7 @@ namespace XX004
 
 		//读取角色创建序号
 		char sql[64];
-		sprintf_s(sql, "call sp_select_role_stamp(%d);", GetServer()->GetServerID());
+		::sprintf(sql, "call sp_select_role_stamp(%d);", GetServer()->GetServerID());
 		auto ret = GetMySQL()->Query(sql);
 		if (ret->GetRecord())
 		{
@@ -379,7 +379,7 @@ namespace XX004
 		res.UserName = req.UserName;
 		char sql[64];
 		int sid = GetServer()->GetServerID();
-		sprintf_s(sql, "call sp_select_user_role('%s',%d);", req.UserName.c_str(), sid);
+		::sprintf(sql, "call sp_select_user_role('%s',%d);", req.UserName.c_str(), sid);
 		auto ret = GetMySQL()->Query(sql);
 		while (ret->GetRecord())
 		{
@@ -442,7 +442,7 @@ namespace XX004
 		//名称重复判断
 		MySQLWrap *mysql = GetMySQL();
 		char sql[128];
-		sprintf_s(sql, "call sp_select_role_by_name('%s');", req.RoleName.c_str());
+		::sprintf(sql, "call sp_select_role_by_name('%s');", req.RoleName.c_str());
 		auto ret = mysql->Query(sql);
 		if (ret->GetRecord())
 		{
@@ -457,7 +457,7 @@ namespace XX004
 
 		//数据库级的角色数量判断
 		int sid = GetServer()->GetServerID();
-		sprintf_s(sql, "call sp_select_user_role_count('%s',%d);", req.UserName.c_str(), sid);
+		::sprintf(sql, "call sp_select_user_role_count('%s',%d);", req.UserName.c_str(), sid);
 		ret = mysql->Query(sql);
 		if (ret->GetRecord())
 		{
@@ -490,7 +490,7 @@ namespace XX004
 
 		//保存角色
 		int stamp = (int)(roleid % UserInfo::ROLE_ID_STAMP_BIT);
-		sprintf_s(sql, "call sp_insert_update_role(%I64d,'%s','%s',%d,%d,%d,%d,%d,%d,%I64d);",
+		::sprintf(sql, "call sp_insert_update_role(%I64d,'%s','%s',%d,%d,%d,%d,%d,%d,%I64d);",
 			role.ID, role.Name.c_str(), req.UserName.c_str(), sid, stamp, role.Prof, role.Level, 0, 0, role.CreateTime);
 		mysql->StartTransaction();
 		mysql->Execute(sql);

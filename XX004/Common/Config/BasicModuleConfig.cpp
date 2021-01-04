@@ -70,7 +70,7 @@ namespace XX004
 
 	void set_string_width(char *buff, int size, const char *str, int width)
 	{
-		int len = ::sprintf_s(buff, size, str);
+		int len = ::sprintf(buff, str);
 		for (int i = len; i < width; ++i)
 		{
 			buff[i] = ' ';
@@ -90,7 +90,7 @@ namespace XX004
 			if (itr != attrs.end() && (print_zero || itr->second > 0))
 			{
 				set_string_width(szName, sizeof(szName), m_Attrs[itr->first]->key.c_str(), 8);
-				::sprintf_s(szValue, "%I64d", itr->second);
+				::sprintf(szValue, "%I64d", itr->second);
 				set_string_width(szValueWidth, sizeof(szValueWidth), szValue, 14);
 				::printf_s("|  %s ----  %s |\n", szName, szValueWidth);
 			}

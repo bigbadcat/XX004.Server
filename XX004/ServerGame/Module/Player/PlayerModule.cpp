@@ -121,7 +121,7 @@ namespace XX004
 		DSBasicInfoResponse res;
 		MySQLWrap *mysql = GetMySQL();
 		char sql[128];
-		sprintf_s(sql, "call sp_select_role(%I64d);", rid);
+		::sprintf(sql, "call sp_select_role(%I64d);", rid);
 		auto ret = mysql->Query(sql);
 		if (ret->GetRecord())
 		{
@@ -166,7 +166,7 @@ namespace XX004
 
 		char sql[128];
 		MySQLWrap *mysql = GetMySQL();
-		sprintf_s(sql, "call sp_update_role_basic(%I64d,%d,%I64d,%d,%d,%d,%d);", 
+		::sprintf(sql, "call sp_update_role_basic(%I64d,%d,%I64d,%d,%d,%d,%d);", 
 			item->key.second, req.Level, req.Exp, req.Map, req.PositionX, req.PositionY, req.Direction);
 		mysql->Execute(sql);
 	}
@@ -182,7 +182,7 @@ namespace XX004
 		//名称重复判断
 		MySQLWrap *mysql = GetMySQL();
 		char sql[128];
-		sprintf_s(sql, "call sp_select_role_by_name('%s');", req.Name.c_str());
+		::sprintf(sql, "call sp_select_role_by_name('%s');", req.Name.c_str());
 		auto ret = mysql->Query(sql);
 		if (ret->GetRecord())
 		{
@@ -197,7 +197,7 @@ namespace XX004
 		ret->Clear();
 
 		//保存名称
-		sprintf_s(sql, "call sp_update_role_name(%I64d,'%s');", item->key.second, req.Name.c_str());
+		::sprintf(sql, "call sp_update_role_name(%I64d,'%s');", item->key.second, req.Name.c_str());
 		mysql->Execute(sql);
 
 		//回复

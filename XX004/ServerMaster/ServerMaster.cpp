@@ -175,7 +175,7 @@ namespace XX004
 
 		//读取服务器组
 		char sql[64];
-		sprintf_s(sql, "SELECT * FROM tb_server_group");
+		::sprintf(sql, "SELECT * FROM tb_server_group");
 		auto ret = m_MySQL->Query(sql);
 		while (ret->GetRecord())
 		{
@@ -186,7 +186,7 @@ namespace XX004
 		ret->Clear();
 
 		//读取服务器
-		sprintf_s(sql, "SELECT * FROM tb_server");
+		::sprintf(sql, "SELECT * FROM tb_server");
 		ret = m_MySQL->Query(sql);
 		while (ret->GetRecord())
 		{
@@ -246,7 +246,7 @@ namespace XX004
 
 		//查询数据库
 		char sql[64];
-		sprintf_s(sql, "call sp_select_user('%s');", user.c_str());
+		::sprintf(sql, "call sp_select_user('%s');", user.c_str());
 		auto ret = m_MySQL->Query(sql);
 		if (ret->GetRecord())
 		{
@@ -278,7 +278,7 @@ namespace XX004
 			create_time = TimeUtil::GetCurrentSecond();
 
 			char sql[128];
-			sprintf_s(sql, "call sp_insert_update_user('%s','%s',%I64d,%I64d);", user.c_str(), pwd.c_str(), create_time, (Int64)0);
+			::sprintf(sql, "call sp_insert_update_user('%s','%s',%I64d,%I64d);", user.c_str(), pwd.c_str(), create_time, (Int64)0);
 			m_MySQL->Execute(sql);
 		}
 		return true;
@@ -288,7 +288,7 @@ namespace XX004
 	{
 		//回复结果		
 		char token[32];
-		sprintf_s(token, sizeof(token), "%s&%I64d", user.c_str(), TimeUtil::GetCurrentSecond());
+		::sprintf(token, "%s&%I64d", user.c_str(), TimeUtil::GetCurrentSecond());
 		res.BeginLuaTable();
 		res.AddLuaKeyValue("Result", 0);
 		res.AddLuaKeyValue("User", user.c_str());

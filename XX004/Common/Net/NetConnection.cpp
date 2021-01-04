@@ -48,7 +48,7 @@ namespace XX004
 				{
 					SOCKADDR_IN *addr_v4 = (PSOCKADDR_IN)&addr;
 					char ip[32];
-					::sprintf_s(ip, "%d.%d.%d.%d", addr_v4->sin_addr.s_net, addr_v4->sin_addr.s_host, addr_v4->sin_addr.s_lh, addr_v4->sin_addr.s_impno);
+					::sprintf(ip, "%d.%d.%d.%d", addr_v4->sin_addr.s_net, addr_v4->sin_addr.s_host, addr_v4->sin_addr.s_lh, addr_v4->sin_addr.s_impno);
 					m_IPAddress = ip;
 					m_Port = addr_v4->sin_port;
 					//cout << "accept connet ip:" << m_IPAddress << " port:" << m_Port << endl;

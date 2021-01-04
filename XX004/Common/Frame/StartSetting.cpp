@@ -83,7 +83,7 @@ namespace XX004
 		//查询服务器
 		ServerSetting *setting = NULL;
 		char sql[64];
-		sprintf_s(sql, "SELECT * FROM tb_server WHERE id = %d", sid);
+		::sprintf(sql, "SELECT * FROM tb_server WHERE id = %d", sid);
 		auto ret = mysql->Query(sql);
 		if (ret->GetRecord())
 		{
@@ -104,7 +104,7 @@ namespace XX004
 		//查询服务器
 		ServerSetting *setting = NULL;
 		char sql[64];
-		sprintf_s(sql, "SELECT * FROM tb_server_region WHERE id = %d", sid);
+		::sprintf(sql, "SELECT * FROM tb_server_region WHERE id = %d", sid);
 		auto ret = mysql->Query(sql);
 		if (ret->GetRecord())
 		{

@@ -44,7 +44,7 @@ namespace XX004
 	bool ModuleConfig::PrepareRead(lua_State *L, const char *name)
 	{
 		char file[64];
-		::sprintf_s(file, sizeof(file), "Lua/Config/%s.lua", name);
+		::sprintf(file, "Lua/Config/%s.lua", name);
 		int top = lua_gettop(L);
 		bool ok = LuaWrap::DoLuaFile(L, file, false);
 		if (!ok)
