@@ -34,10 +34,10 @@ namespace XX004
 			//停止监听
 			void Stop();
 
-			//设置服务端
+			//设置连接管理
 			inline void SetManager(NetConnectionManager *p) { m_pManager = p; }
 
-			//获取服务端
+			//获取连接管理
 			inline NetConnectionManager* GetManager()const { return m_pManager; }
 
 			//获取套接字
@@ -60,7 +60,7 @@ namespace XX004
 			//端口号。
 			int m_Port;
 
-			//网络服务端
+			//网络连接管理
 			NetConnectionManager *m_pManager;
 		};
 	}

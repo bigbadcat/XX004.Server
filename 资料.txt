@@ -8,7 +8,7 @@ xuxiang_study
 
 账号 密码
 root XX20200524
-xuxiang 0297Stone
+xuxiang 0927Stone
 
 
 vim /etc/vsftpd/vsftpd.conf
@@ -22,5 +22,13 @@ cd /etc/httpd/conf
 vim /etc/httpd/conf/httpd.conf
 
 
-
+http test
 http://110.43.46.109/xx004/release/FixProjectVersion.cs
+
+mysql
+user root password xx20200808
+
+ps aux|grep ./ServerMaster
+ps aux|grep ./ServerGame
+kill -9 xxxx
+
