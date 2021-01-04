@@ -78,10 +78,7 @@ namespace XX004
 			}
 
 			//非阻塞
-			bool noblocking = true;
-			u_long argp = noblocking ? 1 : 0;
-			ret = ::ioctlsocket(s, FIONBIO, &argp);
-			if (ret != 0)
+			if (!socket_set_nonblocking(s, true))
 			{
 				cout << "set listen socket noblocking err:" << WSAGetLastError() << endl;
 				SAFE_CLOSE_SOCKET(s);
@@ -103,10 +100,7 @@ namespace XX004
 			}
 
 			//非阻塞
-			bool noblocking = true;
-			u_long argp = noblocking ? 1 : 0;
-			int ret = ::ioctlsocket(rs, FIONBIO, &argp);
-			if (ret != 0)
+			if (!socket_set_nonblocking(rs, true))
 			{
 				cout << "set remote socket noblocking err:" << WSAGetLastError() << endl;
 				SAFE_CLOSE_SOCKET(rs);
@@ -116,7 +110,7 @@ namespace XX004
 			struct linger so_linger;
 			so_linger.l_onoff = 1;
 			so_linger.l_linger = 5;
-			ret = ::setsockopt(rs, SOL_SOCKET, SO_LINGER, (char*)&so_linger, sizeof so_linger);
+			int ret = ::setsockopt(rs, SOL_SOCKET, SO_LINGER, (char*)&so_linger, sizeof so_linger);
 			if (ret != 0)
 			{
 				cout << "setsockopt err:" << WSAGetLastError() << endl;

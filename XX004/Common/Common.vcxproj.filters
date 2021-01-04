@@ -303,5 +303,8 @@
     <ClCompile Include="Config\LuaWrap\AttrWrap.cpp">
       <Filter>Config\LuaWrap</Filter>
     </ClCompile>
+    <ClCompile Include="Net\NetDefine.cpp">
+      <Filter>Net</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

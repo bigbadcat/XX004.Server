@@ -166,10 +166,7 @@ namespace XX004
 			addrSrv.sin_port = htons((u_short)m_Port);
 
 			//非阻塞
-			bool noblocking = true;
-			u_long argp = noblocking ? 1 : 0;
-			int ret = ::ioctlsocket(s, FIONBIO, &argp);
-			if (ret != 0)
+			if (!socket_set_nonblocking(s, true))
 			{
 				cout << "set socket noblocking err:" << WSAGetLastError() << endl;
 				SAFE_CLOSE_SOCKET(s);

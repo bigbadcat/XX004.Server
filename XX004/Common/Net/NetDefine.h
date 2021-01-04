@@ -40,10 +40,20 @@ namespace XX004
 		//远端唯一标识。
 		typedef std::pair<int, Int64> RemoteKey;
 
-		//socket类型
+#if defined(WIN)
 		typedef SOCKET socket_t;
-
+		typedef int socklen_t;
 #define SAFE_CLOSE_SOCKET(s) if (s!=SOCKET_ERROR){::closesocket(s); s=SOCKET_ERROR;}
+#define GET_LAST_ERROR() WSAGetLastError()
+#else
+#define SOCKET_ERROR (-1)
+		typedef int socket_t;
+#define SAFE_CLOSE_SOCKET(s) if (s!=SOCKET_ERROR){::close(s); s=SOCKET_ERROR;}
+#define GET_LAST_ERROR() (errno)
+#endif
+
+		//设置socket是否为非阻塞模式
+		extern bool socket_set_nonblocking(socket_t s, bool on);
 
 		//网络缓冲区大小
 		const int NET_BUFFER_SIZE = 8 * 1024;

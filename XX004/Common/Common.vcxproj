@@ -92,6 +92,7 @@
     <ClCompile Include="MySQL\MySQLWrap.cpp" />
     <ClCompile Include="Net\NetConnection.cpp" />
     <ClCompile Include="Net\NetConnectionManager.cpp" />
+    <ClCompile Include="Net\NetDefine.cpp" />
     <ClCompile Include="Net\NetInternalConnection.cpp" />
     <ClCompile Include="Net\NetListener.cpp" />
     <ClCompile Include="Net\NetMessage.cpp" />
