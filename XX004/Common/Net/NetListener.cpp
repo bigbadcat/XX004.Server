@@ -50,7 +50,7 @@ namespace XX004
 			socket_t s = ::socket(AF_INET, SOCK_STREAM, 0);
 			if (s == SOCKET_ERROR)
 			{
-				cout << "create socket err:" << WSAGetLastError() << endl;
+				cout << "create socket err:" << GET_LAST_ERROR() << endl;
 				return SOCKET_ERROR;
 			}
 
@@ -63,7 +63,7 @@ namespace XX004
 			int ret = ::bind(s, (const sockaddr *)&addr_in, sizeof(addr_in));
 			if (ret != 0)
 			{
-				cout << "bind socket err:" << WSAGetLastError() << endl;
+				cout << "bind socket err:" << GET_LAST_ERROR() << endl;
 				SAFE_CLOSE_SOCKET(s);
 				return SOCKET_ERROR;
 			}
@@ -72,7 +72,7 @@ namespace XX004
 			ret = ::listen(s, 64);
 			if (ret != 0)
 			{
-				cout << "listen socket err:" << WSAGetLastError() << endl;
+				cout << "listen socket err:" << GET_LAST_ERROR() << endl;
 				SAFE_CLOSE_SOCKET(s);
 				return SOCKET_ERROR;
 			}
@@ -80,7 +80,7 @@ namespace XX004
 			//非阻塞
 			if (!socket_set_nonblocking(s, true))
 			{
-				cout << "set listen socket noblocking err:" << WSAGetLastError() << endl;
+				cout << "set listen socket noblocking err:" << GET_LAST_ERROR() << endl;
 				SAFE_CLOSE_SOCKET(s);
 				return SOCKET_ERROR;
 			}
@@ -95,14 +95,14 @@ namespace XX004
 			socket_t rs = ::accept(m_Socket, (sockaddr*)&r_addr, &addr_size);
 			if (rs == SOCKET_ERROR)
 			{
-				cout << "accept socket err:" << WSAGetLastError() << endl;
+				cout << "accept socket err:" << GET_LAST_ERROR() << endl;
 				return 1;
 			}
 
 			//非阻塞
 			if (!socket_set_nonblocking(rs, true))
 			{
-				cout << "set remote socket noblocking err:" << WSAGetLastError() << endl;
+				cout << "set remote socket noblocking err:" << GET_LAST_ERROR() << endl;
 				SAFE_CLOSE_SOCKET(rs);
 				return 2;
 			}
@@ -113,7 +113,7 @@ namespace XX004
 			int ret = ::setsockopt(rs, SOL_SOCKET, SO_LINGER, (char*)&so_linger, sizeof so_linger);
 			if (ret != 0)
 			{
-				cout << "setsockopt err:" << WSAGetLastError() << endl;
+				cout << "setsockopt err:" << GET_LAST_ERROR() << endl;
 				SAFE_CLOSE_SOCKET(rs);
 				return 3;
 			}

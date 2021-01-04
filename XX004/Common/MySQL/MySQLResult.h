@@ -14,6 +14,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include "../Macro.h"
 using namespace std;
 
 typedef struct st_mysql_res MYSQL_RES;
@@ -48,8 +49,8 @@ namespace XX004
 		inline int GetInt(const char *name) { return GetInt(GetIndex(name)); }
 
 		//获取长整数
-		__int64 GetInt64(int index);
-		inline __int64 GetInt64(const char *name) { return GetInt64(GetIndex(name)); }
+		Int64 GetInt64(int index);
+		inline Int64 GetInt64(const char *name) { return GetInt64(GetIndex(name)); }
 
 		//获取浮点数
 		float GetFloat(int index);

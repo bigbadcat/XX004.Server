@@ -67,10 +67,10 @@ namespace XX004
 		return i;
 	}
 
-	__int64 MySQLResult::GetInt64(int index)
+	Int64 MySQLResult::GetInt64(int index)
 	{
 		char *value_str = m_CurRecord[index];
-		__int64 i = value_str == NULL ? 0 : ::_atoi64(value_str);
+		Int64 i = value_str == NULL ? 0 : ::_atoi64(value_str);
 		return i;
 	}
 

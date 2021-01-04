@@ -115,7 +115,7 @@ namespace XX004
 				}
 				else if (ret == SOCKET_ERROR)
 				{
-					cout << "send socket err:" << WSAGetLastError() << endl;
+					cout << "send socket err:" << GET_LAST_ERROR() << endl;
 					return 1;
 				}
 			}
@@ -156,7 +156,7 @@ namespace XX004
 			socket_t s = ::socket(AF_INET, SOCK_STREAM, 0);
 			if (s == SOCKET_ERROR)
 			{
-				cout << "create socket err:" << WSAGetLastError() << endl;
+				cout << "create socket err:" << GET_LAST_ERROR() << endl;
 				return;
 			}
 
@@ -168,7 +168,7 @@ namespace XX004
 			//非阻塞
 			if (!socket_set_nonblocking(s, true))
 			{
-				cout << "set socket noblocking err:" << WSAGetLastError() << endl;
+				cout << "set socket noblocking err:" << GET_LAST_ERROR() << endl;
 				SAFE_CLOSE_SOCKET(s);
 				return;
 			}
@@ -208,7 +208,7 @@ namespace XX004
 			}
 			else if (ret == SOCKET_ERROR)
 			{
-				cout << "InternalConnection connect error:" << WSAGetLastError() << endl;
+				cout << "InternalConnection connect error:" << GET_LAST_ERROR() << endl;
 				SAFE_CLOSE_SOCKET(m_Socket)
 				Retry();
 			}
@@ -267,7 +267,7 @@ namespace XX004
 			else if (ret == SOCKET_ERROR)
 			{
 				m_State = ConnectionState::CS_NOT_CONNECTED;
-				cout << "select InternalConnection socket err:" << WSAGetLastError() << endl;
+				cout << "select InternalConnection socket err:" << GET_LAST_ERROR() << endl;
 				SAFE_CLOSE_SOCKET(m_Socket)
 			}
 		}
@@ -290,7 +290,7 @@ namespace XX004
 			}
 			else
 			{
-				cout << "recv socket err:" << WSAGetLastError() << endl;
+				cout << "recv socket err:" << GET_LAST_ERROR() << endl;
 				return 2;
 			}
 

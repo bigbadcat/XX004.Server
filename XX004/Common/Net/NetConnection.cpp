@@ -60,7 +60,7 @@ namespace XX004
 			}
 			else
 			{
-				cout << "getpeername err:" << WSAGetLastError() << endl;
+				cout << "getpeername err:" << GET_LAST_ERROR() << endl;
 			}
 		}
 
@@ -138,7 +138,7 @@ namespace XX004
 				}
 				else if (ret == SOCKET_ERROR)
 				{
-					cout << "send socket err:" << WSAGetLastError() << endl;
+					cout << "send socket err:" << GET_LAST_ERROR() << endl;
 					return 1;
 				}
 			}

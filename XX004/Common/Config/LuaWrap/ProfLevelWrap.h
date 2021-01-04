@@ -22,7 +22,7 @@ namespace XX004
 		virtual void Init(lua_State *L);
 
 		int level;							//等级
-		__int64 exp;						//经验
+		Int64 exp;							//经验
 	};
 }
 

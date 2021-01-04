@@ -36,7 +36,7 @@ namespace XX004
 			socket_t s = ::socket(AF_INET, SOCK_STREAM, 0);
 			if (s == SOCKET_ERROR)
 			{
-				cout << "create socket err:" << WSAGetLastError() << endl;
+				cout << "create socket err:" << GET_LAST_ERROR() << endl;
 				return;
 			}
 
@@ -48,7 +48,7 @@ namespace XX004
 			//非阻塞
 			if (!socket_set_nonblocking(s, true))
 			{
-				cout << "set socket noblocking err:" << WSAGetLastError() << endl;
+				cout << "set socket noblocking err:" << GET_LAST_ERROR() << endl;
 				SAFE_CLOSE_SOCKET(s);
 				return;
 			}
@@ -76,7 +76,7 @@ namespace XX004
 			int ret = ::send(m_Send, (char*)sendbuff, sendsize, 0);
 			if (ret == SOCKET_ERROR)
 			{
-				cout << "send socket err:" << WSAGetLastError() << endl;
+				cout << "send socket err:" << GET_LAST_ERROR() << endl;
 				SAFE_CLOSE_SOCKET(m_Send)
 			}
 		}
@@ -106,7 +106,7 @@ namespace XX004
 				//先判断是否有异常
 				if (FD_ISSET(m_Send, &exceptfds) != 0)
 				{
-					cout << "NetAwakeBridge error:" << WSAGetLastError() << endl;
+					cout << "NetAwakeBridge error:" << GET_LAST_ERROR() << endl;
 					SAFE_CLOSE_SOCKET(m_Send);
 				}
 				//可以写入了则说明已经准备好了
@@ -117,7 +117,7 @@ namespace XX004
 			}
 			else if (ret == SOCKET_ERROR)
 			{
-				cout << "NetAwakeBridge error:" << WSAGetLastError() << endl;
+				cout << "NetAwakeBridge error:" << GET_LAST_ERROR() << endl;
 				SAFE_CLOSE_SOCKET(m_Send)
 			}
 			return ok;
@@ -222,7 +222,7 @@ namespace XX004
 			}
 			else if (ret == SOCKET_ERROR)
 			{
-				cout << "select socket err:" << WSAGetLastError() << endl;
+				cout << "select socket err:" << GET_LAST_ERROR() << endl;
 			}
 		}
 
@@ -334,7 +334,7 @@ namespace XX004
 			}
 			else
 			{
-				cout << "recv socket err:" << WSAGetLastError() << endl;
+				cout << "recv socket err:" << GET_LAST_ERROR() << endl;
 				return 2;
 			}
 
