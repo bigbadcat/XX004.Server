@@ -55,7 +55,7 @@ namespace XX004
 		}
 		else
 		{
-			::printf_s("The EventParam cache number has reach max number(%d).\n", MAX_CACHE_NUMBER);
+			::printf("The EventParam cache number has reach max number(%d).\n", MAX_CACHE_NUMBER);
 			SAFE_DELETE(ep);
 		}
 	}
@@ -110,7 +110,7 @@ namespace XX004
 		EventCallBackObject call_obj(call, arg);
 		if (find(callback.begin(), callback.end(), call_obj) != callback.end())
 		{
-			::printf_s("The CallBack(id:%d) is alread registered!\n", id);
+			::printf("The CallBack(id:%d) is alread registered!\n", id);
 			return;
 		}
 		callback.push_back(EventCallBackObject(call, arg));

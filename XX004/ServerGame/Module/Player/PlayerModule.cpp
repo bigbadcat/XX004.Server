@@ -96,7 +96,7 @@ namespace XX004
 	{
 		CSRenameRequest req;
 		req.Unpack(item->data, 0);
-		::printf_s("PlayerModule::OnRenameRequest roleid:%I64d name:%s\n", item->key.second, req.Name.c_str());
+		::printf("PlayerModule::OnRenameRequest roleid:%I64d name:%s\n", item->key.second, req.Name.c_str());
 
 		//名称合法性
 		if (!UserInfo::CheckRoleName(req.Name))
@@ -230,7 +230,7 @@ namespace XX004
 
 	void PlayerModule::OnEventUserOnline(int id, EventParam *ep)
 	{
-		::printf_s("PlayerModule::OnEventUserOnline user:%s roleid:%I64d\n", ep->s1.c_str(), ep->l1);
+		::printf("PlayerModule::OnEventUserOnline user:%s roleid:%I64d\n", ep->s1.c_str(), ep->l1);
 		PlayerBasicData *player = GetPlayer(ep->l1);
 		if (player != NULL)
 		{
@@ -263,7 +263,7 @@ namespace XX004
 
 	void PlayerModule::OnEventUserOutline(int id, EventParam *ep)
 	{
-		::printf_s("PlayerModule::OnEventUserOutline roleid:%I64d\n", ep->l1);
+		::printf("PlayerModule::OnEventUserOutline roleid:%I64d\n", ep->l1);
 		PlayerMap::iterator itr = m_Players.find(ep->l1);
 		if (itr == m_Players.end())
 		{
@@ -276,7 +276,7 @@ namespace XX004
 
 	void PlayerModule::OnEventUserQuit(int id, EventParam *ep)
 	{
-		::printf_s("PlayerModule::OnEventUserQuit roleid:%I64d\n", ep->l1);
+		::printf("PlayerModule::OnEventUserQuit roleid:%I64d\n", ep->l1);
 		PlayerMap::iterator itr = m_Players.find(ep->l1);
 		if (itr == m_Players.end())
 		{

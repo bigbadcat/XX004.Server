@@ -63,7 +63,7 @@ namespace XX004
 		err = ::WSAStartup(wVersionRequested, &wsaData);
 		if (err != 0)
 		{
-			::printf_s("WSAStartup err:%d\n", err);
+			::printf("WSAStartup err:%d\n", err);
 			return 1;
 		}
 

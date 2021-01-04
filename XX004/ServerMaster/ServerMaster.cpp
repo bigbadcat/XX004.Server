@@ -60,7 +60,7 @@ namespace XX004
 
 		if (sub_channel.size() == 0)
 		{
-			printf_s("ServerGroup(id:%d) not set sub_channel.\n", id);
+			::printf("ServerGroup(id:%d) not set sub_channel.\n", id);
 		}
 	}
 
@@ -95,7 +95,7 @@ namespace XX004
 
 	void ServerMaster::SetServerDirty()
 	{
-		::printf_s("ServerMaster::SetServerDirty\n");
+		::printf("ServerMaster::SetServerDirty\n");
 		m_IsServerDirty = true;		
 	}
 
@@ -199,7 +199,7 @@ namespace XX004
 			}
 			else
 			{
-				printf_s("Unkown server group id:%d.\n", info->group);
+				::printf("Unkown server group id:%d.\n", info->group);
 				SAFE_DELETE(info);
 			}
 		}
@@ -221,7 +221,7 @@ namespace XX004
 		string pwd = params["pwd"];
 		string sub_channel_str = params["sub_channel"];
 		int sub_channel = sub_channel_str.empty() ? 0 : ::atoi(sub_channel_str.c_str());
-		printf_s("OnLoginRequest cmd:%s user:%s pwd:%s sub_channel:%d\n", path.c_str(), user.c_str(), pwd.c_str(), sub_channel);
+		::printf("OnLoginRequest cmd:%s user:%s pwd:%s sub_channel:%d\n", path.c_str(), user.c_str(), pwd.c_str(), sub_channel);
 
 		Int64 create_time = 0;
 		if (CheckAccount(user, pwd, create_time, res))

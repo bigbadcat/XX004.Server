@@ -95,7 +95,7 @@ namespace XX004
 		if (m_InitMark.size() == 0)
 		{
 			//上线需要同步属性
-			printf_s("Player init finish. id:(%I64d)\n", m_ID);
+			::printf("Player init finish. id:(%I64d)\n", m_ID);
 			this->m_SaveTimeStamp = TimeUtil::GetCurrentSecond() + SAVE_GAP;
 			this->SendToClient();
 		}
@@ -161,7 +161,7 @@ namespace XX004
 		ModuleBase::RequestStorage(this->m_ID, MsgID::SD_BASIC_SAVE, &req);
 		m_NeedSave = false;
 		this->m_SaveTimeStamp = TimeUtil::GetCurrentSecond() + SAVE_GAP;
-		printf_s("PlayerBasicData::SavePlayerData %I64d\n", m_ID);
+		::printf("PlayerBasicData::SavePlayerData %I64d\n", m_ID);
 	}
 
 	void PlayerBasicData::OnBuildSelfAttr()

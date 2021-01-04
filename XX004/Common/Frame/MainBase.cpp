@@ -63,7 +63,7 @@ namespace XX004
 		err = ::WSAStartup(wVersionRequested, &wsaData);
 		if (err != 0)
 		{
-			printf_s("WSAStartup err:%d\n", err);
+			printf("WSAStartup err:%d\n", err);
 			return 1;
 		}
 
@@ -84,7 +84,7 @@ namespace XX004
 		m_pNetManager->Start(info->GetPort());
 		m_pServer->Start(sid, true);
 		CommandLoop();
-		printf_s("Waitting end ...\n");
+		::printf("Waitting end ...\n");
 		m_pServer->Stop();
 		m_pNetManager->Stop();
 		m_pStorageManager->Stop();
@@ -104,7 +104,7 @@ namespace XX004
 
 	void MainBase::CommandLoop()
 	{
-		printf_s("Start command ...\n");
+		::printf("Start command ...\n");
 		char str[64];
 		while (true)
 		{

@@ -33,13 +33,13 @@ namespace XX004
 
 		void NetServer::Start(int port)
 		{
-			::printf_s("NetServer::Start port:%d\n", port);
+			::printf("NetServer::Start port:%d\n", port);
 			m_pConnectionManager->Init(port);
 		}
 
 		void NetServer::Stop()
 		{
-			::printf_s("NetServer::Stop\n");
+			::printf("NetServer::Stop\n");
 			m_pConnectionManager->Release();
 		}
 
@@ -75,7 +75,7 @@ namespace XX004
 
 		void NetServer::OnConnect(NetConnection* con)
 		{
-			::printf_s("OnConnect ip:%s port:%d\n", con->GetIPAddress().c_str(), con->GetPort());
+			::printf("OnConnect ip:%s port:%d\n", con->GetIPAddress().c_str(), con->GetPort());
 			if (m_pProcesser != NULL)
 			{
 				m_pProcesser->OnConnected(con);
@@ -84,7 +84,7 @@ namespace XX004
 
 		void NetServer::OnDisconnect(NetConnection* con)
 		{
-			::printf_s("OnDisconnect ip:%s port:%d\n", con->GetIPAddress().c_str(), con->GetPort());
+			::printf("OnDisconnect ip:%s port:%d\n", con->GetIPAddress().c_str(), con->GetPort());
 			if (m_pProcesser != NULL)
 			{
 				m_pProcesser->OnDisconnected(con);

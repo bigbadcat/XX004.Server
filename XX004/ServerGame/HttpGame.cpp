@@ -42,7 +42,7 @@ namespace XX004
 			}
 			else
 			{
-				::printf_s("Unknow http req path:%s\n", item->path.c_str());
+				::printf("Unknow http req path:%s\n", item->path.c_str());
 			}
 			SAFE_DELETE(item);
 		}
@@ -87,7 +87,7 @@ namespace XX004
 		HttpParamMap::iterator itr = params.find("user");
 		if (itr != params.end())
 		{
-			::printf_s("OnKickRequest user:%s\n", itr->second.c_str());
+			::printf("OnKickRequest user:%s\n", itr->second.c_str());
 			pserver->GetModule<LoginModule>()->KickUser(itr->second);
 			return;
 		}
@@ -97,9 +97,9 @@ namespace XX004
 		{
 			//角色模块通过roleid得到username
 			Int64 roleid = ::_atoi64(itr->second.c_str());
-			::printf_s("OnKickRequest roleid:%I64d\n", roleid);
+			::printf("OnKickRequest roleid:%I64d\n", roleid);
 			return;
 		}
-		::printf_s("OnKickRequest not found user or roleid.\n");
+		::printf("OnKickRequest not found user or roleid.\n");
 	}
 }

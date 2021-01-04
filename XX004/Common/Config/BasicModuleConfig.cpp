@@ -83,7 +83,7 @@ namespace XX004
 		char szName[16];
 		char szValue[16];
 		char szValueWidth[16];
-		::printf_s("O-----------attr-----------------O\n");
+		::printf("O-----------attr-----------------O\n");
 		for (int i = 1; i < AttrType::AT_MAX; ++i)
 		{
 			map<int, Int64>::const_iterator itr = attrs.find(i);
@@ -92,10 +92,10 @@ namespace XX004
 				set_string_width(szName, sizeof(szName), m_Attrs[itr->first]->key.c_str(), 8);
 				::sprintf(szValue, "%I64d", itr->second);
 				set_string_width(szValueWidth, sizeof(szValueWidth), szValue, 14);
-				::printf_s("|  %s ----  %s |\n", szName, szValueWidth);
+				::printf("|  %s ----  %s |\n", szName, szValueWidth);
 			}
 		}
-		::printf_s("O--------------------------------O\n");
+		::printf("O--------------------------------O\n");
 	}
 
 	Int64 BasicModuleConfig::GetNewLevel(int old_level, Int64 old_exp, Int64 add_exp, int &new_level)
@@ -145,7 +145,7 @@ namespace XX004
 		ProfConfigMap::const_iterator itr = m_Profs.find(prof);
 		if (itr == m_Profs.cend())
 		{
-			::printf_s("BasicModuleConfig::GetProfAttr Bad prof %d\n", prof);
+			::printf("BasicModuleConfig::GetProfAttr Bad prof %d\n", prof);
 			return attr;
 		}
 
@@ -154,7 +154,7 @@ namespace XX004
 		ProfLevelAttrConfigMap::mapped_type::const_iterator litr = pitr->second.find(level);
 		if (litr == pitr->second.cend())
 		{
-			::printf_s("BasicModuleConfig::GetProfAttr Bad level %d\n", prof);
+			::printf("BasicModuleConfig::GetProfAttr Bad level %d\n", prof);
 			return attr;
 		}
 

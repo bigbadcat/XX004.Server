@@ -177,19 +177,19 @@ namespace XX004
 				if (!cfg->IsInit())
 				{
 					cfg->Init();
-					printf_s("Init %s\n", cfg->GetName());
+					::printf("Init %s\n", cfg->GetName());
 				}				
 			}
 			else
 			{
 				//先初始化配置
 				ok = OnInitStep(++step);
-				printf_s("Init step:%d\n", step);
+				::printf("Init step:%d\n", step);
 			}
 
 			this_thread::sleep_for(dura);
 		} while (!ok);
-		printf_s("Init complete\n");
+		::printf("Init complete\n");
 	}
 
 	void ServerBase::Update()
@@ -230,10 +230,10 @@ namespace XX004
 		do
 		{
 			ok = OnReleaseStep(++step);
-			printf_s("Release step:%d\n", step);
+			::printf("Release step:%d\n", step);
 			this_thread::sleep_for(dura);
 		} while (!ok);
-		printf_s("Release complete\n");
+		::printf("Release complete\n");
 
 		//销毁配置
 		for (vector<ModuleConfig*>::iterator itr = m_Configs.begin(); itr != m_Configs.end(); ++itr)

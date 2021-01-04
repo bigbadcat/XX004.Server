@@ -231,7 +231,7 @@ namespace XX004
 			assert(m_Connections.find(s) == m_Connections.end());
 			if (m_Connections.size() >= 60)		//Win下默认是能处理64个socket，一个Listener，三个预留
 			{
-				::printf_s("AddConnection failed\n");
+				::printf("AddConnection failed\n");
 				SAFE_CLOSE_SOCKET(s);
 				return;
 			}

@@ -71,7 +71,7 @@ namespace XX004
 		{
 			UserInfo::NextRoleStamp = ret->GetInt("stamp") + 1;
 		}
-		printf_s("NextRoleStamp:%I64d\n", UserInfo::NextRoleStamp);
+		::printf("NextRoleStamp:%I64d\n", UserInfo::NextRoleStamp);
 	}
 
 	void LoginModule::Release()
@@ -195,7 +195,7 @@ namespace XX004
 		{
 			return;
 		}
-		printf_s("OnUserOutline user:%s type:%d\n", username.c_str(), type);
+		::printf("OnUserOutline user:%s type:%d\n", username.c_str(), type);
 
 		UserInfo *info = itr->second;
 		if (info->GetCurRoleID() != 0)
@@ -225,7 +225,7 @@ namespace XX004
 	{
 		CSLoginRequest req;
 		req.Unpack(item->data, 0);
-		printf_s("LoginModule::OnLoginRequest token:%s\n", req.Token.c_str());
+		::printf("LoginModule::OnLoginRequest token:%s\n", req.Token.c_str());
 
 		//token验证
 		vector<string> user_time;
@@ -256,7 +256,7 @@ namespace XX004
 	{
 		CSCreateRoleRequest req;
 		req.Unpack(item->data, 0);
-		printf_s("LoginModule::OnCreateRoleRequest uid:%I64d prof:%d\n", item->uid, req.Prof);
+		::printf("LoginModule::OnCreateRoleRequest uid:%I64d prof:%d\n", item->uid, req.Prof);
 
 		//判断玩家是否登陆(客户端没叛变是不会有这个问题)
 		SCCreateRoleResponse res;
@@ -305,7 +305,7 @@ namespace XX004
 	{
 		CSEnterGameRequest req;
 		req.Unpack(item->data, 0);
-		printf_s("LoginModule::OnEnterGameRequest uid:%I64d role:%I64d\n", item->uid, req.RoleID);
+		::printf("LoginModule::OnEnterGameRequest uid:%I64d role:%I64d\n", item->uid, req.RoleID);
 
 		//判断玩家是否登陆(客户端没叛变是不会有这个问题)
 		SCEnterGameResponse res;
@@ -351,7 +351,7 @@ namespace XX004
 	{
 		CSQuitGameRequest req;
 		req.Unpack(item->data, 0);
-		printf_s("LoginModule::OnQuitGameRequest uid:%I64d\n", item->uid);
+		::printf("LoginModule::OnQuitGameRequest uid:%I64d\n", item->uid);
 
 		UserInfo *info = GetUser(item->uid);
 		if (info == NULL)
@@ -372,7 +372,7 @@ namespace XX004
 	{
 		SDRoleListRequest req;
 		req.Unpack(item->data, 0);
-		printf_s("LoginModule::OnRoleListRequest user:%s\n", req.UserName.c_str());
+		::printf("LoginModule::OnRoleListRequest user:%s\n", req.UserName.c_str());
 
 		//查询玩家角色数据
 		DSRoleListResponse res;
@@ -400,7 +400,7 @@ namespace XX004
 	{
 		DSRoleListResponse res;
 		res.Unpack(item->data, 0);
-		printf_s("LoginModule::OnRoleListResponse user:%s count:%d\n", res.UserName.c_str(), res.RoleCount);
+		::printf("LoginModule::OnRoleListResponse user:%s count:%d\n", res.UserName.c_str(), res.RoleCount);
 
 		UserInfo *info = GetUser(res.UserName);
 		if (info == NULL)
@@ -434,7 +434,7 @@ namespace XX004
 	{
 		SDRoleAddRequest req;
 		req.Unpack(item->data, 0);
-		printf_s("LoginModule::OnRoleAddRequest user:%s\n", req.UserName.c_str());
+		::printf("LoginModule::OnRoleAddRequest user:%s\n", req.UserName.c_str());
 
 		DSRoleAddResponse res;
 		res.UserName = req.UserName;
@@ -504,7 +504,7 @@ namespace XX004
 	{
 		DSRoleAddResponse res;
 		res.Unpack(item->data, 0);
-		printf_s("LoginModule::OnRoleAddResponse user:%s result:%d\n", res.UserName.c_str(), res.Result);
+		::printf("LoginModule::OnRoleAddResponse user:%s result:%d\n", res.UserName.c_str(), res.Result);
 
 		UserInfo *info = GetUser(res.UserName);
 		if (info == NULL)

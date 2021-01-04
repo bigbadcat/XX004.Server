@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 		}
 		else
 		{
-			::printf_s("bad server id(%d).\n", sid);
+			::printf("bad server id(%d).\n", sid);
 		}
 	}
 
