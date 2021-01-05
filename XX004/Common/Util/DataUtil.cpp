@@ -9,6 +9,7 @@
 *******************************************************/
 
 #include "DataUtil.h"
+#include <string.h>
 #include <algorithm>
 #include <assert.h>
 
