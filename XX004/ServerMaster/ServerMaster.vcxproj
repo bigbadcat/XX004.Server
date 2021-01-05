@@ -147,8 +147,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MainMaster.cpp" />
-    <ClCompile Include="ServerMaster.cpp" />
+    <ClCompile Include="Master\MainMaster.cpp" />
+    <ClCompile Include="Master\ServerMaster.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.vcxproj">
@@ -156,8 +156,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MainMaster.h" />
-    <ClInclude Include="ServerMaster.h" />
+    <ClInclude Include="Master\MainMaster.h" />
+    <ClInclude Include="Master\ServerMaster.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

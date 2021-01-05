@@ -2,11 +2,24 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MainMaster.cpp" />
-    <ClCompile Include="ServerMaster.cpp" />
+    <ClCompile Include="Master\MainMaster.cpp">
+      <Filter>Master</Filter>
+    </ClCompile>
+    <ClCompile Include="Master\ServerMaster.cpp">
+      <Filter>Master</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MainMaster.h" />
-    <ClInclude Include="ServerMaster.h" />
+    <Filter Include="Master">
+      <UniqueIdentifier>{ec8bc4c4-c99c-4603-98f7-21d16930b2fb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Master\MainMaster.h">
+      <Filter>Master</Filter>
+    </ClInclude>
+    <ClInclude Include="Master\ServerMaster.h">
+      <Filter>Master</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
