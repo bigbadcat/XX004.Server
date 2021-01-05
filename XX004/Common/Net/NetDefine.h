@@ -77,6 +77,9 @@ namespace XX004
 		//设置socket是否为非阻塞模式
 		extern bool socket_set_nonblocking(socket_t s, bool on);
 
+		//将字符串格式的ip地址赋值为数字格式
+		extern int ip_to_addr(const char *ip, struct in_addr *addr);
+
 		//网络缓冲区大小
 		const int NET_BUFFER_SIZE = 8 * 1024;
 

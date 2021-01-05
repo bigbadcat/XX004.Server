@@ -40,10 +40,10 @@ namespace XX004
 				return;
 			}
 
-			SOCKADDR_IN addrSrv;
-			int pton = inet_pton(AF_INET, "127.0.0.1", &addrSrv.sin_addr.S_un.S_addr);
-			addrSrv.sin_family = AF_INET;
-			addrSrv.sin_port = htons((u_short)port);
+			sockaddr_in addr = { 0 };
+			addr.sin_family = AF_INET;
+			addr.sin_port = htons(port);
+			ip_to_addr("127.0.0.1", &addr.sin_addr);
 
 			//非阻塞
 			if (!socket_set_nonblocking(s, true))
@@ -52,7 +52,7 @@ namespace XX004
 				SAFE_CLOSE_SOCKET(s);
 				return;
 			}
-			::connect(s, (sockaddr *)&addrSrv, sizeof (sockaddr));
+			::connect(s, (sockaddr *)&addr, sizeof (sockaddr));
 			m_Send = s;
 		}
 

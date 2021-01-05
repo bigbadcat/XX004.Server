@@ -38,24 +38,23 @@ namespace XX004
 				return;
 			}
 
-			SOCKADDR addr;
-			int addr_len = sizeof(addr);
-			ZeroMemory(&addr, addr_len);
-			int ret = getpeername(m_Socket, &addr, &addr_len);
+			sockaddr_in addr;
+			socklen_t addr_len = sizeof(addr);
+			::memset(&addr, 0, addr_len);
+			int ret = getpeername(m_Socket, (struct sockaddr*)&addr, &addr_len);
 			if (ret == 0)
 			{
-				if (addr.sa_family == AF_INET)
+				if (addr.sin_family == AF_INET)
 				{
-					SOCKADDR_IN *addr_v4 = (PSOCKADDR_IN)&addr;
 					char ip[32];
-					::sprintf(ip, "%d.%d.%d.%d", addr_v4->sin_addr.s_net, addr_v4->sin_addr.s_host, addr_v4->sin_addr.s_lh, addr_v4->sin_addr.s_impno);
+					::strncpy(ip, inet_ntoa(addr.sin_addr), 24);
 					m_IPAddress = ip;
-					m_Port = addr_v4->sin_port;
-					//cout << "accept connet ip:" << m_IPAddress << " port:" << m_Port << endl;
+					m_Port = htons(addr.sin_port);
+					::printf("accept connetion ip:%s port:%d\n", m_IPAddress.c_str(), m_Port);
 				}
 				else
 				{
-					cout << "socket addr.sa_family:" << addr.sa_family << endl;
+					cout << "socket addr.sin_family:" << addr.sin_family << endl;
 				}
 			}
 			else

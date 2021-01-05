@@ -9,6 +9,9 @@
 *******************************************************/
 
 #include "NetDefine.h"
+#if defined(WIN)
+#include <WS2tcpip.h>
+#endif
 
 namespace XX004
 {
@@ -29,6 +32,16 @@ namespace XX004
 			opts = on ? (opts | O_NONBLOCK) : (opts & ~O_NONBLOCK);
 			fcntl(s, F_SETFL, opts);
 			return opts >= 0;
+#endif
+		}
+
+		int ip_to_addr(const char *ip, struct in_addr *addr)
+		{
+#ifdef WIN
+			::inet_pton(AF_INET, ip, &addr->S_un.S_addr);
+			return 0;
+#else
+			return ::inet_aton(ip, addr);
 #endif
 		}
 	}
