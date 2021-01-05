@@ -123,8 +123,7 @@ namespace XX004
 		else
 		{
 			int num = ::min((int)len, n);
-			::memcpy_s(src + index, num, value.c_str(), num);
-			//::strcpy_s((char*)src + index, num, value.c_str());
+			::memcpy(src + index, value.c_str(), num);
 			if (num < n)
 			{
 				//后面的补0

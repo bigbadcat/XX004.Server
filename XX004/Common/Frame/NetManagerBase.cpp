@@ -94,7 +94,7 @@ namespace XX004
 			item->key.second = header.GUID;
 			item->cmd = header.Command;
 			item->len = header.BodySize;
-			::memcpy_s(item->data, NET_PACKAGE_MAX_SIZE, buffer, item->len);
+			::memcpy(item->data, buffer, item->len);
 			OnAddRecvData(item);
 		}
 	}
@@ -185,7 +185,7 @@ namespace XX004
 		item->op = NetOperateType::NOT_DATA;
 		item->uid = uid;
 		item->cmd = command;
-		::memcpy_s(item->data, NET_PACKAGE_MAX_SIZE, buffer, len);
+		::memcpy(item->data, buffer, len);
 		item->len = len;
 		m_SendQueue.Push(item);
 		m_HaveSend = true;
@@ -210,7 +210,7 @@ namespace XX004
 		item->op = NetOperateType::NOT_DATA;
 		item->key = key;
 		item->cmd = command;
-		::memcpy_s(item->data, NET_PACKAGE_MAX_SIZE, buffer, len);
+		::memcpy(item->data, buffer, len);
 		item->len = len;
 		m_SendQueue.Push(item);
 		m_HaveSend = true;
@@ -479,7 +479,7 @@ namespace XX004
 					item->key = RemoteKey(con->GetRomoteType(), header.GUID);
 					item->cmd = header.Command;
 					item->len = header.BodySize;
-					::memcpy_s(item->data, NET_PACKAGE_MAX_SIZE, buffer, item->len);
+					::memcpy(item->data, buffer, item->len);
 					OnAddRecvData(item);
 				}
 			} while (true);

@@ -58,7 +58,7 @@ namespace XX004
 			static Byte sendbuff[1024];
 			int sendsize = 0;
 			sendsize = sendhead.Pack(sendbuff, sendsize);
-			::memcpy_s(sendbuff + sendsize, 1024 - sendsize, buffer, len);
+			::memcpy(sendbuff + sendsize, buffer, len);
 			sendsize += len;
 
 			return AddSendData(sendbuff, sendsize);
