@@ -90,7 +90,7 @@ namespace XX004
 		int NetListener::OnSocketRead()
 		{
 			sockaddr_in r_addr;
-			int addr_size = sizeof(r_addr);
+			socklen_t addr_size = sizeof(r_addr);
 			::memset(&r_addr, 0, sizeof(r_addr));
 			socket_t rs = ::accept(m_Socket, (sockaddr*)&r_addr, &addr_size);
 			if (rs == SOCKET_ERROR)
