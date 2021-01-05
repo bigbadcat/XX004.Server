@@ -1,6 +1,6 @@
 
 
-TARGET = libcommon.a
+TARGET = libCommon.a
 FLAGS = -std=c++11
 MACROS = -D NDEBUG
 
