@@ -14,7 +14,6 @@
 #include "NetConnection.h"
 #include "../Protocol/NetMsgID.h"
 #include <assert.h>
-#include <WS2tcpip.h>
 using namespace std;
 
 namespace XX004
