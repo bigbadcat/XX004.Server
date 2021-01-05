@@ -23,6 +23,7 @@ MAKE_OBJECT_DIR := $(shell mkdir -p $(OBJ_DIR) $(OBJ_PATH))
 $(TARGET_PATH)/$(TARGET) : $(OBJS) $(LIB_DEP) 
 	@echo "Linking... "
 	g++ $(FLAGS) -o $@ $(OBJS) $(INCLUDE_PATH) $(LIB_NAME) $(LIB_PATH)
+	@echo "build finished"
 
 $(OBJS) : $(OBJ_DIR)/%.o : %.cpp $(OBJ_DIR)/%.cpp.d
 	g++ $(FLAGS) -o $@ -c $< $(INCLUDE_PATH) $(MACROS)

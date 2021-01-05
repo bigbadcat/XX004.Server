@@ -6,8 +6,10 @@ XX004/Common/libCommon.a
 XX004/Common/obj/
 XX004/Common/x64/
 XX004/Common/Common.vcxproj.user
+XX004/ServerMaster/obj/
 XX004/ServerMaster/x64/
 XX004/ServerMaster/ServerMaster.vcxproj.user
+XX004/ServerGame/obj/
 XX004/ServerGame/x64/
 XX004/ServerGame/ServerGame.vcxproj.user
 
