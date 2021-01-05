@@ -11,7 +11,9 @@
 #include "MainMaster.h"
 #include "ServerMaster.h"
 #include <Frame/StartSetting.h>
+#if defined(WIN)
 #include <WinSock2.h>
+#endif
 #include <iostream>
 using namespace std;
 
