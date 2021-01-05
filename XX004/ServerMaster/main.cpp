@@ -8,7 +8,9 @@
 * Date: 2019-09-25 16:02
 *******************************************************/
 
+#if defined(WIN)
 #include <vld.h>
+#endif
 #include "Master/MainMaster.h"
 
 int main(int argc, char *argv[])

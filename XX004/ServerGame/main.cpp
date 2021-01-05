@@ -8,7 +8,9 @@
 * Date: 2019-10-02 10:48
 *******************************************************/
 
+#if defined(WIN)
 #include <vld.h>
+#endif
 #include <iostream>
 #include "MainGame.h"
 using namespace std;
