@@ -16,6 +16,7 @@
 #include <stack>
 #include <map>
 #include <thread>
+#include <regex>
 #include "../Macro.h"
 using namespace std;
 

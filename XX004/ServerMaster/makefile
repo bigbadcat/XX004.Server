@@ -2,7 +2,7 @@
 
 TARGET = ServerMaster
 TARGET_PATH = ../../bin
-FLAGS = -std=c++11
+FLAGS = -std=c++14
 MACROS = -D NDEBUG
 
 INCLUDE = ../Common ../ThirdPart/MySQL5.5/include

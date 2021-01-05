@@ -1,7 +1,7 @@
 
 
 TARGET = libCommon.a
-FLAGS = -std=c++11
+FLAGS = -std=c++14
 MACROS = -D NDEBUG
 
 INCLUDE = ../ThirdPart/lua-5.3.4/include ../ThirdPart/MySQL5.5/include
