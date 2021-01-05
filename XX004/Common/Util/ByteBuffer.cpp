@@ -10,6 +10,7 @@
 
 #include "ByteBuffer.h"
 #include <assert.h>
+#include <cstring>
 
 namespace XX004
 {
