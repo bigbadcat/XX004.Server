@@ -13,7 +13,6 @@
 #include <iostream>
 #include <string>
 #include <assert.h>
-#include <WS2tcpip.h>
 using namespace std;
 
 namespace XX004
