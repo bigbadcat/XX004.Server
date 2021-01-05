@@ -57,6 +57,7 @@ namespace XX004
 
 	int MainMaster::Run()
 	{
+#if defined(WIN)
 		//初始化网络
 		WORD wVersionRequested;
 		WSADATA wsaData;
@@ -65,9 +66,11 @@ namespace XX004
 		err = ::WSAStartup(wVersionRequested, &wsaData);
 		if (err != 0)
 		{
-			::printf("WSAStartup err:%d\n", err);
+			printf_s("WSAStartup err:%d\n", err);
 			return 1;
 		}
+
+#endif
 
 		ServerMaster server;
 		short port = StartSetting::GetInstance()->GetMasterPort();
@@ -75,7 +78,9 @@ namespace XX004
 		wait_quit(server);
 		server.Stop();
 
+#if defined(WIN)
 		::WSACleanup();
+#endif
 		return 0;
 	}
 }

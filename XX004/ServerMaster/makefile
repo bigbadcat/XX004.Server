@@ -5,9 +5,9 @@ TARGET_PATH = ../../bin
 FLAGS = -std=c++11
 MACROS = -D NDEBUG
 
-INCLUDE = ../Common
+INCLUDE = ../Common ../ThirdPart/MySQL5.5/include
 INCLUDE_PATH = $(addprefix -I,$(INCLUDE))
-LIB_NAME = -lcommon -llua -ldl -lmysqlclient -lpthread -levent
+LIB_NAME = -lCommon -llua -ldl -lmysqlclient -lpthread -levent
 LIB_PATH = -L../Common -L/usr/lib64/mysql
 LIB_DEP = ../Common/libCommon.a
 
