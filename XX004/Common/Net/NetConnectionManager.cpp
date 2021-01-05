@@ -99,7 +99,7 @@ namespace XX004
 			timeval timeout;
 			timeout.tv_sec = 0;
 			timeout.tv_usec = 0;
-			int ret = ::select(0, &readfds, &writefds, &exceptfds, &timeout);		//windows下nfds参数无用，可传入0
+			int ret = ::select((int)m_Send + 1, &readfds, &writefds, &exceptfds, &timeout);		//windows下nfds参数无用，可传入0
 			if (ret > 0)
 			{
 				//先判断是否有异常
@@ -157,11 +157,13 @@ namespace XX004
 			FD_ZERO(&readfds);
 			FD_ZERO(&writefds);
 			FD_ZERO(&exceptfds);
+			int max_fd = 0;
 			if (m_pListener->GetSocket() != SOCKET_ERROR)
 			{
 				socket_t s = m_pListener->GetSocket();
 				FD_SET(s, &readfds);
 				FD_SET(s, &exceptfds);
+				max_fd = max((int)s, max_fd);
 			}
 			for (NetConnectionMap::iterator itr = m_Connections.begin(); itr != m_Connections.end(); ++itr)
 			{
@@ -170,13 +172,14 @@ namespace XX004
 				if (con->IsNeedRead()) { FD_SET(s, &readfds); }
 				if (con->IsNeedWrite()) { FD_SET(s, &writefds); }
 				FD_SET(s, &exceptfds);
+				max_fd = max((int)s, max_fd);
 			}
 
 			//处理
 			timeval timeout;
 			timeout.tv_sec = msec / 1000;				//秒
 			timeout.tv_usec = (msec % 1000) * 1000;		//毫秒=1000微秒
-			int ret = ::select(0, &readfds, &writefds, &exceptfds, &timeout);		//windows下nfds参数无用，可传入0
+			int ret = ::select(max_fd + 1, &readfds, &writefds, &exceptfds, &timeout);
 			if (ret > 0)
 			{
 				vector<socket_t> needremove;
