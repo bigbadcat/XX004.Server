@@ -1,5 +1,7 @@
 bin/*.ilk
 bin/*.pdb
+bin/ServerMaster
+bin/ServerGame
 XX004/.vs/
 XX004/XX004.VC.*
 XX004/Common/libCommon.a
