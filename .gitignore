@@ -1,5 +1,7 @@
 bin/*.ilk
 bin/*.pdb
+bin/*.log
+bin/*.exe
 bin/ServerMaster
 bin/ServerGame
 XX004/.vs/
