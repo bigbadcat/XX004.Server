@@ -11,8 +11,9 @@
 #include "FunctionUtil.h"
 #if !defined(WIN)
 #include <unistd.h>
-#include<sys/types.h>
+#include <sys/types.h>
 #include <sys/stat.h>
+#include <csignal>
 #endif
 
 namespace XX004
@@ -54,6 +55,7 @@ namespace XX004
 		}
 #else
 		//linux下走信号退出
+		is_run = true;
 		signal(SIGTERM, OnSignal);
 		signal(SIGINT, OnSignal);
 		std::chrono::milliseconds dura(200);
