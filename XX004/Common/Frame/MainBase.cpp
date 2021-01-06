@@ -16,6 +16,7 @@
 #include "EventManager.h"
 #include <iostream>
 #include <assert.h>
+#include "../Util/FunctionUtil.h"
 
 namespace XX004
 {
@@ -86,7 +87,8 @@ namespace XX004
 		assert(info != NULL);
 		m_pNetManager->Start(info->GetPort());
 		m_pServer->Start(sid, true);
-		CommandLoop();
+		FunctionUtil::CommandLoop(std::bind(&ServerBase::PostCommand, m_pServer, std::placeholders::_1));
+
 		::printf("Waitting end ...\n");
 		m_pServer->Stop();
 		m_pNetManager->Stop();
@@ -106,34 +108,5 @@ namespace XX004
 #endif
 
 		return 0;
-	}
-
-	void MainBase::CommandLoop()
-	{
-		::printf("Start command ...\n");
-		char str[64];
-		while (true)
-		{
-			//接收命令
-			cin.getline(str, sizeof(str));
-			
-			//如果输入内容超过缓冲区
-			if (!std::cin)
-			{
-				std::cin.clear(); // 清除错误标志位
-				std::cin.sync(); // 清除流
-			}
-
-			//提交命令
-			string cmd(str);
-			if (cmd.compare(COMMAND_QUIT) == 0)
-			{
-				break;
-			}
-			else
-			{
-				m_pServer->PostCommand(cmd);
-			}			
-		}
 	}
 }

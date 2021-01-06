@@ -58,10 +58,6 @@ namespace XX004
 
 	private:
 
-		//命令循环
-		void CommandLoop();
-
-
 		//当前Main对象
 		static MainBase *pCurMain;
 

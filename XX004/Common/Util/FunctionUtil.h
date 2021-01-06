@@ -14,6 +14,7 @@
 #include "../Macro.h"
 #include <string>
 #include <time.h>
+#include <functional>
 using namespace std;
 
 namespace XX004
