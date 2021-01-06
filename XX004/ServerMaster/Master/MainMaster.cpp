@@ -15,6 +15,7 @@
 #include <WinSock2.h>
 #endif
 #include <iostream>
+#include <Util/FunctionUtil.h>
 using namespace std;
 
 namespace XX004
@@ -25,34 +26,6 @@ namespace XX004
 
 	MainMaster::~MainMaster()
 	{		
-	}
-
-	void wait_quit(ServerMaster &server)
-	{
-		char str[64];
-		while (true)
-		{
-			//接收命令
-			cin.getline(str, sizeof(str));
-
-			//如果输入内容超过缓冲区
-			if (!std::cin)
-			{
-				std::cin.clear(); // 清除错误标志位
-				std::cin.sync(); // 清除流
-			}
-
-			//提交命令
-			string cmd(str);
-			if (cmd.compare("/q") == 0)
-			{
-				break;
-			}
-			else if (cmd.compare("/r") == 0)
-			{
-				server.SetServerDirty();
-			}
-		}
 	}
 
 	int MainMaster::Run()
@@ -75,7 +48,16 @@ namespace XX004
 		ServerMaster server;
 		short port = StartSetting::GetInstance()->GetMasterPort();
 		server.Start(port);
-		wait_quit(server);
+
+		//等待命令结束
+		CommandCallBack on_cmd = [&server](const string& cmd)
+		{
+			if (cmd.compare("/r") == 0)
+			{
+				server.SetServerDirty();
+			}
+		};
+		FunctionUtil::CommandLoop(on_cmd);
 		server.Stop();
 
 #if defined(WIN)

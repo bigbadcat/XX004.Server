@@ -175,6 +175,9 @@
     <ClInclude Include="Config\LuaWrap\AttrWrap.h">
       <Filter>Config\LuaWrap</Filter>
     </ClInclude>
+    <ClInclude Include="Util\FunctionUtil.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Net\NetServer.cpp">
@@ -305,6 +308,9 @@
     </ClCompile>
     <ClCompile Include="Net\NetDefine.cpp">
       <Filter>Net</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\FunctionUtil.cpp">
+      <Filter>Util</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
