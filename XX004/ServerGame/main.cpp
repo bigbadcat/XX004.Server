@@ -32,6 +32,8 @@ int main(int argc, char *argv[])
 		}
 	}
 
+#if defined(WIN)
  	system("pause");
+#endif
 	return ret;
 }

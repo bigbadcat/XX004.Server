@@ -21,6 +21,8 @@ int main(int argc, char *argv[])
 		ret = server.Run();
 	}
 
+#if defined(WIN)
 	system("pause");
+#endif
 	return ret;
 }
