@@ -13,11 +13,13 @@
 #endif
 #include <iostream>
 #include "Game/MainGame.h"
+#include <Util/FunctionUtil.h>
 using namespace std;
 
 
 int main(int argc, char *argv[])
 {
+	XX004::FunctionUtil::StartDaemon();
 	int ret = 0;
 	{
 		int sid = XX004::MainBase::ParseServerID(argc, argv);

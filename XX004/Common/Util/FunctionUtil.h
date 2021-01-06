@@ -28,6 +28,9 @@ namespace XX004
 		//命令循环。
 		static void CommandLoop(CommandCallBack call);
 
+		//启动守护线程(仅Linux下有用)
+		static void StartDaemon();
+
 	private:
 
 	};

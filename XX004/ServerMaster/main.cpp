@@ -12,9 +12,11 @@
 #include <vld.h>
 #endif
 #include "Master/MainMaster.h"
+#include <Util/FunctionUtil.h>
 
 int main(int argc, char *argv[])
 {
+	XX004::FunctionUtil::StartDaemon();
 	int ret = 0;
 	{
 		XX004::MainMaster server;
