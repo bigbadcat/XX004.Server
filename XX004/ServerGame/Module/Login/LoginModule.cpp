@@ -10,8 +10,8 @@
 
 #include "LoginModule.h"
 #include "LoginDefine.h"
-#include "../../ServerGame.h"
 #include <Frame/MainBase.h>
+#include <Frame/ServerBase.h>
 #include <Frame/NetManagerBase.h>
 #include <Frame/StorageManager.h>
 #include <Frame/EventManager.h>

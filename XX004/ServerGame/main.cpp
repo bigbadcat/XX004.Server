@@ -12,7 +12,7 @@
 #include <vld.h>
 #endif
 #include <iostream>
-#include "MainGame.h"
+#include "Game/MainGame.h"
 using namespace std;
 
 

@@ -151,22 +151,24 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CommandProcesser.cpp" />
-    <ClCompile Include="HttpGame.cpp" />
+    <ClCompile Include="Game\CommandProcesser.cpp" />
+    <ClCompile Include="Game\HttpGame.cpp" />
+    <ClCompile Include="Game\MainGame.cpp" />
+    <ClCompile Include="Game\NetManagerGame.cpp" />
+    <ClCompile Include="Game\ServerGame.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="Module\Login\LoginModule.cpp" />
     <ClCompile Include="Module\Login\UserInfo.cpp" />
     <ClCompile Include="Module\Player\PlayerBasicData.cpp" />
     <ClCompile Include="Module\Player\PlayerDataModel.cpp" />
     <ClCompile Include="Module\Player\PlayerModule.cpp" />
-    <ClCompile Include="NetManagerGame.cpp" />
-    <ClCompile Include="ServerGame.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CommandProcesser.h" />
-    <ClInclude Include="HttpGame.h" />
-    <ClInclude Include="MainGame.h" />
+    <ClInclude Include="Game\CommandProcesser.h" />
+    <ClInclude Include="Game\HttpGame.h" />
+    <ClInclude Include="Game\MainGame.h" />
+    <ClInclude Include="Game\NetManagerGame.h" />
+    <ClInclude Include="Game\ServerGame.h" />
     <ClInclude Include="Module\Login\LoginDefine.h" />
     <ClInclude Include="Module\Login\LoginModule.h" />
     <ClInclude Include="Module\Login\UserInfo.h" />
@@ -174,8 +176,6 @@
     <ClInclude Include="Module\Player\PlayerDataModel.h" />
     <ClInclude Include="Module\Player\PlayerDefine.h" />
     <ClInclude Include="Module\Player\PlayerModule.h" />
-    <ClInclude Include="NetManagerGame.h" />
-    <ClInclude Include="ServerGame.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

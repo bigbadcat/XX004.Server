@@ -12,7 +12,7 @@
 #include <Util/TimeUtil.h>
 #include <Frame/MainBase.h>
 #include "ServerGame.h"
-#include "Module/Login/LoginModule.h"
+#include "../Module/Login/LoginModule.h"
 
 namespace XX004
 {

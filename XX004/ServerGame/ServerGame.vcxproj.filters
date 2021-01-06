@@ -2,16 +2,12 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="NetManagerGame.cpp" />
-    <ClCompile Include="ServerGame.cpp" />
-    <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="Module\Login\LoginModule.cpp">
       <Filter>Module\Login</Filter>
     </ClCompile>
     <ClCompile Include="Module\Login\UserInfo.cpp">
       <Filter>Module\Login</Filter>
     </ClCompile>
-    <ClCompile Include="HttpGame.cpp" />
     <ClCompile Include="Module\Player\PlayerModule.cpp">
       <Filter>Module\Player</Filter>
     </ClCompile>
@@ -21,19 +17,29 @@
     <ClCompile Include="Module\Player\PlayerBasicData.cpp">
       <Filter>Module\Player</Filter>
     </ClCompile>
-    <ClCompile Include="CommandProcesser.cpp" />
+    <ClCompile Include="Game\CommandProcesser.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\HttpGame.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\MainGame.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\NetManagerGame.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\ServerGame.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="NetManagerGame.h" />
-    <ClInclude Include="ServerGame.h" />
-    <ClInclude Include="MainGame.h" />
     <ClInclude Include="Module\Login\LoginModule.h">
       <Filter>Module\Login</Filter>
     </ClInclude>
     <ClInclude Include="Module\Login\UserInfo.h">
       <Filter>Module\Login</Filter>
     </ClInclude>
-    <ClInclude Include="HttpGame.h" />
     <ClInclude Include="Module\Player\PlayerModule.h">
       <Filter>Module\Player</Filter>
     </ClInclude>
@@ -49,7 +55,21 @@
     <ClInclude Include="Module\Player\PlayerDefine.h">
       <Filter>Module\Player</Filter>
     </ClInclude>
-    <ClInclude Include="CommandProcesser.h" />
+    <ClInclude Include="Game\CommandProcesser.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\HttpGame.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\MainGame.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\NetManagerGame.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\ServerGame.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Module">
@@ -60,6 +80,9 @@
     </Filter>
     <Filter Include="Module\Player">
       <UniqueIdentifier>{2696909a-ea6c-456f-8370-b010fd5b7a1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{8865d3ce-4e66-474f-aa1e-cb02b48a4259}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

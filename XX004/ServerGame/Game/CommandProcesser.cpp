@@ -10,8 +10,8 @@
 
 #include "CommandProcesser.h"
 #include "ServerGame.h"
-#include "Module/Player/PlayerModule.h"
-#include "Module/Player/PlayerBasicData.h"
+#include "../Module/Player/PlayerModule.h"
+#include "../Module/Player/PlayerBasicData.h"
 #include <Frame/ModuleBase.h>
 #include <Config/BasicModuleConfig.h>
 

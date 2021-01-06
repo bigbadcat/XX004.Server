@@ -11,8 +11,8 @@
 #include "ServerGame.h"
 #include "HttpGame.h"
 #include "CommandProcesser.h"
-#include "Module/Login/LoginModule.h"
-#include "Module/Player/PlayerModule.h"
+#include "../Module/Login/LoginModule.h"
+#include "../Module/Player/PlayerModule.h"
 #include <Frame/NetManagerBase.h>
 #include <Frame/StartSetting.h>
 using namespace XX004::Net;
