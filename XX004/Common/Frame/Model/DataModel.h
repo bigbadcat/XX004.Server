@@ -19,8 +19,9 @@ namespace XX004
 {
 	class DataModel
 	{
-		typedef vector<DataModel*> DataModelVector;
 	public:
+		typedef vector<DataModel*> DataModelVector;
+
 		DataModel(int mid);
 		virtual ~DataModel();
 

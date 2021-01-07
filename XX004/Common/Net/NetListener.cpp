@@ -54,6 +54,14 @@ namespace XX004
 				return SOCKET_ERROR;
 			}
 
+			int flag = 1;
+			if (::setsockopt(s, SOL_SOCKET, SO_REUSEADDR, (const char*)&flag, sizeof(flag)) < 0)
+			{
+				cout << "set socket reuseaddr err:" << GET_LAST_ERROR() << endl;
+				SAFE_CLOSE_SOCKET(s);
+				return SOCKET_ERROR;
+			}
+
 			//开始绑定
 			sockaddr_in addr_in;
 			::memset(&addr_in, 0, sizeof(addr_in));
