@@ -96,7 +96,7 @@ namespace XX004
 	{
 		CSRenameRequest req;
 		req.Unpack(item->data, 0);
-		::printf("PlayerModule::OnRenameRequest roleid:%I64d name:%s\n", item->key.second, req.Name.c_str());
+		::printf("PlayerModule::OnRenameRequest roleid:%lld name:%s\n", item->key.second, req.Name.c_str());
 
 		//名称合法性
 		if (!UserInfo::CheckRoleName(req.Name))
@@ -121,7 +121,7 @@ namespace XX004
 		DSBasicInfoResponse res;
 		MySQLWrap *mysql = GetMySQL();
 		char sql[128];
-		::sprintf(sql, "call sp_select_role(%I64d);", rid);
+		::sprintf(sql, "call sp_select_role(%lld);", rid);
 		auto ret = mysql->Query(sql);
 		if (ret->GetRecord())
 		{
@@ -166,7 +166,7 @@ namespace XX004
 
 		char sql[128];
 		MySQLWrap *mysql = GetMySQL();
-		::sprintf(sql, "call sp_update_role_basic(%I64d,%d,%I64d,%d,%d,%d,%d);", 
+		::sprintf(sql, "call sp_update_role_basic(%lld,%d,%lld,%d,%d,%d,%d);", 
 			item->key.second, req.Level, req.Exp, req.Map, req.PositionX, req.PositionY, req.Direction);
 		mysql->Execute(sql);
 	}
@@ -197,7 +197,7 @@ namespace XX004
 		ret->Clear();
 
 		//保存名称
-		::sprintf(sql, "call sp_update_role_name(%I64d,'%s');", item->key.second, req.Name.c_str());
+		::sprintf(sql, "call sp_update_role_name(%lld,'%s');", item->key.second, req.Name.c_str());
 		mysql->Execute(sql);
 
 		//回复
@@ -230,7 +230,7 @@ namespace XX004
 
 	void PlayerModule::OnEventUserOnline(int id, EventParam *ep)
 	{
-		::printf("PlayerModule::OnEventUserOnline user:%s roleid:%I64d\n", ep->s1.c_str(), ep->l1);
+		::printf("PlayerModule::OnEventUserOnline user:%s roleid:%lld\n", ep->s1.c_str(), ep->l1);
 		PlayerBasicData *player = GetPlayer(ep->l1);
 		if (player != NULL)
 		{
@@ -263,7 +263,7 @@ namespace XX004
 
 	void PlayerModule::OnEventUserOutline(int id, EventParam *ep)
 	{
-		::printf("PlayerModule::OnEventUserOutline roleid:%I64d\n", ep->l1);
+		::printf("PlayerModule::OnEventUserOutline roleid:%lld\n", ep->l1);
 		PlayerMap::iterator itr = m_Players.find(ep->l1);
 		if (itr == m_Players.end())
 		{
@@ -276,7 +276,7 @@ namespace XX004
 
 	void PlayerModule::OnEventUserQuit(int id, EventParam *ep)
 	{
-		::printf("PlayerModule::OnEventUserQuit roleid:%I64d\n", ep->l1);
+		::printf("PlayerModule::OnEventUserQuit roleid:%lld\n", ep->l1);
 		PlayerMap::iterator itr = m_Players.find(ep->l1);
 		if (itr == m_Players.end())
 		{

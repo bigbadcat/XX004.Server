@@ -62,7 +62,7 @@ namespace XX004
 			attrs.AddAttr(baseic_config->GetProfAttr(1, 30));
 			Int64 p1 = baseic_config->CalcPower(attrs.GetAttrs());
 			baseic_config->PrintAttr(attrs.GetAttrs());
-			::printf("power:%I64d\n", p1);
+			::printf("power:%lld\n", p1);
 
 			//attrs.AddAttr(AttrType::AT_MaxHP, 100);
 			//attrs.AddAttr(AttrType::AT_Attack, 5);
@@ -70,7 +70,7 @@ namespace XX004
 			attrs.AddAttr(baseic_config->GetProfAttr(1, 31));
 			Int64 p2 = baseic_config->CalcPower(attrs.GetAttrs());			
 			baseic_config->PrintAttr(attrs.GetAttrs());
-			::printf("power:%I64d add:%I64d\n", p2, p2 - p1);
+			::printf("power:%lld add:%lld\n", p2, p2 - p1);
 		}
 	}
 }

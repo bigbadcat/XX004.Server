@@ -78,7 +78,7 @@ namespace XX004
 		info->path = path;
 		info->params = params;
 		m_RequestQueue.Push(info);
-		res.AddText("OK_%I64d", TimeUtil::GetCurrentSecond());
+		res.AddText("OK_%lld", TimeUtil::GetCurrentSecond());
 	}
 
 	void HttpGame::OnKickRequest(const string &path, HttpParamMap &params)
@@ -97,7 +97,7 @@ namespace XX004
 		{
 			//角色模块通过roleid得到username
 			Int64 roleid = ::_atoi64(itr->second.c_str());
-			::printf("OnKickRequest roleid:%I64d\n", roleid);
+			::printf("OnKickRequest roleid:%lld\n", roleid);
 			return;
 		}
 		::printf("OnKickRequest not found user or roleid.\n");

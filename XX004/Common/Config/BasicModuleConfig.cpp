@@ -90,7 +90,7 @@ namespace XX004
 			if (itr != attrs.end() && (print_zero || itr->second > 0))
 			{
 				set_string_width(szName, sizeof(szName), m_Attrs[itr->first]->key.c_str(), 8);
-				::sprintf(szValue, "%I64d", itr->second);
+				::sprintf(szValue, "%lld", itr->second);
 				set_string_width(szValueWidth, sizeof(szValueWidth), szValue, 14);
 				::printf("|  %s ----  %s |\n", szName, szValueWidth);
 			}

@@ -79,7 +79,7 @@ namespace XX004
 	void HttpResponse::AddLuaKeyValue(const char *key, Int64 value)
 	{
 		AddLuaKey(key);
-		AddText("%I64d", value);
+		AddText("%lld", value);
 	}
 
 	void HttpResponse::AddLuaKeyValue(const char *key, const char *value)

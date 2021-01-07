@@ -10,6 +10,7 @@
 
 #include "LoginModule.h"
 #include "LoginDefine.h"
+#include <algorithm>
 #include <Frame/MainBase.h>
 #include <Frame/ServerBase.h>
 #include <Frame/NetManagerBase.h>
@@ -71,7 +72,7 @@ namespace XX004
 		{
 			UserInfo::NextRoleStamp = ret->GetInt("stamp") + 1;
 		}
-		::printf("NextRoleStamp:%I64d\n", UserInfo::NextRoleStamp);
+		::printf("NextRoleStamp:%lld\n", UserInfo::NextRoleStamp);
 	}
 
 	void LoginModule::Release()
@@ -91,7 +92,7 @@ namespace XX004
 				UserInfo *info = *itr;
 				m_Users.erase(info->GetName());
 				itr = m_WantQuitUsers.erase(itr);
-				::printf("UserQuit name:%s rid:%I64d\n", info->GetName().c_str(), info->GetCurRoleID());
+				::printf("UserQuit name:%s rid:%lld\n", info->GetName().c_str(), info->GetCurRoleID());
 
 				//通知下线，销毁
 				EventParam *ep = EventParam::Get(LoginEvent::EID_USER_QUIT);
@@ -256,7 +257,7 @@ namespace XX004
 	{
 		CSCreateRoleRequest req;
 		req.Unpack(item->data, 0);
-		::printf("LoginModule::OnCreateRoleRequest uid:%I64d prof:%d\n", item->uid, req.Prof);
+		::printf("LoginModule::OnCreateRoleRequest uid:%lld prof:%d\n", item->uid, req.Prof);
 
 		//判断玩家是否登陆(客户端没叛变是不会有这个问题)
 		SCCreateRoleResponse res;
@@ -305,7 +306,7 @@ namespace XX004
 	{
 		CSEnterGameRequest req;
 		req.Unpack(item->data, 0);
-		::printf("LoginModule::OnEnterGameRequest uid:%I64d role:%I64d\n", item->uid, req.RoleID);
+		::printf("LoginModule::OnEnterGameRequest uid:%lld role:%lld\n", item->uid, req.RoleID);
 
 		//判断玩家是否登陆(客户端没叛变是不会有这个问题)
 		SCEnterGameResponse res;
@@ -351,7 +352,7 @@ namespace XX004
 	{
 		CSQuitGameRequest req;
 		req.Unpack(item->data, 0);
-		::printf("LoginModule::OnQuitGameRequest uid:%I64d\n", item->uid);
+		::printf("LoginModule::OnQuitGameRequest uid:%lld\n", item->uid);
 
 		UserInfo *info = GetUser(item->uid);
 		if (info == NULL)
@@ -490,7 +491,7 @@ namespace XX004
 
 		//保存角色
 		int stamp = (int)(roleid % UserInfo::ROLE_ID_STAMP_BIT);
-		::sprintf(sql, "call sp_insert_update_role(%I64d,'%s','%s',%d,%d,%d,%d,%d,%d,%I64d);",
+		::sprintf(sql, "call sp_insert_update_role(%lld,'%s','%s',%d,%d,%d,%d,%d,%d,%lld);",
 			role.ID, role.Name.c_str(), req.UserName.c_str(), sid, stamp, role.Prof, role.Level, 0, 0, role.CreateTime);
 		mysql->StartTransaction();
 		mysql->Execute(sql);

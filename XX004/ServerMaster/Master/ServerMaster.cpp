@@ -166,7 +166,7 @@ namespace XX004
 		HttpParamMap new_param(params);
 		new_param.erase("sid");		
 		SendHttpRequest(info->ip, info->http_port, path, new_param);
-		res.AddText("Relay to %d. Time:%I64d", sid, TimeUtil::GetCurrentSecond());
+		res.AddText("Relay to %d. Time:%lld", sid, TimeUtil::GetCurrentSecond());
 	}
 
 	void ServerMaster::LoadServerInfo()
@@ -278,7 +278,7 @@ namespace XX004
 			create_time = TimeUtil::GetCurrentSecond();
 
 			char sql[128];
-			::sprintf(sql, "call sp_insert_update_user('%s','%s',%I64d,%I64d);", user.c_str(), pwd.c_str(), create_time, (Int64)0);
+			::sprintf(sql, "call sp_insert_update_user('%s','%s',%lld,%lld);", user.c_str(), pwd.c_str(), create_time, (Int64)0);
 			m_MySQL->Execute(sql);
 		}
 		return true;
@@ -288,7 +288,7 @@ namespace XX004
 	{
 		//回复结果		
 		char token[32];
-		::sprintf(token, "%s&%I64d", user.c_str(), TimeUtil::GetCurrentSecond());
+		::sprintf(token, "%s&%lld", user.c_str(), TimeUtil::GetCurrentSecond());
 		res.BeginLuaTable();
 		res.AddLuaKeyValue("Result", 0);
 		res.AddLuaKeyValue("User", user.c_str());
