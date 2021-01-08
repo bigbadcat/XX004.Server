@@ -92,6 +92,14 @@ namespace XX004
 
 		private:
 
+#ifdef  WIN
+			//选择Socket处理
+			void SelectSocketWin(int msec);
+#else
+			//选择Socket处理
+			void SelectSocketLinux(int msec);
+#endif
+
 			//获取连接
 			NetConnection* GetConnectionFromSocket(socket_t s)const;
 
@@ -118,6 +126,11 @@ namespace XX004
 
 			//远端标识到连接(辅助查找)
 			RemoteKeyToConnectionMap m_RemoteKeyToConnection;
+
+#ifndef WIN
+			int m_EpollFD;
+			epoll_event *m_Events;
+#endif
 		};
 	}
 }

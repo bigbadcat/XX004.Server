@@ -28,7 +28,11 @@ http://110.43.46.109/xx004/release/FixProjectVersion.cs
 mysql
 user root password xx20200808
 
+./ServerMaster > ServerMaster.log
 ps aux|grep ./ServerMaster
+
+./ServerGame 20001 > ServerGame.log
 ps aux|grep ./ServerGame
+
 kill -9 xxxx
 

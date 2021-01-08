@@ -125,12 +125,24 @@ namespace XX004
 
 		NetConnectionManager::NetConnectionManager() : m_pServer(NULL), m_pListener(NULL)
 		{
+#ifndef WIN
+			m_EpollFD = ::epoll_create(1);
+			m_Events = (epoll_event *)malloc(sizeof(epoll_event) * 10);
+#endif
+
 			m_pListener = new NetListener();
 			m_pListener->SetManager(this);
 		}
 
 		NetConnectionManager::~NetConnectionManager()
 		{
+#ifndef WIN
+			::close(m_EpollFD);
+			m_EpollFD = 0;
+			free(m_Events);
+			m_Events = NULL;
+#endif
+
 			Release();
 			SAFE_DELETE(m_pListener)
 		}
@@ -139,6 +151,17 @@ namespace XX004
 		{
 			m_pListener->Start(port);
 			m_AwakeBridge.Init(port);
+
+#ifndef WIN
+			socket_t s = m_pListener->GetSocket();
+			epoll_event ev;
+			ev.events = EPOLLIN | EPOLLERR;		//EPOLLOUT监听socket不需要
+			ev.data.fd = s;
+			if (::epoll_ctl(m_EpollFD, EPOLL_CTL_ADD, s, &ev) != 0)
+			{
+				printf("epoll_ctl err:%d\n", GET_LAST_ERROR());
+			}
+#endif
 		}
 
 		void NetConnectionManager::Release()
@@ -149,6 +172,16 @@ namespace XX004
 		}
 
 		void NetConnectionManager::SelectSocket(int msec)
+		{
+#ifdef  WIN
+			SelectSocketWin(msec);
+#else
+			SelectSocketLinux(msec);
+#endif
+		}
+
+#ifdef  WIN
+		void NetConnectionManager::SelectSocketWin(int msec)
 		{
 			//准备文件集合
 			fd_set readfds;
@@ -227,6 +260,50 @@ namespace XX004
 				cout << "select socket err:" << GET_LAST_ERROR() << endl;
 			}
 		}
+#endif
+
+#ifndef WIN
+		void NetConnectionManager::SelectSocketLinux(int msec)
+		{
+			int ret = ::epoll_wait(m_EpollFD, m_Events, 10, msec);
+			if (ret < 0)
+			{
+				cout << "epoll_wait err:" << GET_LAST_ERROR() << endl;
+				return;
+			}
+
+			vector<socket_t> needremove;
+			for (int i = 0; i < ret; i++)
+			{
+				epoll_event & ev = m_Events[i];
+				socket_t s = ev.data.fd;
+				uint32_t e = ev.events;
+				if (e & EPOLLERR)
+				{
+					needremove.push_back(s);
+					continue;
+				}
+
+				if (e & EPOLLIN && OnSocketRead(s) != 0)
+				{
+					needremove.push_back(s);
+					continue;
+				}
+
+				if (e & EPOLLOUT && OnSocketWrite(s) != 0)
+				{
+					needremove.push_back(s);
+					continue;
+				}
+			}
+
+			//移除错误的SOKECT
+			for (vector<socket_t>::iterator itr = needremove.begin(); itr != needremove.end(); ++itr)
+			{
+				OnSocketClose(*itr);
+			}
+		}
+#endif
 
 		void NetConnectionManager::AddConnection(socket_t s)
 		{
@@ -355,6 +432,9 @@ namespace XX004
 
 		void NetConnectionManager::OnSocketClose(socket_t s)
 		{
+#ifndef WIN
+			::epoll_ctl(m_EpollFD, EPOLL_CTL_DEL, s, NULL);
+#endif
 			if (s == m_pListener->GetSocket())
 			{
 				m_pListener->OnSocketClose();
