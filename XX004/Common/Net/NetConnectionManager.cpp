@@ -307,6 +307,7 @@ namespace XX004
 
 		void NetConnectionManager::AddConnection(socket_t s)
 		{
+#ifdef WIN
 			assert(m_Connections.find(s) == m_Connections.end());
 			if (m_Connections.size() >= 60)		//Win下默认是能处理64个socket，一个Listener，三个预留
 			{
@@ -314,11 +315,22 @@ namespace XX004
 				SAFE_CLOSE_SOCKET(s);
 				return;
 			}
+#endif
 
 			NetConnection *pcon = new NetConnection();
 			pcon->SetSocket(s);
 			pcon->SetManager(this);
 			m_Connections.insert(NetConnectionMap::value_type(s, pcon));
+
+#ifndef WIN
+			epoll_event ev;
+			ev.events = EPOLLIN | EPOLLERR | EPOLLPRI;		//EPOLLOUT不在添加连接时加入
+			ev.data.fd = s;
+			if (::epoll_ctl(m_EpollFD, EPOLL_CTL_ADD, s, &ev) != 0)
+			{
+				printf("epoll_ctl err:%d\n", GET_LAST_ERROR());
+			}
+#endif
 
 			//通知
 			if (m_pServer != NULL)
