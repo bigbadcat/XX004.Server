@@ -90,6 +90,9 @@ namespace XX004
 			//通知唤醒
 			void NotifyAwake() { m_AwakeBridge.Notify(); }
 
+			//更新发送状态
+			void UpdateConnectionSend(NetConnection* con);
+
 		private:
 
 #ifdef  WIN

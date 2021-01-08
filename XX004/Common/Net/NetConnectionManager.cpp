@@ -317,6 +317,7 @@ namespace XX004
 
 			NetConnection *pcon = new NetConnection();
 			pcon->SetSocket(s);
+			pcon->SetManager(this);
 			m_Connections.insert(NetConnectionMap::value_type(s, pcon));
 
 			//通知
@@ -359,6 +360,22 @@ namespace XX004
 		{
 			assert(con != NULL && m_pServer != NULL);
 			m_pServer->OnRecvData(con);
+		}
+
+		void NetConnectionManager::UpdateConnectionSend(NetConnection* con)
+		{
+#ifndef WIN
+			static __uint32_t need_write = EPOLLIN | EPOLLOUT | EPOLLERR;
+			static __uint32_t no_write = EPOLLIN | EPOLLERR;
+			socket_t s = con->GetSocket();
+			epoll_event ev;
+			ev.events = con->IsNeedWrite() ? need_write : no_write;		//根据是否需要写入来设置不同事件
+			ev.data.fd = s;
+			if (::epoll_ctl(m_EpollFD, EPOLL_CTL_MOD, s, &ev) != 0)
+			{
+				printf("epoll_ctl err:%d\n", GET_LAST_ERROR());
+			}
+#endif
 		}
 
 		NetConnection* NetConnectionManager::GetConnectionFromSocket(socket_t s)const

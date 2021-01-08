@@ -9,6 +9,7 @@
 *******************************************************/
 
 #include "NetConnection.h"
+#include "NetConnectionManager.h"
 #include "../Util/DataUtil.h"
 #include <iostream>
 #include <string>
@@ -19,7 +20,7 @@ namespace XX004
 	namespace Net
 	{
 		NetConnection::NetConnection() : m_RemoteType(RemoteType::RT_UNKNOW), m_RoleID(0), m_Socket(SOCKET_ERROR), m_Port(0),
-			m_SendBuffer(NET_BUFFER_SIZE), m_RecvBuffer(NET_BUFFER_SIZE)
+			m_SendBuffer(NET_BUFFER_SIZE), m_RecvBuffer(NET_BUFFER_SIZE), m_BelongManager(NULL)
 		{
 		}
 		
@@ -88,7 +89,9 @@ namespace XX004
 
 		bool NetConnection::AddSendData(Byte *buffer, int len)
 		{
-			return m_SendBuffer.AddData(buffer, len);
+			bool ok = m_SendBuffer.AddData(buffer, len);
+			m_BelongManager->UpdateConnectionSend(this);
+			return ok;
 		}
 
 		bool NetConnection::AddRecvData(Byte *buffer, int len)
@@ -134,6 +137,7 @@ namespace XX004
 				if (ret > 0)
 				{		
 					m_SendBuffer.RemoveData(ret);
+					m_BelongManager->UpdateConnectionSend(this);
 				}
 				else if (ret == SOCKET_ERROR)
 				{
